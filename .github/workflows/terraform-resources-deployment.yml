@@ -1,0 +1,23 @@
+name: Resource-Deployment
+
+on:
+  workflow_dispatch:
+
+jobs:
+  Deploy-DEV-Environment:
+    uses: ./.github/workflows/templates/terraform-resources.yml
+    with:
+      environmentName: dev
+    secrets: inherit
+  Deploy-TEST-Environment:
+    needs: Deploy-DEV-Environment
+    uses: ./.github/workflows/templates/terraform-resources.yml
+    with:
+      environmentName: test
+    secrets: inherit
+  Deploy-PROD-Environment:
+    needs: Deploy-TEST-Environment
+    uses: ./.github/workflows/templates/terraform-resources.yml
+    with:
+      environmentName: prod
+    secrets: inherit
