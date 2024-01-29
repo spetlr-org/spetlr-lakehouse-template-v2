@@ -1,4 +1,4 @@
-name: 'Deploy resources with Terraform'
+name: 'Deploy resources with Terraform Template'
 
 on:
   workflow_call:
@@ -16,24 +16,16 @@ env:
 jobs:
   deploy_environment:
     environment: ${{ inputs.environmentName }}
-    name: 'Environment Deployment'
+    name: 'Resources Deployment with Terraform'
     runs-on: ubuntu-latest
 
-    default:
+    defaults:
       run:
-        working-directory: terraform
+        shell: bash
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      # - name: Log in to azure
-      # shell: pwsh
-      # run: |
-      #   az login --service-principal `
-      #     -u ${{ secrets.SPN_CLIENT_ID }} `
-      #     -p ${{ secrets.SPN_CLIENT_SECRET }} `
-      #     --tenant ${{ secrets.SPN_TENANT_ID }}
 
       - name: 'Set up Terraform'
         uses: hashicorp/setup-terraform@v2
@@ -51,4 +43,4 @@ jobs:
 
       - name: 'Terraform Apply'
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply -auto-approve -var "environment = ${{ environmentName }}"
+        run: terraform apply -auto-approve -var "environment = ${{ inputs.environmentName }}"
