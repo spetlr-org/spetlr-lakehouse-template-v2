@@ -49,7 +49,7 @@ jobs:
       id: tf-plan
       run: |
         export exitcode=0
-        terraform -chdir="./.github/terraform" plan -var "environment = ${{ inputs.environmentName }}" -detailed-exitcode -no-color -out tfplan || export exitcode=$?
+        terraform -chdir="./.github/terraform" plan -var "environment=${{ inputs.environmentName }}" -detailed-exitcode -no-color -out tfplan || export exitcode=$?
 
         echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
         
@@ -135,4 +135,4 @@ jobs:
 
     # Terraform Apply
     - name: Terraform Apply
-      run: terraform -chdir="./.github/terraform" apply -auto-approve tfplan -var "environment = ${{ inputs.environmentName }}"
+      run: terraform -chdir="./.github/terraform" apply -auto-approve tfplan -var "environment=${{ inputs.environmentName }}"
