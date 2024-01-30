@@ -34,9 +34,9 @@ jobs:
       with:
         terraform_wrapper: false
 
-    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+    # Initialize existing Terraform working directory.
     - name: Terraform Init
-      run: terraform init
+      run: terraform -chdir="./.github/terraform" init
 
     # Checks that all Terraform configuration files adhere to a canonical format
     # Will fail the build if not
@@ -49,7 +49,7 @@ jobs:
       id: tf-plan
       run: |
         export exitcode=0
-        terraform plan -detailed-exitcode -no-color -out tfplan || export exitcode=$?
+        terraform -chdir="./.github/terraform" plan -var "environment = ${{ inputs.environmentName }}" -detailed-exitcode -no-color -out tfplan || export exitcode=$?
 
         echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
         
@@ -135,4 +135,4 @@ jobs:
 
     # Terraform Apply
     - name: Terraform Apply
-      run: terraform apply -auto-approve tfplan -var "environment = ${{ inputs.environmentName }}"
+      run: terraform -chdir="./.github/terraform" apply -auto-approve tfplan -var "environment = ${{ inputs.environmentName }}"
