@@ -7,11 +7,6 @@ on:
         required: true
         type: string
 
-permissions:
-  id-token: write
-  contents: read
-  pull-requests: write
-
 env:
   ARM_SUBSCRIPTION_ID: ${{ secrets.SPN_SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ secrets.SPN_TENANT_ID }}
