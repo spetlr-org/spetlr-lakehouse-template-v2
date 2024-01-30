@@ -9,15 +9,15 @@ jobs:
     with:
       environmentName: dev
     secrets: inherit
-  Deploy-TEST-Environment:
-    needs: Deploy-DEV-Environment
-    uses: ./.github/workflows/terraform-resources-template.yml
-    with:
-      environmentName: test
-    secrets: inherit
-  Deploy-PROD-Environment:
-    needs: Deploy-TEST-Environment
-    uses: ./.github/workflows/terraform-resources-template.yml
-    with:
-      environmentName: prod
-    secrets: inherit
+  # Deploy-TEST-Environment:
+  #   needs: Deploy-DEV-Environment
+  #   uses: ./.github/workflows/terraform-resources-template.yml
+  #   with:
+  #     environmentName: test
+  #   secrets: inherit
+  # Deploy-PROD-Environment:
+  #   needs: Deploy-TEST-Environment
+  #   uses: ./.github/workflows/terraform-resources-template.yml
+  #   with:
+  #     environmentName: prod
+  #   secrets: inherit
