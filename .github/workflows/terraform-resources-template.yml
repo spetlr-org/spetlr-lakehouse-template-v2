@@ -9,6 +9,7 @@ on:
 
 jobs:
   terraform-plan:
+    environment: ${{inputs.environmentName}}
     name: 'Terraform Plan'
     runs-on: ubuntu-latest 
 
