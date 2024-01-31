@@ -18,7 +18,7 @@ variable "system_name" {
 
 variable "service_name" {
   type = string
-  default = "LakeHouse"
+  default = "LakeHouse_V2"
   description = "Used in creating the resource group name"
 }
 
