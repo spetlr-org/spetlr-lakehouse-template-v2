@@ -10,7 +10,7 @@ on:
 jobs:
   terraform-deployment:
     environment: ${{inputs.environmentName}}
-    name: 'Resoirce deployment'
+    name: 'Resource deployment'
     runs-on: ubuntu-latest 
 
     steps:
