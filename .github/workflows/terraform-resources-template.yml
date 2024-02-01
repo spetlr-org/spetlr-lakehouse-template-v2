@@ -39,4 +39,4 @@ jobs:
       run: terraform -chdir="./.github/terraform" plan -input=false -var "environment=${{ inputs.environmentName }}"
     
     - name: Terraform Apply
-      run: terraform -chdir="./.github/terraform" apply -auto-approve tfplan -var "environment=${{ inputs.environmentName }}"
+      run: terraform -chdir="./.github/terraform" apply -auto-approve -var "environment=${{ inputs.environmentName }}"
