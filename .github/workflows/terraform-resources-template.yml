@@ -27,7 +27,7 @@ jobs:
     - name: Autheniticate Terraform with SPN secrets
       shell: pwsh
       run: |
-        .github/deploy/authenticate_terraform_to_spn.ps1 `
+        ./.github/deploy/authenticate_terraform_to_spn.ps1 `
           -clientId ${{ secrets.SPN_CLIENT_ID }} `
           -clientSecret ${{ secrets.SPN_CLIENT_SECRET }} `
           -tenantId ${{ secrets.SPN_TENANT_ID }} `
