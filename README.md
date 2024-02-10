@@ -23,12 +23,12 @@ We deploy the cloud requirements in Azure using Terraform. This enables us to de
 
 ## Prerequisites for terraform deployment
 
-### Create a service principal for github actions pipeline to deploy Azure resources:
-For the github deployment pipeline, we need first to create a SPN with right access in our Azure subscription and store its secrets in the github project secrets. We have a module in .github/deploy/setup_deploying_SPN.ps1 to create such a SPN. Thus, you need to deploy it manually and store its secrets in your github project. Note that this module requires some utility functions that are stored in .github/deploy/Utilities folder that you need to run those in your SPN deployment.
+### Create a service principal for the github actions pipeline to deploy Azure resources:
+For the github deployment pipeline, we need first to create an SPN with right access in our Azure subscription and store its secrets in the github project secrets. We have a module in .github/deploy/setup_deploying_SPN.ps1 to create such a SPN. Thus, you need to deploy it manually and store its secrets in your github project. Note that this module requires some utility functions that are stored in .github/deploy/Utilities folder that you need to run those in your SPN deployment.
 
 ### Create Azure resources for the terraform backend:
 
-To manage deployment with terraform, we need to preserve the state files of the Terraform deployment plan to let the deployment know which resources should be created, modified, or destroyed. As these state files may contain confidential information for each project, it is not a good practice to version control them in git, and hence, they should be stored in a secure location. For Azure deployment, state files need to be stored in an Azure Storage Account, and the terraform deployment should get the access to those in the deployment process. Thus, we need to have a storage account already deployed to be used by terraform. Here, we suggest creating these prerequisites manually in your Azure subscription. A good practice here is to deploy a resource group dedicated for terraform state, which can be used for multiple projects in the same subscription. **Note that, the suggested names for the resources below can be changed for your taste and project, but you need to reuse the names for these resources later in terraform deployment in this location .github/deploy/authenticate_terraform_with_secrets.ps1, and .github/terraform/providers.tf**. Follow the following steps in the Azure portal or use Azure the below powershell alternatives in your Azure subscription:
+To manage deployment with terraform, we need to preserve the state files of the Terraform deployment plan to let the deployment know which resources should be created, modified, or destroyed. As these state files may contain confidential information for each project, it is not a good practice to version control them in git, and hence, they should be stored in a secure location. For Azure deployment, state files need to be stored in an Azure Storage Account, and the terraform deployment should get the access to those in the deployment process. Thus, we need to have a storage account already deployed to be used by terraform. Here, we suggest creating these prerequisites manually in your Azure subscription. A good practice here is to deploy a resource group dedicated for the terraform state, which can be used for multiple projects in the same subscription. **Note that, the suggested names for the resources below can be changed for your taste and project, but you need to reuse the names for these resources later in terraform deployment in this location .github/terraform/providers.tf**. Follow the following steps in the Azure portal or below powershell alternatives:
 
 1. Create a resource group ($RESOURCE_GROUP_NAME = 'Terraform-State-Stoarge'). Note that, we choose this resource group in the same location as our other resources.
 
@@ -57,7 +57,16 @@ az storage account update \
     --access-tier Cool
 ```
 
-For further security, you can create a keyvault in the resource group and store the access key as a secret there. Then you can retrieve it from that secret instead of directly retrieving from the storage account that we use in this file .github/deploy/authenticate_terraform_with_secrets.ps1.
+For further security, you can create a keyvault in the resource group and store the access key as a secret there. Then you can retrieve it from that secret.
+
+5. Add the created storage account access key in the github project secrets as SPN_STORAGE_ACCESS_KEY. To retrive the access key directly (if you did not put it in the keyvault), you can find it in the Azure portal or run below:
+
+```powershell
+az storage account keys list \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --account-name $STORAGE_ACCOUNT_NAME \
+    --query '[0].value' -o tsv
+```
 
 
 ## Deploy Databricks components with Databricks Asset bundles (DAB):
