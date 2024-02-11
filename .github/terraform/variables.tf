@@ -51,6 +51,12 @@ variable "creator_tag" {
   description = "Use for tagging"
 }
 
+variable "storage_containers" {
+  type = list
+  default = ["landing", "bronze", "silver", "gold"]
+  description = "Containers to be cretaed in the storage account"
+}
+
 locals {
   resource_group_name = "${var.system_name}-${upper(var.environment)}-${var.service_name}"
   resource_name = "${var.company_abbreviation}${var.system_abbreviation}${var.environment}"
