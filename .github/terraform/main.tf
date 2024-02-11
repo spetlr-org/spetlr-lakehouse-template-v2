@@ -21,3 +21,10 @@ resource "azurerm_storage_account" "storage_account" {
     service = var.service_tag
   }
 }
+
+resource "azurerm_storage_container" "storage_containers" {
+  count = length(var.storage_containers)
+  name  = var.storage_containers[count.index]
+  storage_account_name = azurerm_storage_account.storage_account.name
+  container_access_type = "private"
+}
