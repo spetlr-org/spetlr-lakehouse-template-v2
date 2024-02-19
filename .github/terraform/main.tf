@@ -8,6 +8,8 @@ resource "azurerm_resource_group" "rg" {
   }
 }
 
+data "azurerm_client_config" "current" {}
+
 resource "azurerm_storage_account" "storage_account" {
   name                     = local.resource_name
   resource_group_name      = azurerm_resource_group.rg.name
