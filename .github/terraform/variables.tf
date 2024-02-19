@@ -67,6 +67,12 @@ variable "vault_sku_name" {
   }
 }
 
+variable "msi_id" {
+  type        = string
+  description = "The Managed Service Identity ID. If this value isn't null (the default), 'data.azurerm_client_config.current.object_id' will be set to this value."
+  default     = null
+}
+
 locals {
   resource_group_name = "${var.system_name}-${upper(var.environment)}-${var.service_name}"
   resource_name = "${var.company_abbreviation}${var.system_abbreviation}${var.environment}"
