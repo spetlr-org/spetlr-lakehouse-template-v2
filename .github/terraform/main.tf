@@ -10,6 +10,10 @@ resource "azurerm_resource_group" "rg" {
 
 data "azurerm_client_config" "current" {}
 
+locals {
+  current_user_id = coalesce(var.msi_id, data.azurerm_client_config.current.object_id)
+}
+
 resource "azurerm_storage_account" "storage_account" {
   name                     = local.resource_name
   resource_group_name      = azurerm_resource_group.rg.name
@@ -41,5 +45,7 @@ resource "azurerm_key_vault" "key_vault" {
   soft_delete_retention_days = 7
 
   access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = local.current_user_id
   }
 }
