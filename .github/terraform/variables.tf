@@ -57,6 +57,16 @@ variable "storage_containers" {
   description = "Containers to be cretaed in the storage account"
 }
 
+variable "vault_sku_name" {
+  type        = string
+  description = "The SKU of the vault to be created."
+  default     = "standard"
+  validation {
+    condition     = contains(["standard", "premium"], var.vault_sku_name)
+    error_message = "The sku_name must be one of the following: standard, premium."
+  }
+}
+
 locals {
   resource_group_name = "${var.system_name}-${upper(var.environment)}-${var.service_name}"
   resource_name = "${var.company_abbreviation}${var.system_abbreviation}${var.environment}"
