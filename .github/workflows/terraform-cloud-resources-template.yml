@@ -30,7 +30,7 @@ jobs:
         terraform_wrapper: false
 
     - name: Terraform Init
-      run: terraform -chdir="./.github/terraform" init
+      run: terraform -chdir="./.github/deploy/cloud_resources" init
       env:
         ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
         ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}
@@ -42,7 +42,7 @@ jobs:
       run: terraform fmt -check
 
     - name: Terraform Plan
-      run: terraform -chdir="./.github/terraform" plan -input=false -var "environment=${{ inputs.environmentName }}"
+      run: terraform -chdir="./.github/deploy/cloud_resources" plan -input=false -var "environment=${{ inputs.environmentName }}"
       env:
         ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
         ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}
@@ -51,7 +51,7 @@ jobs:
         ARM_SUBSCRIPTION_ID: ${{ secrets.SPN_SUBSCRIPTION_ID }}
     
     - name: Terraform Apply
-      run: terraform -chdir="./.github/terraform" apply -auto-approve -var "environment=${{ inputs.environmentName }}"
+      run: terraform -chdir="./.github/deploy/cloud_resources" apply -auto-approve -var "environment=${{ inputs.environmentName }}"
       env:
         ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
         ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}
