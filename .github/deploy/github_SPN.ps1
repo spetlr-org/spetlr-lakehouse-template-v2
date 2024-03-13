@@ -1,5 +1,5 @@
 $cicdSpnName = "SpetlrLakehouseV2Pipe"
-$subscriptionName = "ATC.*"
+$subscriptionName = "Delegate.*"
 ########################################################
 #  Setting up a SPN for the pipeline
 ########################################################

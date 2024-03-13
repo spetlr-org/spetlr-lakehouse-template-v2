@@ -24,7 +24,7 @@ We deploy the cloud requirements in Azure using Terraform. This enables us to de
 ## Prerequisites for terraform deployment
 
 ### Create a service principal for the github actions pipeline to deploy Azure resources:
-For the github deployment pipeline, we need first to create an SPN with right access in our Azure subscription and store its secrets in the github project secrets. We have a module in .github/deploy/setup_deploying_SPN.ps1 to create such a SPN. Thus, you need to deploy it manually and store its secrets in your github project. Note that this module requires some utility functions that are stored in .github/deploy/Utilities folder that you need to run those in your SPN deployment.
+For the github deployment pipeline, we need first to create an SPN with right access in our Azure subscription and store its secrets in the github project secrets. We have a module in .github/deploy/github_SPN.ps1 to create such a SPN. Thus, you need to deploy it manually and store its secrets in your github project. Note that this module requires some utility functions that are stored in .github/deploy/Utilities folder that you need to run those before running github_SPN.ps1.
 
 ### Create Azure resources for the terraform backend:
 
@@ -36,7 +36,7 @@ To manage deployment with terraform, we need to preserve the state files of the 
 az group create --name $RESOURCE_GROUP_NAME --location westeurope   
 ```
 
-2. Create a storage account ($STORAGE_ACCOUNT_NAME = 'spetlrlh2tfstate')
+2. Create a storage account ($STORAGE_ACCOUNT_NAME = 'spetlrlhv2tfstate')
 
 ```powershell
 az storage account create --resource-group $RESOURCE_GROUP_NAME --name $STORAGE_ACCOUNT_NAME --sku Standard_LRS --encryption-services blob   
