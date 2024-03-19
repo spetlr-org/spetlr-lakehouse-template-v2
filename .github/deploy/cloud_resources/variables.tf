@@ -64,6 +64,12 @@ variable "storage_containers" {
   description = "Containers to be cretaed in the storage account"
 }
 
+variable "catalog_container" {
+  type = string
+  default = "catalog"
+  description = "Container to be cretaed in the storage account for unity catalog storage"
+}
+
 variable "vault_sku_name" {
   type        = string
   description = "The SKU of the vault to be created."
@@ -106,7 +112,7 @@ variable "databricks_account_id" {
 
 variable "db_metastore_name" {
   type = string
-  default = "SpetlrLhV2-metastore"
+  default = "spetlrlhv2-metastore"
   description = "The name of the Databricks Metastore"
 }
 
@@ -120,6 +126,12 @@ variable "db_workspace_admin_group" {
   type = string
   default = "SpetlrLhV2-workspace-admins"
   description = "An Azure Databricks group with Databricks workspace Admin privilages"
+}
+
+variable "db_ws_url" {
+  type = string
+  default = "Databricks--Workspace--URL"
+  description = "The URL of the created Databricks workspace "
 }
 
 locals {

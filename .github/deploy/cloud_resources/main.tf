@@ -43,7 +43,17 @@ resource "azurerm_key_vault_access_policy" "spn_access" {
   ]
 }
 
-# Provision Azure Storage Account and Containers
+# Provision Azure Storage Account, Access Connector and Containers
+
+resource "azurerm_databricks_access_connector" "ext_access_connector" {
+  name                = local.resource_name
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  identity {
+    type = "SystemAssigned"
+  }
+}
+
 resource "azurerm_storage_account" "storage_account" {
   name                     = local.resource_name
   resource_group_name      = azurerm_resource_group.rg.name
@@ -64,6 +74,18 @@ resource "azurerm_storage_container" "storage_containers" {
   name  = var.storage_containers[count.index]
   storage_account_name = azurerm_storage_account.storage_account.name
   container_access_type = "private"
+}
+
+resource "azurerm_storage_container" "catalog_container" {
+  name  = var.catalog_container
+  storage_account_name = azurerm_storage_account.storage_account.name
+  container_access_type = "private"
+}
+
+resource "azurerm_role_assignment" "ext_storage_role" {
+  scope                = azurerm_storage_account.storage_account.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = azurerm_databricks_access_connector.ext_access_connector.identity[0].principal_id
 }
 
 
@@ -124,9 +146,12 @@ resource "azurerm_databricks_workspace" "db_workspace" {
   }
 }
 
-output "databricks_host" {
-  value = "https://${azurerm_databricks_workspace.db_workspace.workspace_url}/"
+resource "azurerm_key_vault_secret" "db_ws_url" {
+  name         = var.db_ws_url
+  value        = "https://${azurerm_databricks_workspace.db_workspace.workspace_url}/"
+  key_vault_id = azurerm_key_vault.key_vault.id
 }
+
 
 # Assign the workspace to the created Metastore
 resource "databricks_metastore_assignment" "db_metastore_assign_workspace" {
@@ -179,4 +204,94 @@ resource "databricks_permission_assignment" "db_ws_admins_assign" {
   principal_id = databricks_group.db_ws_admin_group.id
   permissions  = ["ADMIN"]
   provider     = databricks.workspace
+}
+
+# Grant metastore privilages to metastore admin group
+resource "databricks_grants" "metastore_grants" {
+  provider = databricks.workspace
+  metastore = databricks_metastore.db_metastore.id
+  grant {
+    principal  = databricks_group.db_metastore_admin_group.display_name
+    privileges = ["CREATE_CATALOG", "CREATE_CONNECTION", "CREATE_EXTERNAL_LOCATION"]
+  }
+}
+
+# External storage assignments
+resource "databricks_storage_credential" "ex_storage_cred" {
+  provider = databricks.workspace
+  name = azurerm_databricks_access_connector.ext_access_connector.name
+  azure_managed_identity {
+    access_connector_id = azurerm_databricks_access_connector.ext_access_connector.id
+  }
+  comment = "Datrabricks external storage credentials"
+  depends_on = [
+    databricks_metastore_assignment.db_metastore_assign_workspace
+  ]
+}
+
+resource "databricks_grants" "ex_creds" {
+  provider = databricks.workspace
+  storage_credential = databricks_storage_credential.ex_storage_cred.id
+  grant {
+    principal  = var.db_workspace_admin_group
+    privileges = ["CREATE_EXTERNAL_TABLE"]
+  }
+}
+
+resource "databricks_external_location" "ex_location_containers" {
+  provider = databricks.workspace
+  count = length(var.storage_containers)
+  name = "${var.environment}-${var.storage_containers[count.index]}"
+  url = format("abfss://%s@%s.dfs.core.windows.net",
+    var.storage_containers[count.index],
+  azurerm_storage_account.storage_account.name)
+
+  credential_name = databricks_storage_credential.ex_storage_cred.id
+  comment         = "Databricks external location"
+  depends_on = [
+    databricks_metastore_assignment.db_metastore_assign_workspace
+  ]
+}
+
+resource "databricks_grants" "ex_location_grants" {
+  provider = databricks.workspace
+  count = length(var.storage_containers)
+  external_location = databricks_external_location.ex_location_containers[count.index].id
+  grant {
+    principal  = databricks_group.db_ws_admin_group.display_name
+    privileges = ["CREATE_EXTERNAL_TABLE", "READ_FILES"]
+  }
+}
+
+resource "databricks_external_location" "ex_catalog_container" {
+  provider = databricks.workspace
+  name = "${var.environment}-${var.catalog_container}"
+  url = format("abfss://%s@%s.dfs.core.windows.net",
+    var.catalog_container,
+  azurerm_storage_account.storage_account.name)
+
+  credential_name = databricks_storage_credential.ex_storage_cred.id
+  comment         = "Databricks external location"
+  depends_on = [
+    databricks_metastore_assignment.db_metastore_assign_workspace
+  ]
+}
+
+resource "databricks_grants" "ex_catalog_grants" {
+  provider = databricks.workspace
+  external_location = databricks_external_location.ex_catalog_container.id
+  grant {
+    principal  = databricks_group.db_ws_admin_group.display_name
+    privileges = ["CREATE_EXTERNAL_TABLE", "READ_FILES"]
+  }
+}
+
+# Create and assigne Catalog
+resource "databricks_catalog" "db_catalog" {
+  provider     = databricks.workspace
+  name    = "${var.environment}"
+  comment = "Catalog to encapsulate all schema under this workspace"
+  # owner = databricks_group.db_ws_admin_group.id  we can define this when we moved this to workspace
+  isolation_mode = "ISOLATED"
+  storage_root = databricks_external_location.ex_catalog_container.url
 }
