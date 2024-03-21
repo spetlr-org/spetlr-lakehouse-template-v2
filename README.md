@@ -130,4 +130,4 @@ In the image above, you can see the Databricks workflow page that displays a sin
 
 ![etl_workflow](/img/etl_workflow_nyc_tlc.png)
 
-In the image above, you can see a detailed view of the three job tasks within the workflow. Each task represents a layer in the medallion architecture. The three tasks are configured [here](/src/jobs/tasks/). 
+In the image above, you can see a detailed view of the three job tasks within the workflow. Each task represents a layer in the medallion architecture. 
