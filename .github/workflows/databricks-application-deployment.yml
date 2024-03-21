@@ -1,0 +1,27 @@
+name: Application-Deployment
+
+on:
+  push:
+    branches:
+      - main
+  
+  workflow_dispatch:
+
+jobs:
+  Deploy-DEV-Application:
+    uses: ./.github/workflows/databricks-application-template.yml
+    with:
+      environmentName: dev
+    secrets: inherit
+  # Deploy-TEST-Application:
+  #   needs: Deploy-DEV-Application
+  #   uses: ./.github/workflows/template-deploy-application.yml
+  #   with:
+  #     environmentName: test
+  #   secrets: inherit
+  # Deploy-PROD-Application:
+  #   needs: Deploy-TEST-Application
+  #   uses: ./.github/workflows/template-deploy-application.yml
+  #   with:
+  #     environmentName: prod
+  #   secrets: inherit

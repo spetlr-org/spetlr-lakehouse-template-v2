@@ -82,6 +82,12 @@ resource "azurerm_storage_container" "catalog_container" {
   container_access_type = "private"
 }
 
+resource "azurerm_storage_container" "volume_container" {
+  name  = var.volume_container
+  storage_account_name = azurerm_storage_account.storage_account.name
+  container_access_type = "private"
+}
+
 resource "azurerm_role_assignment" "ext_storage_role" {
   scope                = azurerm_storage_account.storage_account.id
   role_definition_name = "Storage Blob Data Contributor"
@@ -150,14 +156,6 @@ resource "azurerm_key_vault_secret" "db_ws_url" {
   name         = var.db_ws_url
   value        = "https://${azurerm_databricks_workspace.db_workspace.workspace_url}/"
   key_vault_id = azurerm_key_vault.key_vault.id
-}
-
-
-# Assign the workspace to the created Metastore
-resource "databricks_metastore_assignment" "db_metastore_assign_workspace" {
-  provider      = databricks.account
-  metastore_id = databricks_metastore.db_metastore.id
-  workspace_id = azurerm_databricks_workspace.db_workspace.workspace_id
 }
 
 # Provision and assigne workspace admin SPN
@@ -294,4 +292,56 @@ resource "databricks_catalog" "db_catalog" {
   # owner = databricks_group.db_ws_admin_group.id  we can define this when we moved this to workspace
   isolation_mode = "ISOLATED"
   storage_root = databricks_external_location.ex_catalog_container.url
+}
+
+# Assign the workspace to the created Metastore and set default catalog
+resource "databricks_metastore_assignment" "db_metastore_assign_workspace" {
+  provider      = databricks.account
+  metastore_id = databricks_metastore.db_metastore.id
+  workspace_id = azurerm_databricks_workspace.db_workspace.workspace_id
+  default_catalog_name = "${var.environment}"
+}
+
+# Create and manage volume
+resource "databricks_external_location" "ex_volume_container" {
+  provider = databricks.workspace
+  name = "${var.environment}-${var.volume_container}"
+  url = format("abfss://%s@%s.dfs.core.windows.net",
+    var.volume_container,
+  azurerm_storage_account.storage_account.name)
+
+  credential_name = databricks_storage_credential.ex_storage_cred.id
+  comment         = "Databricks external location for volume"
+  depends_on = [
+    databricks_metastore_assignment.db_metastore_assign_workspace
+  ]
+}
+
+resource "databricks_grants" "ex_volume_grants" {
+  provider = databricks.workspace
+  external_location = databricks_external_location.ex_volume_container.id
+  grant {
+    principal  = databricks_group.db_ws_admin_group.display_name
+    privileges = ["CREATE_EXTERNAL_TABLE", "READ_FILES"]
+  }
+}
+
+resource "databricks_schema" "schema_volume" {
+  provider = databricks.workspace
+  catalog_name = "${var.environment}"
+  name         = "${var.volume_container}"
+  comment      = "this schema is for volume"
+  properties = {
+    kind = "various"
+  }
+}
+
+resource "databricks_volume" "ex_volume" {
+  provider = databricks.workspace
+  name             = "${var.volume_container}"
+  catalog_name     = databricks_catalog.db_catalog.name
+  schema_name      = databricks_schema.schema_volume.name
+  volume_type      = "EXTERNAL"
+  storage_location = databricks_external_location.ex_volume_container.url
+  comment          = "External volume for the workspace"
 }
