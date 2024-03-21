@@ -76,7 +76,7 @@ Here, we deploy Azure cloud components that we need:
 * Containers: Utilized within the Storage Account, containers are used to store and organize large volumes of data in the form of blobs - one container for each layer in the medallion architecture. 
 * Databricks Access Connector: The Access connector for Azure Databricks lets you connect managed identities to an Azure Databricks account for the purpose of accessing data registered in Unity Catalog
 
-[az_arch](/img/azure_arhitecture.png)
+![az_arch](/img/azure_arhitecture.png)
 
 ## Deploy Databricks components:
 After we have set up cloud requirements in the previous step, we can deploy Databricks Account and Workspace elements.
