@@ -124,10 +124,10 @@ The silver data is used for presenting a consumption-ready gold table. In this d
 # Databricks Workflow
 This demo project showcases an example of a workflow within the Databricks environment. The project demonstrates the implementation of a three-layer medallion architecture, with each layer being represented by a job task.
 
-![workflow_overview](/img/workflows_overview.png)
+![workflow_overview](/img/workflows_overview_nyc_tlc.png)
 
 In the image above, you can see the Databricks workflow page that displays a single workflow. This workflow represents the entire process of the medallion architecture, from data bronze to gold - find the workflow configuration [here](/src/jobs/workflows.yml).
 
-![example_etl_workflow](/img/example_etl_workflow.png)
+![etl_workflow](/img/etl_workflow_nyc_tlc.png)
 
 In the image above, you can see a detailed view of the three job tasks within the workflow. Each task represents a layer in the medallion architecture. The three tasks are configured [here](/src/jobs/tasks/). 
