@@ -70,6 +70,12 @@ variable "catalog_container" {
   description = "Container to be cretaed in the storage account for unity catalog storage"
 }
 
+variable "volume_container" {
+  type = string
+  default = "volume"
+  description = "Container to be cretaed in the storage account as external volume storage"
+}
+
 variable "vault_sku_name" {
   type        = string
   description = "The SKU of the vault to be created."

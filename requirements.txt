@@ -1,0 +1,11 @@
+setuptools
+pyspark
+packaging
+pytest
+pyclean
+black
+flake8
+spetlr-tools==0.1.65
+wheel
+azureml
+azureml-opendatasets

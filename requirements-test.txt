@@ -1,0 +1,3 @@
+spetlr-tools==0.1.65
+spetlr
+pyspark
