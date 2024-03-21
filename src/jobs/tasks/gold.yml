@@ -1,6 +1,0 @@
-task_key: NycTlcGold
-job_cluster_key: SmallCluster1
-<<: *common_task_setting
-python_wheel_task:
-  entry_point: nyc_tlc_gold
-  package_name: dataplatform
