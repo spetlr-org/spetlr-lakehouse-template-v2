@@ -24,4 +24,4 @@ $env_config = [ordered]@{
 
 Set-Content $repoRoot/src/dataplatform/environment/config/environment.json $env_config
 
-&"$repoRoot/tools/build_spark_conf.ps1" $environmentName
+# &"$repoRoot/tools/build_spark_conf.ps1" $environmentName
