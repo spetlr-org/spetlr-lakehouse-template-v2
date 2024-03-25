@@ -7,12 +7,7 @@ param (
   [Parameter(Mandatory = $false)]
   [ValidateNotNullOrEmpty()]
   [string]
-  $buildId = "0",
-
-
-  [Parameter(Mandatory = $false)]
-  [string]
-  $environmentType = "NonLocal"
+  $buildId
 )
 
 $repoRoot = (git rev-parse --show-toplevel)

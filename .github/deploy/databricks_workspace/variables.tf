@@ -50,3 +50,15 @@ variable "azure_tenant_id" {
   default = "Azure--Tenant--ID"
   description = "The tenant id of the Azure subscription "
 }
+
+variable "infrastructure_volume_container" {
+  type = string
+  default = "infrastructure"
+  description = "The name of volume to store files for infrastructure purposes"
+}
+
+variable "spetlr_version" {
+  default = "0"
+  type = string
+  description = "This variable is for tracking the build version of spetlr library"
+}

@@ -58,23 +58,29 @@ variable "creator_tag" {
   description = "Use for tagging"
 }
 
-variable "storage_containers" {
-  type = list
-  default = ["landing", "bronze", "silver", "gold"]
-  description = "Containers to be cretaed in the storage account"
+variable "data_catalog_container" {
+  type = string
+  default = "data-catalog"
+  description = "Container in the storage account for databricks data catalog external location"
 }
 
-variable "catalog_container" {
+# variable "data_storage_containers" {
+#   type = list
+#   default = ["landing", "bronze", "silver", "gold"]
+#   description = "Containers in the storage account as the external location for corresponding data layers"
+# }
+
+variable "infrastructure_catalog_container" {
   type = string
-  default = "catalog"
-  description = "Container to be cretaed in the storage account for unity catalog storage"
+  default = "infrastructure-catalog"
+  description = "Container in the storage account for databricks infrastructure catalog external location"
 }
 
-variable "volume_container" {
-  type = string
-  default = "volume"
-  description = "Container to be cretaed in the storage account as external volume storage"
-}
+# variable "infrastructure_container" {
+#   type = string
+#   default = "infrastructure-data"
+#   description = "Container in the storage account as infrastructure data external location"
+# }
 
 variable "vault_sku_name" {
   type        = string
@@ -168,6 +174,12 @@ variable "azure_tenant_id" {
   type = string
   default = "Azure--Tenant--ID"
   description = "The tenant id of the Azure subscription "
+}
+
+variable "infrastructure_volume_container" {
+  type = string
+  default = "infrastructure"
+  description = "The name of volume to store files for infrastructure purposes"
 }
 
 locals {
