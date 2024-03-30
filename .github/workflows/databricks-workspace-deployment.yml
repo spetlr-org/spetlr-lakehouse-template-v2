@@ -1,4 +1,4 @@
-name: Application-Deployment
+name: Databricks Workspace Deployment
 
 on:
   push:
