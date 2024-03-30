@@ -8,12 +8,12 @@ terraform {
       source = "databricks/databricks"
     }
   }
-  # backend "azurerm" {
-  #     resource_group_name  = "Terraform-State-Stoarge"
-  #     storage_account_name = "spetlrlhv2tfstate"
-  #     container_name       = "tfstate"
-  #     key                  = "terraform_databricks_workspace.tfstate"
-  # }
+  backend "azurerm" {
+      resource_group_name  = "Terraform-State-Stoarge"
+      storage_account_name = "spetlrlhv2tfstate"
+      container_name       = "tfstate"
+      key                  = "terraform_databricks_workspace.tfstate"
+  }
 }
 
 provider "azurerm" {
