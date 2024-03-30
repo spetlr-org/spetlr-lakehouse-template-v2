@@ -62,3 +62,7 @@ variable "db_ws_url" {
   default = "Databricks--Workspace-URL"
   description = "The URL of the created Databricks workspace "
 }
+
+locals {
+  default_catalog = "data_${var.environment}"
+}

@@ -4,7 +4,7 @@
 # Create catalog for data. We suffix this catalog with environment name
 resource "databricks_catalog" "db_data_catalog" {
   provider     = databricks.workspace
-  name    = "data_${var.environment}"
+  name    = local.default_catalog
   comment = "Catalog to encapsulate all data schema under this workspace"
   isolation_mode = "ISOLATED"
   storage_root = databricks_external_location.ex_data_catalog_location.url

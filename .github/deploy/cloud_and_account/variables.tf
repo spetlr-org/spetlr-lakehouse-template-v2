@@ -185,4 +185,5 @@ variable "infrastructure_volume_container" {
 locals {
   resource_group_name = "${var.system_name}-${upper(var.environment)}-${var.service_name}"
   resource_name = "${var.company_abbreviation}${var.system_abbreviation}${var.environment}"
+  default_catalog = "data_${var.environment}"
 }
