@@ -11,6 +11,7 @@ resource "azurerm_key_vault_access_policy" "spn_access" {
     "Set",
     "List",
     "Delete",
+    "Purge",
   ]
 }
 
