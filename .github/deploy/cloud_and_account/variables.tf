@@ -100,13 +100,13 @@ variable "db_metastore_spn_name" {
 
 variable "db_metastore_spn_app_id" {
   type = string
-  default = "Databricks--Metastore--SPN--ID"
+  default = "Databricks--Metastore--SPN-ID"
   description = "Application ID of the metastore admin SPN"
 }
 
 variable "db_metastore_spn_app_password" {
   type = string
-  default = "Databricks--Metastore--SPN--Password"
+  default = "Databricks--Metastore--SPN-Password"
   description = "Application password of the metastore admin SPN"
 }
 
@@ -142,13 +142,13 @@ variable "db_workspace_spn_name" {
 
 variable "db_workspace_spn_app_id" {
   type = string
-  default = "Databricks--Workspace--SPN--ID"
+  default = "Databricks--Workspace--SPN-ID"
   description = "Application ID of the workspace admin SPN"
 }
 
 variable "db_workspace_spn_app_password" {
   type = string
-  default = "Databricks--Workspace--SPN--Password"
+  default = "Databricks--Workspace--SPN-Password"
   description = "Application password of the workspace admin SPN"
 }
 
@@ -160,19 +160,19 @@ variable "db_workspace_admin_group" {
 
 variable "db_ws_url" {
   type = string
-  default = "Databricks--Workspace--URL"
+  default = "Databricks--Workspace-URL"
   description = "The URL of the created Databricks workspace "
 }
 
 variable "db_ws_id" {
   type = string
-  default = "Databricks--Workspace--ID"
+  default = "Databricks--Workspace-ID"
   description = "The Id of the created Databricks workspace "
 }
 
 variable "azure_tenant_id" {
   type = string
-  default = "Azure--Tenant--ID"
+  default = "Azure--Tenant-ID"
   description = "The tenant id of the Azure subscription "
 }
 
