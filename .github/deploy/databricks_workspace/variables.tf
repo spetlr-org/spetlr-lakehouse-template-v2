@@ -35,19 +35,19 @@ locals {
 
 variable "db_workspace_spn_app_id" {
   type = string
-  default = "Databricks--Workspace--SPN--ID"
+  default = "Databricks--Workspace--SPN-ID"
   description = "Application ID of the workspace admin SPN"
 }
 
 variable "db_workspace_spn_app_password" {
   type = string
-  default = "Databricks--Workspace--SPN--Password"
+  default = "Databricks--Workspace--SPN-Password"
   description = "Application password of the workspace admin SPN"
 }
 
 variable "azure_tenant_id" {
   type = string
-  default = "Azure--Tenant--ID"
+  default = "Azure--Tenant-ID"
   description = "The tenant id of the Azure subscription "
 }
 
