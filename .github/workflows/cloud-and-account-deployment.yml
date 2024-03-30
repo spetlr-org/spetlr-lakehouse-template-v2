@@ -1,4 +1,4 @@
-name: Resource-Deployment
+name: 'Cloud and Account Deployment'
 
 on:
   workflow_dispatch:

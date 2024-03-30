@@ -1,4 +1,4 @@
-name: 'Resources-Deployment Template'
+name: 'Cloud and Account - Template'
 
 on:
   workflow_call:
@@ -10,7 +10,7 @@ on:
 jobs:
   terraform-deployment:
     environment: ${{inputs.environmentName}}
-    name: 'Resource deployment'
+    name: 'Cloud and Account Deployment'
     runs-on: ubuntu-latest 
 
     steps:
@@ -24,12 +24,12 @@ jobs:
           -p ${{ secrets.SPN_CLIENT_SECRET }} `
           --tenant ${{ secrets.SPN_TENANT_ID }}
 
-    - name: Setup Terraform
+    - name: Setup Cloud and Account Terraform
       uses: hashicorp/setup-terraform@v3
       with:
         terraform_wrapper: false
 
-    - name: Terraform Init
+    - name: Cloud and Account Terraform Init
       run: terraform -chdir="./.github/deploy/cloud_and_account" init
       env:
         ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
@@ -38,7 +38,7 @@ jobs:
         ARM_TENANT_ID: ${{ secrets.SPN_TENANT_ID }}
         ARM_SUBSCRIPTION_ID: ${{ secrets.SPN_SUBSCRIPTION_ID }}
 
-    - name: Terraform Format
+    - name: Cloud and Account Terraform Format
       run: terraform fmt -check
 
     - name: Terraform Plan
@@ -50,7 +50,7 @@ jobs:
         ARM_TENANT_ID: ${{ secrets.SPN_TENANT_ID }}
         ARM_SUBSCRIPTION_ID: ${{ secrets.SPN_SUBSCRIPTION_ID }}
     
-    - name: Terraform Apply
+    - name: Cloud and Account Terraform Apply
       run: terraform -chdir="./.github/deploy/cloud_and_account" apply -auto-approve -var "environment=${{ inputs.environmentName }}"
       env:
         ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}

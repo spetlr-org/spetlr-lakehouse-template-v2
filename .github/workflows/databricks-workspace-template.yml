@@ -1,5 +1,5 @@
 
-name: Deployment-Application - Template
+name: Databricks Workspace - Template
 
 on:
   workflow_call:
@@ -28,7 +28,7 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Deploy Application
+      - name: Build Spetlr Wheel
         shell: pwsh
         run: .github/deploy/application/build.ps1 `
             -environmentName "${{ inputs.environmentName }}"
@@ -39,7 +39,7 @@ jobs:
         with:
           terraform_wrapper: false
   
-      - name: Terraform Init
+      - name: Workspace Terraform Init
         run: terraform -chdir="./.github/deploy/databricks_workspace" init
         env:
           ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
@@ -48,7 +48,7 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.SPN_TENANT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.SPN_SUBSCRIPTION_ID }}
   
-      - name: Terraform Format
+      - name: Workspace Terraform Format
         run: terraform fmt -check
   
       - name: Terraform Plan
@@ -60,7 +60,7 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.SPN_TENANT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.SPN_SUBSCRIPTION_ID }}
       
-      - name: Terraform Apply
+      - name: Workspace Terraform Apply
         run: terraform -chdir="./.github/deploy/databricks_workspace" apply -auto-approve -var "environment=${{ inputs.environmentName }}"
         env:
           ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
