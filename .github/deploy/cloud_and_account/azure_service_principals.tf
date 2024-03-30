@@ -40,13 +40,13 @@ resource "azurerm_role_assignment" "db_meta_spn_role" {
 # Provision Azure SPN for Databricks workspace admin, and setting its role
 resource "azuread_application" "db_ws_application" {
   display_name = var.db_workspace_spn_name
-  owners       = [azuread_service_principal.db_meta_spn.object_id]
+  owners       = [data.azuread_service_principal.cicd_spn.object_id]
 }
 
 resource "azuread_service_principal" "db_ws_spn" {
   client_id                    = azuread_application.db_ws_application.client_id
   app_role_assignment_required = false
-  owners                       = [azuread_service_principal.db_meta_spn.object_id]
+  owners                       = [data.azuread_service_principal.cicd_spn.object_id]
 }
 
 resource "azuread_service_principal_password" "db_ws_spn_password" {
