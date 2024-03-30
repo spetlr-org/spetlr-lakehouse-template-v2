@@ -57,8 +57,8 @@ variable "infrastructure_volume_container" {
   description = "The name of volume to store files for infrastructure purposes"
 }
 
-variable "spetlr_version" {
-  default = "0"
+variable "db_ws_url" {
   type = string
-  description = "This variable is for tracking the build version of spetlr library"
+  default = "Databricks--Workspace-URL"
+  description = "The URL of the created Databricks workspace "
 }
