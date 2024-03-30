@@ -64,23 +64,17 @@ variable "data_catalog_container" {
   description = "Container in the storage account for databricks data catalog external location"
 }
 
-# variable "data_storage_containers" {
-#   type = list
-#   default = ["landing", "bronze", "silver", "gold"]
-#   description = "Containers in the storage account as the external location for corresponding data layers"
-# }
+variable "landing_storage_container" {
+  type = string
+  default = "landing"
+  description = "Containers in the storage account as the external location for corresponding data layers"
+}
 
 variable "infrastructure_catalog_container" {
   type = string
   default = "infrastructure-catalog"
   description = "Container in the storage account for databricks infrastructure catalog external location"
 }
-
-# variable "infrastructure_container" {
-#   type = string
-#   default = "infrastructure-data"
-#   description = "Container in the storage account as infrastructure data external location"
-# }
 
 variable "vault_sku_name" {
   type        = string
@@ -119,7 +113,13 @@ variable "db_metastore_spn_app_password" {
 variable "db_metastore_admin_group" {
   type = string
   default = "SpetlrLhV2-metastore-admins"
-  description = "An Azure Databricks group with Databricks Metastore Admin privilages"
+  description = "Databricks group with Databricks Metastore Admin privilages"
+}
+
+variable "db_metastore_user_group" {
+  type = string
+  default = "SpetlrLhV2-metastore-users"
+  description = "Databricks group with Databricks Metastore use privilages"
 }
 
 variable "databricks_account_id" {

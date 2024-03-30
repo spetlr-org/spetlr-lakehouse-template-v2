@@ -19,6 +19,7 @@ resource "azurerm_key_vault" "key_vault" {
   tenant_id                  = data.azurerm_client_config.current.tenant_id
   sku_name                   = var.vault_sku_name
   soft_delete_retention_days = 7
+  depends_on = [azurerm_resource_group.rg]
 }
 
 # Provision access connector and setting its role
@@ -29,12 +30,14 @@ resource "azurerm_databricks_access_connector" "ext_access_connector" {
   identity {
     type = "SystemAssigned"
   }
+  depends_on = [azurerm_resource_group.rg]
 }
 
 resource "azurerm_role_assignment" "ext_storage_role" {
   scope                = azurerm_storage_account.storage_account.id
   role_definition_name = "Storage Blob Data Contributor"
   principal_id         = azurerm_databricks_access_connector.ext_access_connector.identity[0].principal_id
+  depends_on = [azurerm_databricks_access_connector.ext_access_connector]
 }
 
 # Provision storage account 
@@ -51,22 +54,25 @@ resource "azurerm_storage_account" "storage_account" {
     system = var.system_tag
     service = var.service_tag
   }
+  depends_on = [azurerm_resource_group.rg]
 }
 
 # Provision containers
 
-## Data catalog container
-# resource "azurerm_storage_container" "data_storage_containers" {
-#   count = length(var.data_storage_containers)
-#   name  = var.storage_containers[count.index]
-#   storage_account_name = azurerm_storage_account.storage_account.name
-#   container_access_type = "private"
-# }
+## Landing container
+resource "azurerm_storage_container" "landing_storage_containers" {
+  name  = var.landing_storage_container
+  storage_account_name = azurerm_storage_account.storage_account.name
+  container_access_type = "private"
+  depends_on = [azurerm_storage_account.storage_account]
+}
 
+## Data catalog container
 resource "azurerm_storage_container" "data_catalog_container" {
   name  = var.data_catalog_container
   storage_account_name = azurerm_storage_account.storage_account.name
   container_access_type = "private"
+  depends_on = [azurerm_storage_account.storage_account]
 }
 
 ## Infrastructure catalog container
@@ -74,13 +80,8 @@ resource "azurerm_storage_container" "infrastructure_volume_container" {
   name  = var.infrastructure_volume_container
   storage_account_name = azurerm_storage_account.storage_account.name
   container_access_type = "private"
+  depends_on = [azurerm_storage_account.storage_account]
 }
-
-# resource "azurerm_storage_container" "volume_container" {
-#   name  = var.volume_container
-#   storage_account_name = azurerm_storage_account.storage_account.name
-#   container_access_type = "private"
-# }
 
 # Provision databricks service
 resource "azurerm_databricks_workspace" "db_workspace" {
@@ -93,4 +94,5 @@ resource "azurerm_databricks_workspace" "db_workspace" {
     system = var.system_tag
     service = var.service_tag
   }
+  depends_on = [azurerm_resource_group.rg]
 }
