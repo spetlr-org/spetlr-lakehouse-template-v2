@@ -26,7 +26,7 @@ data "azurerm_key_vault" "key_vault" {
 }
 
 data "azurerm_key_vault_secret" "workspace_url" {
-  name                = "Databricks--Workspace--URL"
+  name                = var.db_ws_url
   key_vault_id = data.azurerm_key_vault.key_vault.id
 }
 
