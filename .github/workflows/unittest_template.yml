@@ -22,6 +22,6 @@ jobs:
       - name:  Local Test job (Unit testing)
         shell: pwsh
         run: |
-          .github/application/unittest.ps1 `
+          .github/deploy/application/unittest.ps1 `
             -environmentName "${{ inputs.environmentName }}"
 
