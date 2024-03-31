@@ -1,4 +1,4 @@
-USE CATALOG data_ENV};
+USE CATALOG data_{ENV};
 
 CREATE DATABASE IF NOT EXISTS {NycTlcGoldDb}
 COMMENT "Gold Database for NYC TLC"
