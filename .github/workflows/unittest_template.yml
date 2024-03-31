@@ -1,0 +1,27 @@
+
+name: Local Test (Unittest) - Template
+
+on:
+  workflow_call:
+    inputs:
+      environmentName:
+        required: true
+        type: string
+jobs:
+  test_local:
+    #environment: azure-${{ inputs.environmentName }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+            
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+     
+      - name:  Local Test job (Unit testing)
+        shell: pwsh
+        run: |
+          .github/deploy/application/unittest.ps1 `
+            -environmentName "${{ inputs.environmentName }}"
+
