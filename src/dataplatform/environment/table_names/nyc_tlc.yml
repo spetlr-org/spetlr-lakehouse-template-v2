@@ -3,7 +3,7 @@ NycTlcSource:
 
 NycTlcBronzeDb:
   name: nyc_tlc_bronze{ID}
-  path: abfss://bronze@spetlrlhv2{ENV}.dfs.core.windows.net/nyc_tlc_bronze{ID}
+  path: abfss://data-catalog@spetlrlhv2{ENV}.dfs.core.windows.net/bronze/nyc_tlc_bronze{ID}
 
 NycTlcBronzeTable:
   name: "{NycTlcBronzeDb}.nyc_tlc"
@@ -11,7 +11,7 @@ NycTlcBronzeTable:
 
 NycTlcSilverDb:
   name: nyc_tlc_silver{ID}
-  path: abfss://silver@spetlrlhv2{ENV}.dfs.core.windows.net/nyc_tlc_bronze{ID}
+  path: abfss://data-catalog@spetlrlhv2{ENV}.dfs.core.windows.net/silver/nyc_tlc_bronze{ID}
 
 NycTlcSilverTable:
   name: "{NycTlcSilverDb}.nyc_tlc"
@@ -19,7 +19,7 @@ NycTlcSilverTable:
 
 NycTlcGoldDb:
   name: nyc_tlc_gold{ID}
-  path: abfss://gold@spetlrlhv2{ENV}.dfs.core.windows.net/nyc_tlc_bronze{ID}
+  path: abfss://data-catalog@spetlrlhv2{ENV}.dfs.core.windows.net/gold/nyc_tlc_bronze{ID}
 
 NycTlcGoldTable:
   name: "{NycTlcGoldDb}.nyc_tlc"
