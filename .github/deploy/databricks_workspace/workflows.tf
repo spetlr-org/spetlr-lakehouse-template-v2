@@ -31,7 +31,7 @@ resource "databricks_job" "nyc_tlc_etl" {
     }
 
     library {
-        whl = "/Volumes/${local.default_catalog}/${var.company_abbreviation}${var.system_abbreviation}_${var.infrastructure_volume_container}/${var.infrastructure_volume_container}/dataplatform-latest-py3-none-any.whl"
+        whl = "/Volumes/${local.default_catalog}/${var.company_abbreviation}${var.system_abbreviation}_${var.infrastructure_volume_container}/${var.infrastructure_libraries_folder}/dataplatform-latest-py3-none-any.whl"
     }
   }
 
@@ -50,7 +50,7 @@ resource "databricks_job" "nyc_tlc_etl" {
     }
 
     library {
-        whl = "/Volumes/${local.default_catalog}/${var.company_abbreviation}${var.system_abbreviation}_${var.infrastructure_volume_container}/${var.infrastructure_volume_container}/dataplatform-latest-py3-none-any.whl"
+        whl = "/Volumes/${local.default_catalog}/${var.company_abbreviation}${var.system_abbreviation}_${var.infrastructure_volume_container}/${var.infrastructure_libraries_folder}/dataplatform-latest-py3-none-any.whl"
     }
   }
 
@@ -69,7 +69,7 @@ resource "databricks_job" "nyc_tlc_etl" {
     }
 
     library {
-        whl = "/Volumes/${local.default_catalog}/${var.company_abbreviation}${var.system_abbreviation}_${var.infrastructure_volume_container}/${var.infrastructure_volume_container}/dataplatform-latest-py3-none-any.whl"
+        whl = "/Volumes/${local.default_catalog}/${var.company_abbreviation}${var.system_abbreviation}_${var.infrastructure_volume_container}/${var.infrastructure_libraries_folder}/dataplatform-latest-py3-none-any.whl"
     }
   }
 }

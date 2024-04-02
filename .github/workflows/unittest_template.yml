@@ -9,7 +9,7 @@ on:
         type: string
 jobs:
   test_local:
-    #environment: azure-${{ inputs.environmentName }}
+    environment: ${{ inputs.environmentName }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
