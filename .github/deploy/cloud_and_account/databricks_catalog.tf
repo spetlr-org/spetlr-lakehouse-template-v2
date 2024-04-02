@@ -33,11 +33,26 @@ resource "databricks_schema" "db_infrastructure_schema" {
 
 resource "databricks_volume" "db_infrastructure_volume" {
   provider = databricks.workspace
-  name             = var.infrastructure_volume_container
+  name             = var.infrastructure_libraries_folder
   catalog_name     = databricks_catalog.db_data_catalog.name
   schema_name      = databricks_schema.db_infrastructure_schema.name
   volume_type      = "EXTERNAL"
-  storage_location = databricks_external_location.ex_infrastructure_volume_location.url
+  storage_location = databricks_external_location.ex_infrastructure_libraries_volume_location.url
+  comment          = "External volume to store infrastructure files"
+  owner = databricks_group.db_metastore_admin_group.display_name
+  depends_on = [
+    databricks_schema.db_infrastructure_schema,
+    databricks_grants.ex_infrastructure_volume_grants
+  ]
+}
+
+resource "databricks_volume" "db_infrastructure_volume" {
+  provider = databricks.workspace
+  name             = var.infrastructure_tests_folder
+  catalog_name     = databricks_catalog.db_data_catalog.name
+  schema_name      = databricks_schema.db_infrastructure_schema.name
+  volume_type      = "EXTERNAL"
+  storage_location = databricks_external_location.ex_infrastructure_tests_volume_location.url
   comment          = "External volume to store infrastructure files"
   owner = databricks_group.db_metastore_admin_group.display_name
   depends_on = [
