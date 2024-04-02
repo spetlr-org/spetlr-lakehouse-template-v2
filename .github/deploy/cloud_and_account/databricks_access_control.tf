@@ -77,11 +77,11 @@ resource "databricks_grants" "ex_creds" {
 
 # Extrenal location for infrastructure components
 
-## External location for infrastructure volume
-resource "databricks_external_location" "ex_infrastructure_volume_location" {
+## External location for infrastructure volume / libraries
+resource "databricks_external_location" "ex_infrastructure_libraries_volume_location" {
   provider = databricks.workspace
-  name = "${var.environment}-${var.infrastructure_volume_container}"
-  url = "abfss://${var.infrastructure_volume_container}@${azurerm_storage_account.storage_account.name}.dfs.core.windows.net/${var.infrastructure_volume_container}"
+  name = "${var.environment}-${var.infrastructure_libraries_folder}"
+  url = "abfss://${var.infrastructure_volume_container}@${azurerm_storage_account.storage_account.name}.dfs.core.windows.net/${var.infrastructure_libraries_folder}"
 
   credential_name = databricks_storage_credential.ex_storage_cred.id
   comment         = "Databricks external location for infrastructure catalog"
@@ -90,16 +90,38 @@ resource "databricks_external_location" "ex_infrastructure_volume_location" {
   ]
 }
 
-resource "databricks_grants" "ex_infrastructure_volume_grants" {
+resource "databricks_grants" "ex_infrastructure_libraries_volume_grants" {
   provider = databricks.workspace
-  external_location = databricks_external_location.ex_infrastructure_volume_location.id
+  external_location = databricks_external_location.ex_infrastructure_libraries_volume_location.id
   grant {
     principal  = databricks_group.db_ws_admin_group.display_name
     privileges = ["ALL_PRIVILEGES"]
   }
-  depends_on = [databricks_external_location.ex_infrastructure_volume_location]
+  depends_on = [databricks_external_location.ex_infrastructure_libraries_volume_location]
 }
 
+## External location for infrastructure volume / tests
+resource "databricks_external_location" "ex_infrastructure_tests_volume_location" {
+  provider = databricks.workspace
+  name = "${var.environment}-${var.infrastructure_tests_folder}"
+  url = "abfss://${var.infrastructure_volume_container}@${azurerm_storage_account.storage_account.name}.dfs.core.windows.net/${var.infrastructure_tests_folder}"
+
+  credential_name = databricks_storage_credential.ex_storage_cred.id
+  comment         = "Databricks external location for infrastructure catalog"
+  depends_on = [
+    databricks_grants.ex_creds
+  ]
+}
+
+resource "databricks_grants" "ex_infrastructure_tests_volume_grants" {
+  provider = databricks.workspace
+  external_location = databricks_external_location.ex_infrastructure_tests_volume_location.id
+  grant {
+    principal  = databricks_group.db_ws_admin_group.display_name
+    privileges = ["ALL_PRIVILEGES"]
+  }
+  depends_on = [databricks_external_location.ex_infrastructure_tests_volume_location]
+}
 
 ## Extrenal location for medallion data components 
 resource "databricks_external_location" "ex_data_catalog_location" {

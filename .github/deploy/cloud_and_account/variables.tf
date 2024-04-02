@@ -182,6 +182,18 @@ variable "infrastructure_volume_container" {
   description = "The name of volume to store files for infrastructure purposes"
 }
 
+variable "infrastructure_tests_folder" {
+  type = string
+  default = "tests"
+  description = "The name of a folder inside infrastructure container to tests files (like cluster tests)"
+}
+
+variable "infrastructure_libraries_folder" {
+  type = string
+  default = "libraries"
+  description = "The name of a folder inside infrastructure container to store library files (like python wheels)"
+}
+
 locals {
   resource_group_name = "${var.system_name}-${upper(var.environment)}-${var.service_name}"
   resource_name = "${var.company_abbreviation}${var.system_abbreviation}${var.environment}"
