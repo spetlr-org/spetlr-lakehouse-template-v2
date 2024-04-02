@@ -57,6 +57,12 @@ variable "infrastructure_volume_container" {
   description = "The name of volume to store files for infrastructure purposes"
 }
 
+variable "infrastructure_libraries_folder" {
+  type = string
+  default = "libraries"
+  description = "The name of a folder inside infrastructure container to store library files (like python wheels)"
+}
+
 variable "db_ws_url" {
   type = string
   default = "Databricks--Workspace-URL"

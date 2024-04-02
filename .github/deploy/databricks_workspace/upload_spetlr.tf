@@ -5,7 +5,7 @@ locals {
 }
 
 resource "azurerm_storage_blob" "upload_spetlr" {
-  name                   = "${var.infrastructure_volume_container}/dataplatform-latest-py3-none-any.whl"
+  name                   = "${var.infrastructure_libraries_folder}/dataplatform-latest-py3-none-any.whl"
   storage_account_name   = local.resource_name
   storage_container_name = var.infrastructure_volume_container
   type                   = "Block"
