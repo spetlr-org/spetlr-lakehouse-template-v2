@@ -8,7 +8,7 @@ on:
         required: true
         type: string
 jobs:
-  test_local:
+  Run-Local-Test:
     environment: ${{ inputs.environmentName }}
     runs-on: ubuntu-latest
     steps:
@@ -24,4 +24,5 @@ jobs:
         run: |
           .github/deploy/application/unittest.ps1 `
             -environmentName "${{ inputs.environmentName }}"
+            -buildId "${{ github.run_id }}"
 

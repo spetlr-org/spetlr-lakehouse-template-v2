@@ -65,6 +65,17 @@ jobs:
             -u ${{ secrets.SPN_CLIENT_ID }} `
             -p ${{ secrets.SPN_CLIENT_SECRET }} `
             --tenant ${{ secrets.SPN_TENANT_ID }}
+      
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+
+      - name: Build Spetlr Wheel
+        shell: pwsh
+        run: .github/deploy/application/build.ps1 `
+            -environmentName "${{ inputs.environmentName }}"
+            -buildId "${{ github.run_id }}"
 
       - name: Setup Cloud and Account Terraform
         uses: hashicorp/setup-terraform@v3
