@@ -1,4 +1,4 @@
-name: Test-Pipeline
+name: Databricks-Workspace-PR-Pipeline
 
 on:
   workflow_call:
@@ -19,7 +19,7 @@ on:
       - "./README.md"
 
 jobs:
-  Linting:
+  Workspace-Linting:
     runs-on: ubuntu-latest
 
     steps:
@@ -42,14 +42,15 @@ jobs:
         shell: pwsh
         run: flake8 .
 
-  LocalTest-DEV-Environment:
-    needs: Linting
+  Workspace-LocalTest-DEV-Environment:
+    needs: Workspace-Linting
     uses: ./.github/workflows/unit-test-template.yml
     with:
       environmentName: dev
     secrets: inherit
 
   Workspace-DEV-Terraform-Plan:
+    needs: Workspace-LocalTest-DEV-Environment
     environment: ${{inputs.environmentName}}
     name: 'Workspace-DEV-Terraform-Plan'
     runs-on: ubuntu-latest 
