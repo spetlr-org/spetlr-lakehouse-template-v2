@@ -49,7 +49,7 @@ jobs:
       environmentName: dev
     secrets: inherit
 
-  Workspace-DEV-Terraform-Plan:
+  Workspace-DEV-Terraform-Test:
     needs: Workspace-LocalTest-DEV-Environment
     environment: ${{inputs.environmentName}}
     name: 'Workspace-DEV-Terraform-Plan'
@@ -57,14 +57,14 @@ jobs:
 
     steps:
       # Checkout the repository to the GitHub Actions runner
-      - uses: actions/checkout@v4
-      - name: Log in to azure
-        shell: pwsh
-        run: |
-          az login --service-principal `
-            -u ${{ secrets.SPN_CLIENT_ID }} `
-            -p ${{ secrets.SPN_CLIENT_SECRET }} `
-            --tenant ${{ secrets.SPN_TENANT_ID }}
+      # - uses: actions/checkout@v4
+      # - name: Log in to azure
+      #   shell: pwsh
+      #   run: |
+      #     az login --service-principal `
+      #       -u ${{ secrets.SPN_CLIENT_ID }} `
+      #       -p ${{ secrets.SPN_CLIENT_SECRET }} `
+      #       --tenant ${{ secrets.SPN_TENANT_ID }}
 
       - name: Workspace Terraform Init
         run: terraform -chdir="./.github/deploy/databricks_workspace" init
