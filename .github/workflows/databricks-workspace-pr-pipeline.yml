@@ -51,20 +51,20 @@ jobs:
 
   Workspace-DEV-Terraform-Test:
     needs: Workspace-LocalTest-DEV-Environment
-    environment: ${{inputs.environmentName}}
-    name: 'Workspace-DEV-Terraform-Plan'
+    environment: dev
+    name: 'Workspace-DEV-Terraform-Test'
     runs-on: ubuntu-latest 
 
     steps:
       # Checkout the repository to the GitHub Actions runner
       - uses: actions/checkout@v4
-      # - name: Log in to azure
-      #   shell: pwsh
-      #   run: |
-      #     az login --service-principal `
-      #       -u ${{ secrets.SPN_CLIENT_ID }} `
-      #       -p ${{ secrets.SPN_CLIENT_SECRET }} `
-      #       --tenant ${{ secrets.SPN_TENANT_ID }}
+      - name: Log in to azure
+        shell: pwsh
+        run: |
+          az login --service-principal `
+            -u ${{ secrets.SPN_CLIENT_ID }} `
+            -p ${{ secrets.SPN_CLIENT_SECRET }} `
+            --tenant ${{ secrets.SPN_TENANT_ID }}
 
       - name: Setup Cloud and Account Terraform
         uses: hashicorp/setup-terraform@v3
