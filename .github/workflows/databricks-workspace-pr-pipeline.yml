@@ -66,6 +66,11 @@ jobs:
       #       -p ${{ secrets.SPN_CLIENT_SECRET }} `
       #       --tenant ${{ secrets.SPN_TENANT_ID }}
 
+      - name: Setup Cloud and Account Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+
       - name: Workspace Terraform Init
         run: terraform -chdir="./.github/deploy/databricks_workspace" init
         env:
