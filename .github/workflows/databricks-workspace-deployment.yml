@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - ".github/deploy/databricks_workspace/**"
   
   workflow_dispatch:
 
