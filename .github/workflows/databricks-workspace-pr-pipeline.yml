@@ -14,7 +14,7 @@ on:
       - "./README.md"
 
 jobs:
-  Workspace-Linting:
+  Workspace-Linting-DEV:
     runs-on: ubuntu-latest
 
     steps:
@@ -37,18 +37,17 @@ jobs:
         shell: pwsh
         run: flake8 .
 
-  Workspace-LocalTest-DEV-Environment:
-    needs: Workspace-Linting
+  Workspace-LocalTest-DEV:
+    needs: Workspace-Linting-DEV
     uses: ./.github/workflows/unit-test-template.yml
     with:
       environmentName: "dev"
       buildId: "${{github.run_id}}"
     secrets: inherit
 
-  Workspace-DEV-Terraform-Test:
-    needs: Workspace-LocalTest-DEV-Environment
+  Workspace-Terraform-Plan-DEV:
+    needs: Workspace-LocalTest-DEV
     environment: dev
-    name: 'Workspace-DEV-Terraform-Test'
     runs-on: ubuntu-latest 
 
     steps:
