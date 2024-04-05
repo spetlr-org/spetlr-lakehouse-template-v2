@@ -1,7 +1,11 @@
 name: Cloud-and-Account-PR-Pipeline
 
 on:
-  push:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
     paths:
       - ".github/deploy/cloud_and_account/**"
       - ".github/workflows/cloud-and-account-template.yml"
