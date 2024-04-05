@@ -1,13 +1,13 @@
 param (
-  [Parameter(Mandatory=$true)]
+  [Parameter(Mandatory = $true)]
   [ValidateNotNullOrEmpty()]
   [string]
   $environmentName,
 
-  [Parameter(Mandatory=$false)]
+  [Parameter(Mandatory = $true)]
   [ValidateNotNullOrEmpty()]
   [string]
-  $buildId="0"
+  $buildId
 )
 
 $repoRoot = (git rev-parse --show-toplevel)
@@ -22,8 +22,8 @@ pip install -r requirements-deploy.txt
 pip install -r requirements-test.txt
 
 . "$repoRoot/tools/set_lib_env.ps1" `
-    -buildId "0" `
-    -environmentName $environmentName
+  -buildId $buildId `
+  -environmentName $environmentName
 
 # Step 0 Build Dependencies
 Write-Host "Now Running Local Unit Test"
