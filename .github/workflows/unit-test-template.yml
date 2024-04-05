@@ -7,6 +7,9 @@ on:
       environmentName:
         required: true
         type: string
+      buildId:
+        required: true
+        type: string
 jobs:
   Run-Local-Test:
     environment: ${{ inputs.environmentName }}
@@ -24,5 +27,5 @@ jobs:
         run: |
           .github/deploy/application/unittest.ps1 `
             -environmentName "${{ inputs.environmentName }}"
-            -buildId "${{ github.run_id }}"
+            -buildId "${{ inputs.buildId }}"
 
