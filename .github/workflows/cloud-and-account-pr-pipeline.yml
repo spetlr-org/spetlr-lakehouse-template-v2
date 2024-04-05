@@ -1,12 +1,16 @@
 name: Cloud-and-Account-PR-Pipeline
 
 on:
-  push:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
     paths:
-      - "./.github/deploy/cloud_and_account/**"
-      - "./.github/workflows/cloud-and-account-template.yml"
-      - "./.github/workflows/cloud-and-account-deployment.yml"
-      - "./.github/workflows/cloud-and-account-pr-pipeline.yml"
+      - ".github/deploy/cloud_and_account/**"
+      - ".github/workflows/cloud-and-account-template.yml"
+      - ".github/workflows/cloud-and-account-deployment.yml"
+      - ".github/workflows/cloud-and-account-pr-pipeline.yml"
 
 jobs:
   Cloud-and-Account-Terraform-Plan-DEV:
