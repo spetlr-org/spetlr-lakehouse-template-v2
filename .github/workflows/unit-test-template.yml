@@ -26,6 +26,6 @@ jobs:
         shell: pwsh
         run: |
           .github/deploy/application/unittest.ps1 `
-            -environmentName "${{ inputs.environmentName }}"
-            -buildId "${{ inputs.buildId }}"
+            -environmentName ${{ inputs.environmentName }} `
+            -buildId ${{ inputs.buildId }}
 

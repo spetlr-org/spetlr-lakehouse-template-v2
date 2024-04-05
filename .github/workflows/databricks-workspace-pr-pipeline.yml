@@ -41,8 +41,8 @@ jobs:
     needs: Workspace-Linting
     uses: ./.github/workflows/unit-test-template.yml
     with:
-      environmentName: dev
-      buildId: ${{github.run_id}}
+      environmentName: "dev"
+      buildId: "${{github.run_id}}"
     secrets: inherit
 
   Workspace-DEV-Terraform-Test:
