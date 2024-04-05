@@ -199,3 +199,9 @@ locals {
   resource_name = "${var.company_abbreviation}${var.system_abbreviation}${var.environment}"
   default_catalog = "data_${var.environment}"
 }
+
+variable "test" {
+  type = string
+  default = "libraries"
+  description = "The name of a folder inside infrastructure container to store library files (like python wheels)"
+}
