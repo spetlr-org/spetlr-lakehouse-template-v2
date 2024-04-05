@@ -3,12 +3,12 @@ name: Databricks-Workspace-PR-Pipeline
 on:
   push:
     paths-ignore:
-      - "./.github/deploy/cloud_and_account/**"
-      - "./.github/workflows/cloud-and-account-template.yml"
-      - "./.github/workflows/cloud-and-account-deployment.yml"
-      - "./.github/workflows/cloud-and-account-pr-pipeline.yml"
-      - "./img/**"
-      - "./README.md"
+      - ".github/deploy/cloud_and_account/**"
+      - ".github/workflows/cloud-and-account-template.yml"
+      - ".github/workflows/cloud-and-account-deployment.yml"
+      - ".github/workflows/cloud-and-account-pr-pipeline.yml"
+      - "img/**"
+      - "README.md"
 
 jobs:
   Workspace-Linting-DEV:
