@@ -10,6 +10,7 @@ on:
       - "./.github/deploy/cloud_and_account/**"
       - "./.github/workflows/cloud-and-account-template.yml"
       - "./.github/workflows/cloud-and-account-deployment.yml"
+      - "./.github/workflows/cloud-and-account-pr-pipeline.yml"
       - "./img/**"
       - "./README.md"
 

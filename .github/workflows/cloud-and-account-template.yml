@@ -8,9 +8,8 @@ on:
         type: string
 
 jobs:
-  terraform-deployment:
+  Cloud-and-Account-Terraform-Deployment:
     environment: ${{inputs.environmentName}}
-    name: 'Cloud and Account Deployment'
     runs-on: ubuntu-latest 
 
     steps:
