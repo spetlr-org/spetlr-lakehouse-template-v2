@@ -24,6 +24,3 @@ NycTlcGoldDb:
 NycTlcGoldTable:
   name: "{NycTlcGoldDb}.nyc_tlc"
   path: "{NycTlcGoldDb_path}/nyc_tlc"
-
-test:
-  name: "test"
