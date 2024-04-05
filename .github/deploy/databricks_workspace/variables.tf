@@ -72,9 +72,3 @@ variable "db_ws_url" {
 locals {
   default_catalog = "data_${var.environment}"
 }
-
-variable "test" {
-  type = string
-  default = "test"
-  description = "The name of a folder inside infrastructure container to store library files (like python wheels)"
-}
