@@ -8,6 +8,11 @@ on:
       - ".github/deploy/databricks_workspace/**"
       - "src/**"
       - ".github/deploy/application/**"
+      - "requirements-deploy.txt"
+      - "requirements.txt"
+      - "setup.cfg"
+      - "setup.py"
+      - "pyproject.toml"
   
   workflow_dispatch:
 
