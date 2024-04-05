@@ -1,11 +1,7 @@
 name: Databricks-Workspace-PR-Pipeline
 
 on:
-  pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
+  push:
     paths-ignore:
       - "./.github/deploy/cloud_and_account/**"
       - "./.github/workflows/cloud-and-account-template.yml"
