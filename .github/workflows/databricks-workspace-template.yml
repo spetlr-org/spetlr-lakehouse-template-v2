@@ -8,7 +8,7 @@ on:
         required: true
         type: string
 jobs:
-  deploy_environment:
+  deploy_application:
     environment: ${{ inputs.environmentName }}
     runs-on: ubuntu-latest
     steps:

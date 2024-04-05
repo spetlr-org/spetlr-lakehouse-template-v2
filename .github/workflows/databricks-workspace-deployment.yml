@@ -17,7 +17,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  Deploy-DEV-Application:
+  Deploy-Databricks-Workspace-Application-DEV:
     uses: ./.github/workflows/databricks-workspace-template.yml
     with:
       environmentName: dev
