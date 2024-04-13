@@ -33,7 +33,7 @@ resource "databricks_mws_permission_assignment" "add_workspace_group_to_workspac
   ]
 }
 
-# Grant metastore privilages to metastore admin group
+# Grant privilages to metastore admin group
 resource "databricks_grants" "metastore_admin_grants" {
   provider = databricks.workspace
   metastore = databricks_metastore.db_metastore.id
@@ -44,6 +44,21 @@ resource "databricks_grants" "metastore_admin_grants" {
   depends_on = [
     databricks_metastore.db_metastore,
     databricks_group.db_metastore_admin_group,
+    databricks_metastore_assignment.db_metastore_assign_workspace
+  ]
+}
+
+# Grant privilages to workspace admin group
+resource "databricks_grants" "workspace_admin_grants" {
+  provider = databricks.workspace
+  metastore = databricks_metastore.db_metastore.id
+  grant {
+    principal  = databricks_group.db_ws_admin_group.display_name
+    privileges = ["CREATE_CATALOG", "CREATE_CONNECTION", "CREATE_EXTERNAL_LOCATION", "CREATE_STORAGE_CREDENTIAL"]
+  }
+  depends_on = [
+    databricks_metastore.db_metastore,
+    databricks_group.db_ws_admin_group,
     databricks_metastore_assignment.db_metastore_assign_workspace
   ]
 }
