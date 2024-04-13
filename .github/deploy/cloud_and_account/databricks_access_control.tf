@@ -49,7 +49,7 @@ resource "databricks_grants" "metastore_admin_grants" {
 }
 
 # Grant privilages to workspace admin group
-resource "databricks_grants" "metastore_admin_grants" {
+resource "databricks_grants" "workspace_admin_grants" {
   provider = databricks.workspace
   metastore = databricks_metastore.db_metastore.id
   grant {
