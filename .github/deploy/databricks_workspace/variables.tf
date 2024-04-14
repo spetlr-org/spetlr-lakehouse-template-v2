@@ -15,6 +15,11 @@ variable "system_abbreviation" {
   description = "Used in creating resources name. lh here stands for LakeHouse"
 }
 
+variable "data_catalog_container" {
+  type = string
+  default = "data-catalog"
+  description = "Container in the storage account for databricks data catalog external location"
+}
 
 variable "system_name" {
   type = string
@@ -70,5 +75,7 @@ variable "db_ws_url" {
 }
 
 locals {
+  resource_name = "${var.company_abbreviation}${var.system_abbreviation}${var.environment}"
   default_catalog = "data_${var.environment}"
+  infrastructure_catalog = "infrastructure_${var.environment}"
 }

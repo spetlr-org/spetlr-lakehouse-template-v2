@@ -38,7 +38,7 @@ resource "databricks_cluster" "default" {
       max_workers = 1
     }
     library {
-      whl = "/Volumes/${local.default_catalog}/${var.company_abbreviation}${var.system_abbreviation}_${var.infrastructure_volume_container}/${var.infrastructure_libraries_folder}/dataplatform-latest-py3-none-any.whl"
+      whl = "/Volumes/${local.infrastructure_catalog}/${var.company_abbreviation}${var.system_abbreviation}_${var.infrastructure_volume_container}/${var.infrastructure_libraries_folder}/dataplatform-latest-py3-none-any.whl"
     }
 }
 
