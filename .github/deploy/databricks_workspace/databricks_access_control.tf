@@ -14,7 +14,7 @@ resource "databricks_grants" "ex_data_catalog_location_grants" {
   provider = databricks.workspace
   external_location = databricks_external_location.ex_data_catalog_location.id
   grant {
-    principal  = data.databricks_group.admins.display_name
+    principal  = data.databricks_group.db_ws_admin_group.display_name
     privileges = ["ALL_PRIVILEGES"]
   }
   depends_on = [databricks_external_location.ex_data_catalog_location]
@@ -25,7 +25,7 @@ resource "databricks_grants" "data_catalog_grants" {
   provider     = databricks.workspace
   catalog = databricks_catalog.db_data_catalog.name
   grant {
-    principal  = data.databricks_group.admins.display_name
+    principal  = data.databricks_group.db_ws_admin_group.display_name
     privileges = ["ALL_PRIVILEGES"]
   }
   depends_on = [

@@ -69,6 +69,12 @@ variable "db_ws_url" {
   description = "The URL of the created Databricks workspace "
 }
 
+variable "db_workspace_admin_group" {
+  type = string
+  default = "SpetlrLhV2-workspace-admins"
+  description = "An Azure Databricks group with Databricks workspace Admin privilages"
+}
+
 locals {
   resource_group_name = "${var.system_name}-${upper(var.environment)}-${var.service_name}"
   resource_name = "${var.company_abbreviation}${var.system_abbreviation}${var.environment}"
