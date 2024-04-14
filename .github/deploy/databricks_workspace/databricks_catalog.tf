@@ -8,7 +8,7 @@ resource "databricks_catalog" "db_data_catalog" {
   comment = "Catalog to encapsulate all data schema under this workspace"
   isolation_mode = "ISOLATED"
   storage_root = databricks_external_location.ex_data_catalog_location.url
-  owner = data.databricks_group.admins.display_name
+  owner = data.databricks_group.db_ws_admin_group.display_name
   depends_on = [
     databricks_external_location.ex_data_catalog_location,
   ]
