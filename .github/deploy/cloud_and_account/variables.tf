@@ -197,5 +197,5 @@ variable "infrastructure_libraries_folder" {
 locals {
   resource_group_name = "${var.system_name}-${upper(var.environment)}-${var.service_name}"
   resource_name = "${var.company_abbreviation}${var.system_abbreviation}${var.environment}"
-  infrastructure_catalog = "data_${var.environment}"
+  infrastructure_catalog = "infrastructure_${var.environment}"
 }
