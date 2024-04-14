@@ -92,6 +92,32 @@ resource "databricks_grants" "ex_creds" {
 
 # Extrenal location for infrastructure components
 
+## Extrenal location for infrastructure catalog 
+resource "databricks_external_location" "ex_infrastructure_catalog_location" {
+  provider = databricks.workspace
+  name = "${var.environment}-${var.infrastructure_catalog_container}"
+  url = "abfss://${var.infrastructure_volume_container}@${azurerm_storage_account.storage_account.name}.dfs.core.windows.net/${var.infrastructure_catalog_container}"
+  credential_name = databricks_storage_credential.ex_storage_cred.id
+  comment         = "Databricks external location for data catalog"
+  depends_on = [
+    databricks_grants.ex_creds
+  ]
+}
+
+resource "databricks_grants" "ex_infrastructure_catalog_grants" {
+  provider = databricks.workspace
+  external_location = databricks_external_location.ex_infrastructure_catalog_location.id
+  grant {
+    principal  = databricks_group.db_ws_admin_group.display_name
+    privileges = ["ALL_PRIVILEGES"]
+  }
+  grant {
+    principal  = databricks_group.db_metastore_admin_group.display_name
+    privileges = ["ALL_PRIVILEGES"]
+  }
+  depends_on = [databricks_external_location.ex_infrastructure_catalog_location]
+}
+
 ## External location for infrastructure volume / libraries
 resource "databricks_external_location" "ex_infrastructure_libraries_volume_location" {
   provider = databricks.workspace
@@ -138,31 +164,6 @@ resource "databricks_grants" "ex_infrastructure_tests_volume_grants" {
   depends_on = [databricks_external_location.ex_infrastructure_tests_volume_location]
 }
 
-## Extrenal location for medallion data components 
-resource "databricks_external_location" "ex_data_catalog_location" {
-  provider = databricks.workspace
-  name = "${var.environment}-${var.data_catalog_container}"
-  url = format("abfss://%s@%s.dfs.core.windows.net/",
-    var.data_catalog_container,
-  azurerm_storage_account.storage_account.name)
-
-  credential_name = databricks_storage_credential.ex_storage_cred.id
-  comment         = "Databricks external location for data catalog"
-  depends_on = [
-    databricks_grants.ex_creds
-  ]
-}
-
-resource "databricks_grants" "ex_data_catalog_grants" {
-  provider = databricks.workspace
-  external_location = databricks_external_location.ex_data_catalog_location.id
-  grant {
-    principal  = databricks_group.db_ws_admin_group.display_name
-    privileges = ["ALL_PRIVILEGES"]
-  }
-  depends_on = [databricks_external_location.ex_data_catalog_location]
-}
-
 ## Extrenal location for landing data components 
 resource "databricks_external_location" "ex_landing_data_location" {
   provider = databricks.workspace
@@ -187,9 +188,9 @@ resource "databricks_grants" "ex_landing_data_grants" {
 }
 
 # Catalog permissions
-resource "databricks_grants" "data_catalog_grants" {
+resource "databricks_grants" "infrastructure_catalog_grants" {
   provider     = databricks.workspace
-  catalog = databricks_catalog.db_data_catalog.name
+  catalog = databricks_catalog.db_infrastructure_catalog.name
   grant {
     principal  = databricks_group.db_ws_admin_group.display_name
     privileges = ["ALL_PRIVILEGES"]
@@ -199,7 +200,7 @@ resource "databricks_grants" "data_catalog_grants" {
     privileges = ["ALL_PRIVILEGES"]
   }
   depends_on = [
-    databricks_catalog.db_data_catalog,
+    databricks_catalog.db_infrastructure_catalog,
     databricks_mws_permission_assignment.add_metastore_admin_group_to_workspace,
     databricks_mws_permission_assignment.add_workspace_group_to_workspace,
     databricks_group.db_ws_admin_group,
