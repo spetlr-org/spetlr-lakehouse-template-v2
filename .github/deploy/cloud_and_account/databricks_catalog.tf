@@ -26,7 +26,7 @@ resource "databricks_schema" "db_infrastructure_schema" {
   storage_root = databricks_external_location.ex_infrastructure_catalog_location.url
   depends_on = [
     databricks_catalog.db_infrastructure_catalog,
-    databricks_grants.ex_data_catalog_grants
+    databricks_grants.ex_infrastructure_catalog_grants
   ]
 }
 

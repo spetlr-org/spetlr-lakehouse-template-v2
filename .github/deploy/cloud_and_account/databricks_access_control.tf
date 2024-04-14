@@ -200,7 +200,7 @@ resource "databricks_grants" "infrastructure_catalog_grants" {
     privileges = ["ALL_PRIVILEGES"]
   }
   depends_on = [
-    databricks_catalog.db_data_catalog,
+    databricks_catalog.db_infrastructure_catalog,
     databricks_mws_permission_assignment.add_metastore_admin_group_to_workspace,
     databricks_mws_permission_assignment.add_workspace_group_to_workspace,
     databricks_group.db_ws_admin_group,
