@@ -2,10 +2,7 @@
 resource "databricks_external_location" "ex_data_catalog_location" {
   provider = databricks.workspace
   name = "${var.environment}-${var.data_catalog_container}"
-  url = format("abfss://%s@%s.dfs.core.windows.net/",
-    var.data_catalog_container,
-  local.resource_name)
-
+  url = "abfss://${var.data_catalog_container}@${local.resource_name}.dfs.core.windows.net/"
   credential_name = data.ex_storage_cred.id
   comment         = "Databricks external location for data catalog"
   depends_on = [

@@ -33,11 +33,6 @@ variable "service_name" {
   description = "Used in creating the resource group name"
 }
 
-locals {
-  resource_group_name = "${var.system_name}-${upper(var.environment)}-${var.service_name}"
-  resource_name = "${var.company_abbreviation}${var.system_abbreviation}${var.environment}"
-}
-
 variable "db_workspace_spn_app_id" {
   type = string
   default = "Databricks--Workspace--SPN-ID"
@@ -75,6 +70,7 @@ variable "db_ws_url" {
 }
 
 locals {
+  resource_group_name = "${var.system_name}-${upper(var.environment)}-${var.service_name}"
   resource_name = "${var.company_abbreviation}${var.system_abbreviation}${var.environment}"
   default_catalog = "data_${var.environment}"
   infrastructure_catalog = "infrastructure_${var.environment}"
