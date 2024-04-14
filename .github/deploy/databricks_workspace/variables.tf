@@ -15,6 +15,11 @@ variable "system_abbreviation" {
   description = "Used in creating resources name. lh here stands for LakeHouse"
 }
 
+variable "data_catalog_container" {
+  type = string
+  default = "data-catalog"
+  description = "Container in the storage account for databricks data catalog external location"
+}
 
 variable "system_name" {
   type = string
@@ -26,11 +31,6 @@ variable "service_name" {
   type = string
   default = "LakeHouse-V2"
   description = "Used in creating the resource group name"
-}
-
-locals {
-  resource_group_name = "${var.system_name}-${upper(var.environment)}-${var.service_name}"
-  resource_name = "${var.company_abbreviation}${var.system_abbreviation}${var.environment}"
 }
 
 variable "db_workspace_spn_app_id" {
@@ -70,5 +70,8 @@ variable "db_ws_url" {
 }
 
 locals {
+  resource_group_name = "${var.system_name}-${upper(var.environment)}-${var.service_name}"
+  resource_name = "${var.company_abbreviation}${var.system_abbreviation}${var.environment}"
   default_catalog = "data_${var.environment}"
+  infrastructure_catalog = "infrastructure_${var.environment}"
 }
