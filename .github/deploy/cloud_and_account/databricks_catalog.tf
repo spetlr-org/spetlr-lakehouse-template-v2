@@ -6,10 +6,10 @@ resource "databricks_catalog" "db_infrastructure_catalog" {
   name    = local.infrastructure_catalog
   comment = "Catalog to encapsulate all data schema under this workspace"
   isolation_mode = "ISOLATED"
-  storage_root = databricks_external_location.ex_data_catalog_location.url
+  storage_root = databricks_external_location.ex_infrastructure_catalog_location.url
   owner = databricks_group.db_metastore_admin_group.display_name
   depends_on = [
-    databricks_external_location.ex_data_catalog_location,
+    databricks_external_location.ex_infrastructure_catalog_location,
     databricks_group.db_metastore_admin_group
   ]
 }
@@ -23,7 +23,7 @@ resource "databricks_schema" "db_infrastructure_schema" {
     kind = "various"
   }
   owner = databricks_group.db_metastore_admin_group.display_name
-  storage_root = databricks_external_location.ex_data_catalog_location.url
+  storage_root = databricks_external_location.ex_infrastructure_catalog_location.url
   depends_on = [
     databricks_catalog.db_infrastructure_catalog,
     databricks_grants.ex_data_catalog_grants

@@ -92,6 +92,32 @@ resource "databricks_grants" "ex_creds" {
 
 # Extrenal location for infrastructure components
 
+## Extrenal location for infrastructure catalog 
+resource "databricks_external_location" "ex_infrastructure_catalog_location" {
+  provider = databricks.workspace
+  name = "${var.environment}-${var.infrastructure_catalog_container}"
+  url = "abfss://${var.infrastructure_volume_container}@${azurerm_storage_account.storage_account.name}.dfs.core.windows.net/${var.infrastructure_catalog_container}"
+  credential_name = data.ex_storage_cred.id
+  comment         = "Databricks external location for data catalog"
+  depends_on = [
+    data.ex_storage_cred
+  ]
+}
+
+resource "databricks_grants" "ex_infrastructure_catalog_grants" {
+  provider = databricks.workspace
+  external_location = databricks_external_location.ex_infrastructure_catalog_location.id
+  grant {
+    principal  = databricks_group.db_ws_admin_group.display_name
+    privileges = ["ALL_PRIVILEGES"]
+  }
+  grant {
+    principal  = databricks_group.db_metastore_admin_group.display_name
+    privileges = ["ALL_PRIVILEGES"]
+  }
+  depends_on = [databricks_external_location.ex_infrastructure_catalog_location]
+}
+
 ## External location for infrastructure volume / libraries
 resource "databricks_external_location" "ex_infrastructure_libraries_volume_location" {
   provider = databricks.workspace
