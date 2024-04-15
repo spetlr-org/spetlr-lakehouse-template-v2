@@ -33,6 +33,18 @@ resource "databricks_mws_permission_assignment" "add_workspace_group_to_workspac
   ]
 }
 
+# Add table user group in the workspace as workspace user
+resource "databricks_mws_permission_assignment" "add_table_user_group_to_workspace" {
+  provider      = databricks.account
+  workspace_id = azurerm_databricks_workspace.db_workspace.workspace_id
+  principal_id = databricks_group.db_table_user_group.id
+  permissions  = ["USER"]
+  depends_on = [
+    azurerm_databricks_workspace.db_workspace,
+    databricks_group.db_table_user_group
+  ]
+}
+
 # Grant privilages to metastore admin group
 resource "databricks_grants" "metastore_admin_grants" {
   provider = databricks.workspace
