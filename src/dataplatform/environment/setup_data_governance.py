@@ -1,7 +1,7 @@
 from spetlr.sql.SqlExecutor import SqlExecutor
-from dataplatform.environment.init_configurator import init_configurator
 
 from dataplatform.environment.data_governance import bronze, catalog, gold, silver
+from dataplatform.environment.init_configurator import init_configurator
 
 
 def setup_data_governance():
