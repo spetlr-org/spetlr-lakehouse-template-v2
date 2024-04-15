@@ -1,1 +1,1 @@
-GRANT USE CATALOG data_{ENV} TO ROLE `SpetlrLhV2-table-users`;
+GRANT USE CATALOG data_{ENV} TO `SpetlrLhV2-table-users`;
