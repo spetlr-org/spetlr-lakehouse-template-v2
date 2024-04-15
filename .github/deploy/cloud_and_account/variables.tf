@@ -158,6 +158,12 @@ variable "db_workspace_admin_group" {
   description = "An Azure Databricks group with Databricks workspace Admin privilages"
 }
 
+variable "db_table_user_group" {
+  type = string
+  default = "SpetlrLhV2-table-users"
+  description = "A Databricks workspace group with table usage privilages"
+}
+
 variable "db_ws_url" {
   type = string
   default = "Databricks--Workspace-URL"

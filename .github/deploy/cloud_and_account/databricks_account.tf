@@ -70,3 +70,8 @@ resource "databricks_group_member" "ws_admin_member" {
     databricks_service_principal.db_ws_spn
   ]
 }
+
+resource "databricks_group" "db_table_user_group" {
+  provider     = databricks.account
+  display_name               = var.db_table_user_group
+}
