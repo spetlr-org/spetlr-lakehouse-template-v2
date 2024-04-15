@@ -1,0 +1,1 @@
+GRANT USE CATALOG data_{ENV} TO ROLE `SpetlrLhV2-table-users`;
