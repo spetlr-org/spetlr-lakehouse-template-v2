@@ -1,26 +1,18 @@
 NycTlcSource:
   path: abfss://landing@spetlrlhv2{ENV}.dfs.core.windows.net/NYC_TLC_dataset.csv
 
-NycTlcBronzeDb:
-  name: nyc_tlc_bronze{ID}
-  path: abfss://data-catalog@spetlrlhv2{ENV}.dfs.core.windows.net/bronze/nyc_tlc_bronze{ID}
+NycTlcDb:
+  name: nyc_tlc{ID}
+  path: abfss://data-catalog@spetlrlhv2{ENV}.dfs.core.windows.net/nyc_tlc{ID}
 
 NycTlcBronzeTable:
-  name: "{NycTlcBronzeDb}.nyc_tlc"
-  path: "{NycTlcBronzeDb_path}/nyc_tlc"
-
-NycTlcSilverDb:
-  name: nyc_tlc_silver{ID}
-  path: abfss://data-catalog@spetlrlhv2{ENV}.dfs.core.windows.net/silver/nyc_tlc_bronze{ID}
+  name: "{NycTlcDb}.nyc_tlc_bronze"
+  path: "{NycTlcBronzeDb_path}/nyc_tlc_bronze"
 
 NycTlcSilverTable:
-  name: "{NycTlcSilverDb}.nyc_tlc"
-  path: "{NycTlcSilverDb_path}/nyc_tlc"
-
-NycTlcGoldDb:
-  name: nyc_tlc_gold{ID}
-  path: abfss://data-catalog@spetlrlhv2{ENV}.dfs.core.windows.net/gold/nyc_tlc_bronze{ID}
+  name: "{NycTlcDb}.nyc_tlc_silver"
+  path: "{NycTlcSilverDb_path}/nyc_tlc_silver"
 
 NycTlcGoldTable:
-  name: "{NycTlcGoldDb}.nyc_tlc"
-  path: "{NycTlcGoldDb_path}/nyc_tlc"
+  name: "{NycTlcDb}.nyc_tlc_gold"
+  path: "{NycTlcGoldDb_path}/nyc_tlc_gold"

@@ -1,18 +1,13 @@
 from spetlr.sql.SqlExecutor import SqlExecutor
 
-from dataplatform.environment.databases import bronze, gold, silver
+from dataplatform.environment import databases
 
 
-def setup_environment(layer: str):
+def setup_environment(database: str) -> None:
+    """
+    Setup the environment for the database.
+        args:
+            database: The database name
+    """
 
-    if layer.lower() == "bronze":
-        print("Creating bronze database")
-        SqlExecutor(base_module=bronze).execute_sql_file("*")
-    elif layer.lower() == "silver":
-        print("Creating silver database")
-        SqlExecutor(base_module=silver).execute_sql_file("*")
-    elif layer.lower() == "gold":
-        print("Creating gold database")
-        SqlExecutor(base_module=gold).execute_sql_file("*")
-    else:
-        raise ValueError("The layer should be one of bronze, silver or gold")
+    SqlExecutor(base_module=databases).execute_sql_file(database)

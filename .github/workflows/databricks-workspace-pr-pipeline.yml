@@ -73,7 +73,7 @@ jobs:
             -environmentName "dev" `
             -buildId "${{ github.run_id }}"
 
-      - name: Setup Cloud and Account Terraform
+      - name: Setup Workspace Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_wrapper: false
