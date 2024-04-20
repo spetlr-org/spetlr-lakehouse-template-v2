@@ -14,8 +14,12 @@ env = dbutils.widgets.get("env")
 
 # COMMAND ----------
 
-source_path = f"abfss://landing@spetlrlhv2{env}.dfs.core.windows.net/NYC_TLC_dataset.csv"
-target_schema_path = f"abfss://data-catalog@spetlrlhv2{env}.dfs.core.windows.net/notebook_nyc_tlc/"
+source_path = (
+    f"abfss://landing@spetlrlhv2{env}.dfs.core.windows.net/NYC_TLC_dataset.csv"
+)
+target_schema_path = (
+    f"abfss://data-catalog@spetlrlhv2{env}.dfs.core.windows.net/notebook_nyc_tlc/"
+)
 target_schema_name = "notebook_nyc_tlc"
 target_table_name = "nyc_tlc_bronze"
 
@@ -27,8 +31,7 @@ target_table_name = "nyc_tlc_bronze"
 # COMMAND ----------
 
 df_source = (
-    spark
-    .read.format("csv")
+    spark.read.format("csv")
     .option("delimiter", ",")
     .option("header", True)
     .load(source_path)
@@ -94,8 +97,7 @@ spark.sql(sql_table)
 # COMMAND ----------
 
 (
-    df_source
-    .write.format("delta")
+    df_source.write.format("delta")
     .mode("overwrite")
     .save(f"{target_schema_path}/{target_table_name}")
 )

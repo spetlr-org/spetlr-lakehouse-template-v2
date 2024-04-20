@@ -24,7 +24,9 @@ import pyspark.sql.functions as f
 # COMMAND ----------
 
 source_table_name = "nyc_tlc_bronze"
-schema_path = f"abfss://data-catalog@spetlrlhv2{env}.dfs.core.windows.net/notebook_nyc_tlc/"
+schema_path = (
+    f"abfss://data-catalog@spetlrlhv2{env}.dfs.core.windows.net/notebook_nyc_tlc/"
+)
 schema_name = "notebook_nyc_tlc"
 target_table_name = "nyc_tlc_silver"
 
@@ -39,11 +41,7 @@ target_table_name = "nyc_tlc_silver"
 sql_catalog = f"USE CATALOG data_{env};"
 spark.sql(sql_catalog)
 
-df_bronze = (
-    spark
-    .read.format("delta")
-    .table(f"{schema_name}.{source_table_name}")
-)
+df_bronze = spark.read.format("delta").table(f"{schema_name}.{source_table_name}")
 
 # COMMAND ----------
 
@@ -106,8 +104,7 @@ df_target = df_target.select(
 # COMMAND ----------
 
 (
-    df_target
-    .write.format("delta")
+    df_target.write.format("delta")
     .mode("overwrite")
     .save(f"{schema_path}/{target_table_name}")
 )
