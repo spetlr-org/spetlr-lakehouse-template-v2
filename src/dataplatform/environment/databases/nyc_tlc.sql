@@ -2,7 +2,7 @@ USE CATALOG data_{ENV};
 
 CREATE DATABASE IF NOT EXISTS {NycTlcDb}
 COMMENT "Bronze Database for NYC TLC"
-MANAGED LOCATION "{NycTlcBronzeDb_path}";
+MANAGED LOCATION "{NycTlcDb_path}";
 
 CREATE TABLE IF NOT EXISTS {NycTlcBronzeTable}
 (
@@ -33,10 +33,6 @@ USING DELTA
 COMMENT "This table contains bronze data for NYC TLC"
 LOCATION "{NycTlcBronzeTable_path}";
 
-CREATE DATABASE IF NOT EXISTS {NycTlcDb}
-COMMENT "Silver Database for NYC TLC"
-MANAGED LOCATION "{NycTlcSilverDb_path}";
-
 CREATE TABLE IF NOT EXISTS {NycTlcSilverTable}
 (
   vendorID STRING,
@@ -49,10 +45,6 @@ CREATE TABLE IF NOT EXISTS {NycTlcSilverTable}
 USING DELTA
 COMMENT "This table contains silver NYC TLC data"
 LOCATION "{NycTlcSilverTable_path}";
-
-CREATE DATABASE IF NOT EXISTS {NycTlcDb}
-COMMENT "Gold Database for NYC TLC"
-MANAGED LOCATION "{NycTlcGoldDb_path}";
 
 CREATE TABLE IF NOT EXISTS {NycTlcGoldTable}
 (
