@@ -23,7 +23,7 @@ def main():
     NycTlcBronzeOrchestrator().execute()
 
     print("NYC TLC Silver Orchestrator")
-    NycTlcSilverOrchestrator.execute()
+    NycTlcSilverOrchestrator().execute()
 
     print("NYC TLC Gold Orchestrator")
     NycTlcGoldOrchestrator().execute()
