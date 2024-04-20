@@ -33,10 +33,10 @@ jobs:
         run: black --check .
       - name: iSort
         shell: pwsh
-        run: isort --check .
+        run: isort --check src
       - name: Flake8
         shell: pwsh
-        run: flake8 .
+        run: flake8 --check src
 
   Workspace-LocalTest-DEV:
     needs: Workspace-Linting-DEV
