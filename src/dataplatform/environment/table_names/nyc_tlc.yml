@@ -7,12 +7,12 @@ NycTlcDb:
 
 NycTlcBronzeTable:
   name: "{NycTlcDb}.nyc_tlc_bronze"
-  path: "{NycTlcBronzeDb_path}/nyc_tlc_bronze"
+  path: "{NycTlcDb_path}/nyc_tlc_bronze"
 
 NycTlcSilverTable:
   name: "{NycTlcDb}.nyc_tlc_silver"
-  path: "{NycTlcSilverDb_path}/nyc_tlc_silver"
+  path: "{NycTlcDb_path}/nyc_tlc_silver"
 
 NycTlcGoldTable:
   name: "{NycTlcDb}.nyc_tlc_gold"
-  path: "{NycTlcGoldDb_path}/nyc_tlc_gold"
+  path: "{NycTlcDb_path}/nyc_tlc_gold"
