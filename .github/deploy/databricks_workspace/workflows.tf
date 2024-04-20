@@ -21,50 +21,12 @@ resource "databricks_job" "nyc_tlc_etl" {
   }
 
   task {
-    task_key = "Process_Bronze"
+    task_key = "Process_Nyc_Tlc"
 
     job_cluster_key = "small_job_cluster"
 
     python_wheel_task {
-      entry_point = "nyc_tlc_bronze"
-      package_name = "dataplatform"
-    }
-
-    library {
-        whl = "/Volumes/${local.infrastructure_catalog}/${var.company_abbreviation}${var.system_abbreviation}_${var.infrastructure_volume_container}/${var.infrastructure_libraries_folder}/dataplatform-latest-py3-none-any.whl"
-    }
-  }
-
-  task {
-    task_key = "Process_Gold"
-
-    job_cluster_key = "small_job_cluster"
-
-    depends_on {
-      task_key = "Process_Silver"
-    }
-
-    python_wheel_task {
-      entry_point = "nyc_tlc_gold"
-      package_name = "dataplatform"
-    }
-
-    library {
-        whl = "/Volumes/${local.infrastructure_catalog}/${var.company_abbreviation}${var.system_abbreviation}_${var.infrastructure_volume_container}/${var.infrastructure_libraries_folder}/dataplatform-latest-py3-none-any.whl"
-    }
-  }
-
-  task {
-    task_key = "Process_Silver"
-
-    job_cluster_key = "small_job_cluster"
-
-    depends_on {
-      task_key = "Process_Bronze"
-    }
-
-    python_wheel_task {
-      entry_point = "nyc_tlc_silver"
+      entry_point = "nyc_tlc"
       package_name = "dataplatform"
     }
 
