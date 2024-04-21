@@ -26,7 +26,7 @@ resource "databricks_job" "nyc_tlc_etl_notebook" {
     job_cluster_key = "small_job_cluster"
 
     notebook_task {
-      notebook_path = "/Workspace/Shared/nyc_tlc/orchestrate_bronze"
+      notebook_path = "/Workspace/Shared/dataplatform/nyc_tlc/orchestrate_bronze"
     }
   }
 
@@ -40,7 +40,7 @@ resource "databricks_job" "nyc_tlc_etl_notebook" {
     job_cluster_key = "small_job_cluster"
 
     notebook_task {
-      notebook_path = "/Workspace/Shared/nyc_tlc/orchestrate_silver"
+      notebook_path = "/Workspace/Shared/dataplatform/nyc_tlc/orchestrate_silver"
     }
   }
 
@@ -54,7 +54,7 @@ resource "databricks_job" "nyc_tlc_etl_notebook" {
     job_cluster_key = "small_job_cluster"
 
     notebook_task {
-      notebook_path = "/Workspace/Shared/nyc_tlc/orchestrate_gold"
+      notebook_path = "/Workspace/Shared/dataplatform/nyc_tlc/orchestrate_gold"
     }
   }
 
@@ -68,7 +68,7 @@ resource "databricks_job" "nyc_tlc_etl_notebook" {
     job_cluster_key = "small_job_cluster"
 
     notebook_task {
-      notebook_path = "/Workspace/Shared/nyc_tlc/governance"
+      notebook_path = "/Workspace/Shared/dataplatform/nyc_tlc/governance"
     }
   }
 }
