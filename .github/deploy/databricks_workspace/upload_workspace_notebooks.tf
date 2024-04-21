@@ -32,6 +32,7 @@ locals {
 
 # Create a Databricks directory for each unique directory found in the workspace
 resource "databricks_directory" "workspace_directories" {
+  provider = databricks.workspace
   for_each = local.databricks_directories
 
   # Use the value of each item in the map as the path for the Databricks directory
@@ -40,6 +41,7 @@ resource "databricks_directory" "workspace_directories" {
 
 # Sync files to the created Databricks workspace
 resource "databricks_workspace_file" "sync_file" {
+  provider = databricks.workspace
   for_each = local.file_workspace_map
 
   source = "${local.base_directory}/${each.key}"
