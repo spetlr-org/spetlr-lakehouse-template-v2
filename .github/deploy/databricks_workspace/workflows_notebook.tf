@@ -71,4 +71,10 @@ resource "databricks_job" "nyc_tlc_etl_notebook" {
       notebook_path = "/Workspace/Shared/dataplatform/nyc_tlc/governance"
     }
   }
+
+  depends_on = [
+    databricks_directory.workspace_directories,
+    databricks_workspace_file.sync_file,
+
+    ]
 }
