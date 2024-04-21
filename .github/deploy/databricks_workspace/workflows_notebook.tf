@@ -73,8 +73,6 @@ resource "databricks_job" "nyc_tlc_etl_notebook" {
   }
 
   depends_on = [
-    databricks_directory.workspace_directories,
     databricks_workspace_file.sync_file,
-
     ]
 }
