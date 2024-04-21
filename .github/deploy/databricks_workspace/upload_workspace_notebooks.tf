@@ -44,13 +44,13 @@ resource "databricks_directory" "workspace_directories" {
   depends_on = [databricks_directory.workspace_dataplatform_directory]
 }
 
-# Sync files to the created Databricks workspace
-resource "databricks_workspace_file" "sync_file" {
-  provider = databricks.workspace
-  for_each = local.file_workspace_map
+# # Sync files to the created Databricks workspace
+# resource "databricks_workspace_file" "sync_file" {
+#   provider = databricks.workspace
+#   for_each = local.file_workspace_map
 
-  source = "${local.base_directory}/${each.key}"
-  path   = each.value
+#   source = "${local.base_directory}/${each.key}"
+#   path   = each.value
 
-  depends_on = [databricks_directory.workspace_directories]
-}
+#   depends_on = [databricks_directory.workspace_directories]
+# }
