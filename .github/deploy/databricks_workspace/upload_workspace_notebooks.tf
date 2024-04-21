@@ -21,13 +21,10 @@ locals {
   databricks_directories = { for d in local.unique_directories : d => "${local.db_workspace_base_path}/${d}" }
 
   # List all files within the 'workspace' directory
-  all_files = fileset(local.base_directory, "**/*")
-
-  # Filter out files from the list of paths
-  files = [for file in local.all_files : file if contains(file, ".")]
-
+  all_files = tolist(fileset(local.base_directory, "**/*"))
+  
   # Create a map of file paths to their corresponding workspace destination paths
-  file_workspace_map = { for file in local.files : file => "${local.db_workspace_base_path}/${file}" }
+  file_workspace_map = { for file in local.all_files : file => "${local.db_workspace_base_path}/${file}" }
 }
 
 # Create a Databricks directory for each unique directory found in the workspace
