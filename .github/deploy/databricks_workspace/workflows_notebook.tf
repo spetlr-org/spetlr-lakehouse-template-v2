@@ -72,7 +72,7 @@ resource "databricks_job" "nyc_tlc_etl_notebook" {
     }
   }
 
-  depends_on = [
-    databricks_workspace_file.sync_file,
-    ]
+  # depends_on = [
+  #   databricks_workspace_file.sync_file,
+  #   ]
 }
