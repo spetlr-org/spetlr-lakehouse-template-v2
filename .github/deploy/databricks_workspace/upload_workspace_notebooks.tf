@@ -5,14 +5,13 @@ locals {
   # Replace this with the path to your 'dataplatform' directory
   base_directory = "${path.cwd}/workspace"
 
-  db_workspace_base_path = "/Shared/dataplatform"
+  db_workspace_base_path = "/Workspace/Shared/dataplatform"
 
   # List all paths within the 'workspace' directory
   all_paths = fileset(local.base_directory, "**/*")
 
   # Filter out directories from the list of paths
-  # This method assumes that directories contain at least one file or subdirectory
-  directories = [for path in local.all_paths : dirname(join("/", split("/", path))) if length(fileset("${local.base_directory}/${path}", "*")) > 0]
+  directories = distinct([for file in local.all_paths : join("/", slice(split("/", file), 0, length(split("/", file)) - 1))])
 
   # Remove duplicates from the list of directories
   unique_directories = distinct(local.directories)
@@ -44,13 +43,13 @@ resource "databricks_directory" "workspace_directories" {
   depends_on = [databricks_directory.workspace_dataplatform_directory]
 }
 
-# # Sync files to the created Databricks workspace
-# resource "databricks_workspace_file" "sync_file" {
-#   provider = databricks.workspace
-#   for_each = local.file_workspace_map
+# Create a Databricks notebook for each file in the workspace
+resource "databricks_notebook" "sync_notebook" {
+  provider = databricks.workspace
+  for_each = local.file_workspace_map
 
-#   source = "${local.base_directory}/${each.key}"
-#   path   = each.value
+  source = "${local.base_directory}/${each.key}"
+  path   = each.value
 
-#   depends_on = [databricks_directory.workspace_directories]
-# }
+  depends_on = [databricks_directory.workspace_directories]
+}
