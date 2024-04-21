@@ -22,9 +22,15 @@ locals {
 
   # List all files within the 'workspace' directory
   all_files = tolist(fileset(local.base_directory, "**/*"))
-  
+
   # Create a map of file paths to their corresponding workspace destination paths
   file_workspace_map = { for file in local.all_files : file => "${local.db_workspace_base_path}/${file}" }
+}
+
+# Create a dataplatform directory in the workspace
+resource "databricks_directory" "workspace_dataplatform_directory" {
+  provider = databricks.workspace
+  path = local.db_workspace_base_path
 }
 
 # Create a Databricks directory for each unique directory found in the workspace
@@ -34,6 +40,8 @@ resource "databricks_directory" "workspace_directories" {
 
   # Use the value of each item in the map as the path for the Databricks directory
   path = each.value
+
+  depends_on = [databricks_directory.workspace_dataplatform_directory]
 }
 
 # Sync files to the created Databricks workspace
@@ -43,4 +51,6 @@ resource "databricks_workspace_file" "sync_file" {
 
   source = "${local.base_directory}/${each.key}"
   path   = each.value
+
+  depends_on = [databricks_directory.workspace_directories]
 }
