@@ -20,6 +20,11 @@ resource "databricks_job" "nyc_tlc_etl_notebook" {
     }
   }
 
+  parameter {
+    name = "env"
+    default = var.environment
+  }
+
   task {
     task_key = "Process_Nyc_Tlc_Bronze"
 
