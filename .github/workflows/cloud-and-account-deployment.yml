@@ -6,6 +6,8 @@ on:
       - main
     paths:
       - ".github/deploy/cloud_and_account/**"
+  
+  workflow_dispatch:
 
 jobs:
   Deploy-DEV-Environment:
