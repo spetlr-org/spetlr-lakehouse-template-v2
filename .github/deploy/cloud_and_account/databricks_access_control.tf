@@ -1,3 +1,5 @@
+# This module is responsible for creating the necessary resources for Databricks account and workspace access control
+
 # Assign the workspace to the created Metastore
 resource "databricks_metastore_assignment" "db_metastore_assign_workspace" {
   provider      = databricks.account
@@ -45,7 +47,7 @@ resource "databricks_mws_permission_assignment" "add_table_user_group_to_workspa
   ]
 }
 
-# Grant privilages to metastore admin group
+# Grant metastore privileges to metastore and workspace admin groups
 resource "databricks_grants" "metastore_admin_grants" {
   provider = databricks.workspace
   metastore = databricks_metastore.db_metastore.id
@@ -53,29 +55,19 @@ resource "databricks_grants" "metastore_admin_grants" {
     principal  = databricks_group.db_metastore_admin_group.display_name
     privileges = ["CREATE_CATALOG", "CREATE_CONNECTION", "CREATE_EXTERNAL_LOCATION", "CREATE_STORAGE_CREDENTIAL"]
   }
-  depends_on = [
-    databricks_metastore.db_metastore,
-    databricks_group.db_metastore_admin_group,
-    databricks_metastore_assignment.db_metastore_assign_workspace
-  ]
-}
-
-# Grant privilages to workspace admin group
-resource "databricks_grants" "workspace_admin_grants" {
-  provider = databricks.workspace
-  metastore = databricks_metastore.db_metastore.id
   grant {
     principal  = databricks_group.db_ws_admin_group.display_name
     privileges = ["CREATE_CATALOG", "CREATE_CONNECTION", "CREATE_EXTERNAL_LOCATION", "CREATE_STORAGE_CREDENTIAL"]
   }
   depends_on = [
     databricks_metastore.db_metastore,
+    databricks_group.db_metastore_admin_group,
     databricks_group.db_ws_admin_group,
     databricks_metastore_assignment.db_metastore_assign_workspace
   ]
 }
 
-# External storage assignments
+# Create storage credential
 resource "databricks_storage_credential" "ex_storage_cred" {
   provider = databricks.workspace
   name = azurerm_databricks_access_connector.ext_access_connector.name
@@ -88,6 +80,7 @@ resource "databricks_storage_credential" "ex_storage_cred" {
   ]
 }
 
+# Grant storage credential privileges to the workspace and metastore admin groups
 resource "databricks_grants" "ex_creds" {
   provider = databricks.workspace
   storage_credential = databricks_storage_credential.ex_storage_cred.id
@@ -102,7 +95,7 @@ resource "databricks_grants" "ex_creds" {
   depends_on = [databricks_storage_credential.ex_storage_cred]
 }
 
-# Extrenal location for infrastructure components
+# Extrenal location and privileges for infrastructure components
 
 ## Extrenal location for infrastructure catalog 
 resource "databricks_external_location" "ex_infrastructure_catalog_location" {
@@ -116,6 +109,7 @@ resource "databricks_external_location" "ex_infrastructure_catalog_location" {
   ]
 }
 
+## Infrastructure catalog grants
 resource "databricks_grants" "ex_infrastructure_catalog_grants" {
   provider = databricks.workspace
   external_location = databricks_external_location.ex_infrastructure_catalog_location.id
