@@ -33,13 +33,13 @@ source_path = (
 
 # COMMAND ----------
 
+
 @dlt.table
 def nyc_tlc_dlt_bronze(table_properties={"quality": "bronze"}):
-  df_source = (
-    spark.read.format("csv")
-    .option("delimiter", ",")
-    .option("header", True)
-    .load(source_path)
+    df_source = (
+        spark.read.format("csv")
+        .option("delimiter", ",")
+        .option("header", True)
+        .load(source_path)
     )
-  return df_source
-
+    return df_source
