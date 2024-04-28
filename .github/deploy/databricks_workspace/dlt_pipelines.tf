@@ -1,7 +1,11 @@
 resource "databricks_pipeline" "nyc_tlc_dlt" {
   provider     = databricks.workspace
   name    = "NYC TLC DLT ETL"
-  storage = "/test/first-pipeline"
+  edition = "ADVANCED"
+  photon = false
+  channel = "CURRENT"
+  catalog = "data_${var.environment}"
+  continuous = false
   configuration = {
     env = var.environment
   }
@@ -31,8 +35,6 @@ resource "databricks_pipeline" "nyc_tlc_dlt" {
       path = "/Workspace/Shared/dataplatform/nyc_tlc_dlt/orchestrate_dlt_gold.py"
     }
   }
-
-  continuous = false
 
   depends_on = [
     databricks_notebook.sync_notebook,
