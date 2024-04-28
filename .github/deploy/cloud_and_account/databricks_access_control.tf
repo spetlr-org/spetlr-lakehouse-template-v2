@@ -11,6 +11,14 @@ resource "databricks_metastore_assignment" "db_metastore_assign_workspace" {
   ]
 }
 
+# Wait for the metastore assignment to complete. This might not be necessary.
+resource "time_sleep" "wait_for_metastore_assign" {
+  create_duration = "10s"
+  depends_on = [
+    databricks_metastore_assignment.db_metastore_assign_workspace
+    ]
+}
+
 # Add metastore admin group in the workspace as workspace admin
 resource "databricks_mws_permission_assignment" "add_metastore_admin_group_to_workspace" {
   provider      = databricks.account
@@ -19,7 +27,8 @@ resource "databricks_mws_permission_assignment" "add_metastore_admin_group_to_wo
   permissions  = ["ADMIN"]
   depends_on = [
     azurerm_databricks_workspace.db_workspace,
-    databricks_group.db_metastore_admin_group
+    databricks_group.db_metastore_admin_group,
+    time_sleep.wait_for_metastore_assign
   ]
 }
 
@@ -31,7 +40,8 @@ resource "databricks_mws_permission_assignment" "add_workspace_group_to_workspac
   permissions  = ["ADMIN"]
   depends_on = [
     azurerm_databricks_workspace.db_workspace,
-    databricks_group.db_ws_admin_group
+    databricks_group.db_ws_admin_group,
+    time_sleep.wait_for_metastore_assign
   ]
 }
 
@@ -43,27 +53,24 @@ resource "databricks_mws_permission_assignment" "add_table_user_group_to_workspa
   permissions  = ["USER"]
   depends_on = [
     azurerm_databricks_workspace.db_workspace,
-    databricks_group.db_table_user_group
+    databricks_group.db_table_user_group,
+    time_sleep.wait_for_metastore_assign
   ]
 }
 
-# Grant metastore privileges to metastore and workspace admin groups
+# Grant metastore privileges to metastore admin group
 resource "databricks_grants" "metastore_admin_grants" {
   provider = databricks.workspace
   metastore = databricks_metastore.db_metastore.id
   grant {
-    principal  = databricks_group.db_metastore_admin_group.display_name
-    privileges = ["CREATE_CATALOG", "CREATE_CONNECTION", "CREATE_EXTERNAL_LOCATION", "CREATE_STORAGE_CREDENTIAL"]
-  }
-  grant {
-    principal  = databricks_group.db_ws_admin_group.display_name
+    principal  = var.db_metastore_admin_group
     privileges = ["CREATE_CATALOG", "CREATE_CONNECTION", "CREATE_EXTERNAL_LOCATION", "CREATE_STORAGE_CREDENTIAL"]
   }
   depends_on = [
     databricks_metastore.db_metastore,
     databricks_group.db_metastore_admin_group,
-    databricks_group.db_ws_admin_group,
-    databricks_metastore_assignment.db_metastore_assign_workspace
+    databricks_metastore_assignment.db_metastore_assign_workspace,
+    databricks_mws_permission_assignment.add_metastore_admin_group_to_workspace,
   ]
 }
 
@@ -76,7 +83,7 @@ resource "databricks_storage_credential" "ex_storage_cred" {
   }
   comment = "Datrabricks external storage credentials"
   depends_on = [
-    databricks_metastore_assignment.db_metastore_assign_workspace
+    databricks_metastore_assignment.db_metastore_assign_workspace,
   ]
 }
 
@@ -92,7 +99,9 @@ resource "databricks_grants" "ex_creds" {
     principal  = var.db_metastore_admin_group
     privileges = ["ALL_PRIVILEGES"]
   }
-  depends_on = [databricks_storage_credential.ex_storage_cred]
+  depends_on = [
+    databricks_storage_credential.ex_storage_cred,
+  ]
 }
 
 # Extrenal location and privileges for infrastructure components
@@ -105,7 +114,7 @@ resource "databricks_external_location" "ex_infrastructure_catalog_location" {
   credential_name = databricks_storage_credential.ex_storage_cred.id
   comment         = "Databricks external location for data catalog"
   depends_on = [
-    databricks_grants.ex_creds
+    databricks_grants.ex_creds,
   ]
 }
 
@@ -133,7 +142,7 @@ resource "databricks_external_location" "ex_infrastructure_libraries_volume_loca
   credential_name = databricks_storage_credential.ex_storage_cred.id
   comment         = "Databricks external location for infrastructure catalog"
   depends_on = [
-    databricks_grants.ex_creds
+    databricks_grants.ex_creds,
   ]
 }
 
@@ -156,7 +165,7 @@ resource "databricks_external_location" "ex_infrastructure_tests_volume_location
   credential_name = databricks_storage_credential.ex_storage_cred.id
   comment         = "Databricks external location for infrastructure catalog"
   depends_on = [
-    databricks_grants.ex_creds
+    databricks_grants.ex_creds,
   ]
 }
 
@@ -179,7 +188,7 @@ resource "databricks_external_location" "ex_landing_data_location" {
   credential_name = databricks_storage_credential.ex_storage_cred.id
   comment         = "Databricks external location for landing data"
   depends_on = [
-    databricks_grants.ex_creds
+    databricks_grants.ex_creds,
   ]
 }
 

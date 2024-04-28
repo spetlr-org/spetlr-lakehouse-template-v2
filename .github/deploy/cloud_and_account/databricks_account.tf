@@ -38,7 +38,7 @@ resource "databricks_group_member" "metastore_admin_member" {
 resource "databricks_metastore" "db_metastore" {
   provider      = databricks.account
   name          = var.db_metastore_name
-  owner = databricks_group.db_metastore_admin_group.display_name
+  owner = var.db_metastore_admin_group
   force_destroy = true
   region        = azurerm_resource_group.rg.location
   depends_on = [
@@ -67,6 +67,17 @@ resource "databricks_group_member" "ws_admin_member" {
   member_id = databricks_service_principal.db_ws_spn.id
   depends_on = [
     databricks_group.db_ws_admin_group,
+    databricks_service_principal.db_ws_spn
+  ]
+}
+
+# We want the workspace admin spn also the role of metastore admin, so adding it to meta admin group
+resource "databricks_group_member" "metastore_admin_member_ws" {
+  provider     = databricks.account
+  group_id  = databricks_group.db_metastore_admin_group.id
+  member_id = databricks_service_principal.db_ws_spn.id
+  depends_on = [
+    databricks_group.db_metastore_admin_group,
     databricks_service_principal.db_ws_spn
   ]
 }

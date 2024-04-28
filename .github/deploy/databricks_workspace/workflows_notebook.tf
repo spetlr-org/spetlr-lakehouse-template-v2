@@ -26,7 +26,7 @@ resource "databricks_job" "nyc_tlc_etl_notebook" {
   }
 
   task {
-    task_key = "Process_Nyc_Tlc_Bronze"
+    task_key = "01_Process_Nyc_Tlc_Bronze"
 
     job_cluster_key = "small_job_cluster"
 
@@ -36,10 +36,10 @@ resource "databricks_job" "nyc_tlc_etl_notebook" {
   }
 
   task {
-    task_key = "Process_Nyc_Tlc_Silver"
+    task_key = "02_Process_Nyc_Tlc_Silver"
 
     depends_on {
-      task_key = "Process_Nyc_Tlc_Bronze"
+      task_key = "01_Process_Nyc_Tlc_Bronze"
     }
 
     job_cluster_key = "small_job_cluster"
@@ -50,10 +50,10 @@ resource "databricks_job" "nyc_tlc_etl_notebook" {
   }
 
   task {
-    task_key = "Process_Nyc_Tlc_Gold"
+    task_key = "03_Process_Nyc_Tlc_Gold"
 
     depends_on {
-      task_key = "Process_Nyc_Tlc_Silver"
+      task_key = "02_Process_Nyc_Tlc_Silver"
     }
 
     job_cluster_key = "small_job_cluster"
@@ -64,10 +64,10 @@ resource "databricks_job" "nyc_tlc_etl_notebook" {
   }
 
   task {
-    task_key = "Process_Nyc_Tlc_Governance"
+    task_key = "04_Process_Nyc_Tlc_Governance"
 
     depends_on {
-      task_key = "Process_Nyc_Tlc_Gold"
+      task_key = "03_Process_Nyc_Tlc_Gold"
     }
 
     job_cluster_key = "small_job_cluster"

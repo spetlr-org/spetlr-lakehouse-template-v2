@@ -6,7 +6,8 @@ resource "azurerm_key_vault_secret" "azure_tenant_id" {
   value        = "${data.azurerm_client_config.current.tenant_id}"
   key_vault_id = azurerm_key_vault.key_vault.id
   depends_on = [
-    azurerm_key_vault.key_vault
+    azurerm_key_vault.key_vault,
+    azurerm_key_vault_access_policy.spn_access
   ]
 }
 
@@ -17,7 +18,8 @@ resource "azurerm_key_vault_secret" "db_ws_url" {
   key_vault_id = azurerm_key_vault.key_vault.id
   depends_on = [
     azurerm_key_vault.key_vault,
-    azurerm_databricks_workspace.db_workspace
+    azurerm_databricks_workspace.db_workspace,
+    azurerm_key_vault_access_policy.spn_access
   ]
 }
 
@@ -28,7 +30,8 @@ resource "azurerm_key_vault_secret" "db_ws_id" {
   key_vault_id = azurerm_key_vault.key_vault.id
   depends_on = [
     azurerm_key_vault.key_vault,
-    azurerm_databricks_workspace.db_workspace
+    azurerm_databricks_workspace.db_workspace,
+    azurerm_key_vault_access_policy.spn_access
   ]
 }
 
@@ -39,7 +42,8 @@ resource "azurerm_key_vault_secret" "db_meta_admin_spn_app_id" {
   key_vault_id = azurerm_key_vault.key_vault.id
   depends_on = [
     azurerm_key_vault.key_vault,
-    azuread_service_principal.db_meta_spn
+    azuread_service_principal.db_meta_spn,
+    azurerm_key_vault_access_policy.spn_access
   ]
 }
 
@@ -49,7 +53,8 @@ resource "azurerm_key_vault_secret" "db_meta_admin_spn_app_password" {
   key_vault_id = azurerm_key_vault.key_vault.id
   depends_on = [
     azurerm_key_vault.key_vault,
-    azuread_service_principal_password.db_meta_spn_password
+    azuread_service_principal_password.db_meta_spn_password,
+    azurerm_key_vault_access_policy.spn_access
   ]
 }
 
@@ -60,7 +65,8 @@ resource "azurerm_key_vault_secret" "db_ws_admin_spn_app_id" {
   key_vault_id = azurerm_key_vault.key_vault.id
   depends_on = [
     azurerm_key_vault.key_vault,
-    azuread_service_principal.db_ws_spn
+    azuread_service_principal.db_ws_spn,
+    azurerm_key_vault_access_policy.spn_access
   ]
 }
 
@@ -70,6 +76,7 @@ resource "azurerm_key_vault_secret" "db_ws_admin_spn_app_password" {
   key_vault_id = azurerm_key_vault.key_vault.id
   depends_on = [
     azurerm_key_vault.key_vault,
-    azuread_service_principal_password.db_ws_spn_password
+    azuread_service_principal_password.db_ws_spn_password,
+    azurerm_key_vault_access_policy.spn_access
   ]
 }

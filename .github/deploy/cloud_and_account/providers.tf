@@ -27,11 +27,6 @@ provider "databricks" {
 }
 
 provider "databricks" {
-  alias      = "account_workspace"
-  host       = azurerm_key_vault_secret.db_ws_url.value
-}
-
-provider "databricks" {
   alias      = "workspace"
   host       = azurerm_key_vault_secret.db_ws_url.value
   azure_client_id = azuread_service_principal.db_meta_spn.client_id
