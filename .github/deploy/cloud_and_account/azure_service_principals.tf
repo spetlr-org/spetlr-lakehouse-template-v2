@@ -12,6 +12,8 @@ resource "azurerm_key_vault_access_policy" "spn_access" {
     "List",
     "Delete",
     "Purge",
+    "Recover",
+    "Restore",
   ]
 }
 

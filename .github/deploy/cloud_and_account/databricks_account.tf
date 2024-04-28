@@ -34,18 +34,6 @@ resource "databricks_group_member" "metastore_admin_member" {
   ]
 }
 
-# Provision Databricks Metastore and set the owner
-resource "databricks_metastore" "db_metastore" {
-  provider      = databricks.account
-  name          = var.db_metastore_name
-  owner = var.db_metastore_admin_group
-  force_destroy = true
-  region        = azurerm_resource_group.rg.location
-  depends_on = [
-    databricks_group.db_metastore_admin_group
-  ]
-}
-
 # Workspace admin spn and admin group
 resource "databricks_group" "db_ws_admin_group" {
   provider     = databricks.account
@@ -82,7 +70,22 @@ resource "databricks_group_member" "metastore_admin_member_ws" {
   ]
 }
 
+# Provision Databricks Metastore and set the owner
+resource "databricks_metastore" "db_metastore" {
+  provider      = databricks.account
+  name          = var.db_metastore_name
+  owner = var.db_metastore_admin_group
+  force_destroy = true
+  region        = azurerm_resource_group.rg.location
+  depends_on = [
+    databricks_group.db_metastore_admin_group,
+    databricks_group_member.metastore_admin_member_ws,
+    databricks_group_member.metastore_admin_member
+  ]
+}
+
 resource "databricks_group" "db_table_user_group" {
   provider     = databricks.account
   display_name               = var.db_table_user_group
 }
+

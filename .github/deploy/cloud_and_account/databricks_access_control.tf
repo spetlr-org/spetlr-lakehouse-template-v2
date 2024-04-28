@@ -71,7 +71,16 @@ resource "databricks_grants" "metastore_admin_grants" {
     databricks_group.db_metastore_admin_group,
     databricks_metastore_assignment.db_metastore_assign_workspace,
     databricks_mws_permission_assignment.add_metastore_admin_group_to_workspace,
+    databricks_mws_permission_assignment.add_workspace_group_to_workspace
   ]
+}
+
+# Wait for the metastore admin grants to complete. This might not be necessary.
+resource "time_sleep" "wait_for_metastore_admin_grants" {
+  create_duration = "10s"
+  depends_on = [
+    databricks_grants.metastore_admin_grants
+    ]
 }
 
 # Create storage credential
@@ -84,6 +93,7 @@ resource "databricks_storage_credential" "ex_storage_cred" {
   comment = "Datrabricks external storage credentials"
   depends_on = [
     databricks_metastore_assignment.db_metastore_assign_workspace,
+    time_sleep.wait_for_metastore_admin_grants
   ]
 }
 
@@ -104,6 +114,15 @@ resource "databricks_grants" "ex_creds" {
   ]
 }
 
+# Wait for the storage credentilas to complete. This might not be necessary.
+resource "time_sleep" "wait_for_metastore_storage_creds" {
+  create_duration = "10s"
+  depends_on = [
+    databricks_grants.metastore_admin_grants,
+    databricks_grants.ex_creds
+    ]
+}
+
 # Extrenal location and privileges for infrastructure components
 
 ## Extrenal location for infrastructure catalog 
@@ -115,6 +134,7 @@ resource "databricks_external_location" "ex_infrastructure_catalog_location" {
   comment         = "Databricks external location for data catalog"
   depends_on = [
     databricks_grants.ex_creds,
+    time_sleep.wait_for_metastore_storage_creds
   ]
 }
 
@@ -143,6 +163,7 @@ resource "databricks_external_location" "ex_infrastructure_libraries_volume_loca
   comment         = "Databricks external location for infrastructure catalog"
   depends_on = [
     databricks_grants.ex_creds,
+    time_sleep.wait_for_metastore_storage_creds
   ]
 }
 
@@ -166,6 +187,7 @@ resource "databricks_external_location" "ex_infrastructure_tests_volume_location
   comment         = "Databricks external location for infrastructure catalog"
   depends_on = [
     databricks_grants.ex_creds,
+    time_sleep.wait_for_metastore_storage_creds
   ]
 }
 
@@ -189,6 +211,7 @@ resource "databricks_external_location" "ex_landing_data_location" {
   comment         = "Databricks external location for landing data"
   depends_on = [
     databricks_grants.ex_creds,
+    time_sleep.wait_for_metastore_storage_creds
   ]
 }
 
