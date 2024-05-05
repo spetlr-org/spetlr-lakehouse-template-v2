@@ -207,12 +207,4 @@ locals {
   # SPN names
   db_metastore_spn_name = "${var.db_metastore_spn_name}-${var.environment}"
   db_workspace_spn_name = "${var.db_workspace_spn_name}-${var.environment}"
-
-  # Keyvault secrets
-  azure_tenant_id = "${var.azure_tenant_id}-${var.environment}"
-  db_ws_url = "${var.db_ws_url}-${var.environment}"
-  db_metastore_spn_app_id = "${var.db_metastore_spn_app_id}-${var.environment}"
-  db_metastore_spn_app_password = "${var.db_metastore_spn_app_password}-${var.environment}"
-  db_workspace_spn_app_id = "${var.db_workspace_spn_app_id}-${var.environment}"
-  db_workspace_spn_app_password = "${var.db_workspace_spn_app_password}-${var.environment}"
 }
