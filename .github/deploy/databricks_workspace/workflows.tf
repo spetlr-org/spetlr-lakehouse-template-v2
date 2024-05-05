@@ -1,33 +1,33 @@
 # This mocules is to define Databricks jobs.
 
 resource "databricks_job" "nyc_tlc_etl" {
-  provider     = databricks.workspace
+  provider    = databricks.workspace
   name        = "NYC TLC ETL"
   description = "This job executes multiple tasks for processing NYC TLC data."
 
   schedule {
     quartz_cron_expression = "0 0 7 * * ?"
-    timezone_id = "Europe/Brussels"
-    pause_status = "PAUSED"
+    timezone_id            = "Europe/Brussels"
+    pause_status           = "PAUSED"
   }
 
   job_cluster {
-    job_cluster_key = "small_job_cluster"
+    job_cluster_key    = "small_job_cluster"
     new_cluster {
-      num_workers   = 1
-      instance_pool_id        = databricks_instance_pool.default.id
-      spark_version           = data.databricks_spark_version.default_spark_config.id
+      num_workers      = 1
+      instance_pool_id = databricks_instance_pool.default.id
+      spark_version    = data.databricks_spark_version.default_spark_config.id
     }
   }
 
   task {
-    task_key = "Process_Nyc_Tlc"
+    task_key        = "Process_Nyc_Tlc"
 
     job_cluster_key = "small_job_cluster"
 
     python_wheel_task {
-      entry_point = "nyc_tlc"
-      package_name = "dataplatform"
+      entry_point   = "nyc_tlc"
+      package_name  = "dataplatform"
     }
 
     library {
@@ -37,33 +37,33 @@ resource "databricks_job" "nyc_tlc_etl" {
 }
 
 resource "databricks_job" "setup_data_governance" {
-  provider     = databricks.workspace
+  provider    = databricks.workspace
   name        = "Setup Data Governance"
   description = "This job executes tasks for data governance."
 
   schedule {
     quartz_cron_expression = "0 0 23 * * ?"
-    timezone_id = "Europe/Brussels"
-    pause_status = "PAUSED"
+    timezone_id            = "Europe/Brussels"
+    pause_status           = "PAUSED"
   }
 
   job_cluster {
-    job_cluster_key = "small_job_cluster"
+    job_cluster_key    = "small_job_cluster"
     new_cluster {
-      num_workers   = 1
-      instance_pool_id        = databricks_instance_pool.default.id
-      spark_version           = data.databricks_spark_version.default_spark_config.id
+      num_workers      = 1
+      instance_pool_id = databricks_instance_pool.default.id
+      spark_version    = data.databricks_spark_version.default_spark_config.id
     }
   }
 
   task {
-    task_key = "Setup_Data_Governance"
+    task_key        = "Setup_Data_Governance"
 
     job_cluster_key = "small_job_cluster"
 
     python_wheel_task {
-      entry_point = "setup_data_governance"
-      package_name = "dataplatform"
+      entry_point   = "setup_data_governance"
+      package_name  = "dataplatform"
     }
 
     library {

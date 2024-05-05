@@ -1,11 +1,11 @@
 resource "databricks_pipeline" "nyc_tlc_dlt" {
-  provider     = databricks.workspace
-  name    = "NYC TLC DLT ETL"
-  edition = "ADVANCED"
-  photon = false
-  channel = "CURRENT"
-  catalog = "data_${var.environment}"
-  continuous = false
+  provider      = databricks.workspace
+  name          = "NYC TLC DLT ETL"
+  edition       = "ADVANCED"
+  photon        = false
+  channel       = "CURRENT"
+  catalog       = "data_${var.environment}"
+  continuous    = false
   configuration = {
     env = var.environment
   }

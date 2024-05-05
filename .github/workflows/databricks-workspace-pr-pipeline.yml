@@ -49,7 +49,7 @@ jobs:
   Workspace-Terraform-Plan-DEV:
     needs: Workspace-LocalTest-DEV
     environment: dev
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
 
     steps:
       # Checkout the repository to the GitHub Actions runner
@@ -70,8 +70,8 @@ jobs:
       - name: Build Spetlr Wheel
         shell: pwsh
         run: .github/deploy/application/build.ps1 `
-            -environmentName "dev" `
-            -buildId "${{ github.run_id }}"
+          -environmentName "dev" `
+          -buildId "${{ github.run_id }}"
 
       - name: Setup Workspace Terraform
         uses: hashicorp/setup-terraform@v3
@@ -79,7 +79,7 @@ jobs:
           terraform_wrapper: false
 
       - name: Workspace Terraform Init
-        run: terraform -chdir="./.github/deploy/databricks_workspace" init
+        run: terraform -chdir="./.github/deploy/databricks_workspace" init -backend-config="key=dev_terraform_datarbricks_workspace.tfstate"
         env:
           ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
           ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}
@@ -99,23 +99,76 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.SPN_TENANT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.SPN_SUBSCRIPTION_ID }}
 
-  # LocalTest-TEST-Environment:
-  #   needs: Linting
+  # LocalTest-DEV-Environment:
+  #   needs: Workspace-LocalTest-DEV
   #   uses: ./.github/workflows/unit-test-template.yml
-  #   with:
-  #     environmentName: test
-  #   secrets: inherit
-
-  # ClusterTest-DEV-Environment:
-  #   needs: LocalTest-DEV-Environment
-  #   uses: ./.github/workflows/template-test-applicaiton.yml
   #   with:
   #     environmentName: dev
   #   secrets: inherit
+
+  Workspace-LocalTest-TEST:
+    needs: Workspace-Linting-DEV
+    uses: ./.github/workflows/unit-test-template.yml
+    with:
+      environmentName: "test"
+      buildId: "${{github.run_id}}"
+    secrets: inherit
+
+  Workspace-Terraform-Plan-TEST:
+    needs: Workspace-LocalTest-TEST
+    environment: test
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository to the GitHub Actions runner
+      - uses: actions/checkout@v4
+      - name: Log in to azure
+        shell: pwsh
+        run: |
+          az login --service-principal `
+            -u ${{ secrets.SPN_CLIENT_ID }} `
+            -p ${{ secrets.SPN_CLIENT_SECRET }} `
+            --tenant ${{ secrets.SPN_TENANT_ID }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+
+      - name: Build Spetlr Wheel
+        shell: pwsh
+        run: .github/deploy/application/build.ps1 `
+          -environmentName "test" `
+          -buildId "${{ github.run_id }}"
+
+      - name: Setup Workspace Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+
+      - name: Workspace Terraform Init
+        run: terraform -chdir="./.github/deploy/databricks_workspace" init -backend-config="key="test_terraform_datarbricks_workspace.tfstate"
+        env:
+          ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
+          ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.SPN_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ secrets.SPN_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.SPN_SUBSCRIPTION_ID }}
+
+      - name: Workspace Terraform Format
+        run: terraform fmt -check
+
+      - name: Workspace Terraform Plan
+        run: terraform -chdir="./.github/deploy/databricks_workspace" plan -input=false -var "environment=test"
+        env:
+          ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
+          ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.SPN_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ secrets.SPN_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.SPN_SUBSCRIPTION_ID }}
   # ClusterTest-TEST-Environment:
   #   needs: LocalTest-TEST-Environment
   #   uses: ./.github/workflows/template-test-applicaiton.yml
   #   with:
   #     environmentName: test
   #   secrets: inherit
-
