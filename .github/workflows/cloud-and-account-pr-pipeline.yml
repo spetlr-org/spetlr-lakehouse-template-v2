@@ -36,9 +36,7 @@ jobs:
           terraform_wrapper: false
 
       - name: Databricks Metastore Terraform Init
-        run: |
-          cd ./.github/deploy/databricks_metastore
-          terraform init
+        run: terraform -chdir="./.github/deploy/databricks_metastore" init
         env:
           ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
           ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}
@@ -50,9 +48,7 @@ jobs:
         run: terraform fmt -check
 
       - name: Databricks Metastore Terraform Plan
-        run: |
-          cd ./.github/deploy/databricks_metastore
-          terraform plan -input=false
+        run: terraform -chdir="./.github/deploy/databricks_metastore" plan -input=false
         env:
           ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
           ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}
@@ -61,9 +57,7 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.SPN_SUBSCRIPTION_ID }}
 
       - name: Cloud and Account Terraform Init
-        run: |
-          cd ./.github/deploy/could_and_account
-          terraform init -backend-config="key=dev_terraform_could_and_account.tfstate"
+        run: terraform -chdir="./.github/deploy/cloud_and_account" init -backend-config="key=dev_terraform_could_and_account.tfstate"
         env:
           ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
           ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}
@@ -75,9 +69,7 @@ jobs:
         run: terraform fmt -check
 
       - name: Cloud and Account Terraform Plan
-        run: |
-          cd ./.github/deploy/could_and_account
-          terraform plan -input=false -var "environment=dev"
+        run: terraform -chdir="./.github/deploy/cloud_and_account" plan -input=false -var "environment=dev"
         env:
           ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
           ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}
@@ -106,9 +98,7 @@ jobs:
           terraform_wrapper: false
 
       - name: Cloud and Account Terraform Init
-        run: |
-          cd ./.github/deploy/could_and_account
-          terraform init -backend-config="key=test_terraform_could_and_account.tfstate"
+        run: terraform -chdir="./.github/deploy/cloud_and_account" init -backend-config="key=test_terraform_could_and_account.tfstate"
         env:
           ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
           ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}
@@ -120,9 +110,7 @@ jobs:
         run: terraform fmt -check
 
       - name: Cloud and Account Terraform Plan
-        run: |
-          cd ./.github/deploy/could_and_account
-          terraform plan -input=false -var "environment=test"
+        run: terraform -chdir="./.github/deploy/cloud_and_account" plan -input=false -var "environment=test"
         env:
           ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
           ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}

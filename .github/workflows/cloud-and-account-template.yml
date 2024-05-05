@@ -29,9 +29,7 @@ jobs:
           terraform_wrapper: false
 
       - name: Cloud and Account Terraform Init
-        run: |
-          cd ./.github/deploy/could_and_account
-          terraform init -backend-config="key=${{ inputs.environmentName }}_terraform_could_and_account.tfstate"
+        run: terraform -chdir="./.github/deploy/cloud_and_account" init -backend-config="key=${{ inputs.environmentName }}_terraform_could_and_account.tfstate"
         env:
           ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
           ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}
@@ -40,9 +38,7 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.SPN_SUBSCRIPTION_ID }}
 
       - name: Cloud and Account Terraform Apply
-        run: |
-          cd ./.github/deploy/could_and_account
-          terraform apply -auto-approve -var "environment=${{ inputs.environmentName }}"
+        run: terraform -chdir="./.github/deploy/cloud_and_account" apply -auto-approve -var "environment=${{ inputs.environmentName }}"
         env:
           ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
           ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}

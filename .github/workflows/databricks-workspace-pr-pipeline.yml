@@ -79,9 +79,7 @@ jobs:
           terraform_wrapper: false
 
       - name: Workspace Terraform Init
-        run: |
-          cd ./.github/deploy/databricks_workspace
-          terraform init -backend-config="key=dev_terraform_datarbricks_workspace.tfstate"
+        run: terraform -chdir="./.github/deploy/databricks_workspace" init -backend-config="key=dev_terraform_datarbricks_workspace.tfstate"
         env:
           ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
           ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}
@@ -93,9 +91,7 @@ jobs:
         run: terraform fmt -check
 
       - name: Workspace Terraform Plan
-        run: |
-          cd ./.github/deploy/databricks_workspace
-          terraform plan -input=false -var "environment=dev"
+        run: terraform -chdir="./.github/deploy/databricks_workspace" plan -input=false -var "environment=dev"
         env:
           ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
           ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}
@@ -151,9 +147,7 @@ jobs:
           terraform_wrapper: false
 
       - name: Workspace Terraform Init
-        run: |
-          cd ./.github/deploy/databricks_workspace
-          terraform init -backend-config="key="test_terraform_datarbricks_workspace.tfstate"
+        run: terraform -chdir="./.github/deploy/databricks_workspace" init -backend-config="key="test_terraform_datarbricks_workspace.tfstate"
         env:
           ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
           ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}
@@ -165,9 +159,7 @@ jobs:
         run: terraform fmt -check
 
       - name: Workspace Terraform Plan
-        run: |
-          cd ./.github/deploy/databricks_workspace
-          terraform plan -input=false -var "environment=test"
+        run: terraform -chdir="./.github/deploy/databricks_workspace" plan -input=false -var "environment=test"
         env:
           ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
           ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}

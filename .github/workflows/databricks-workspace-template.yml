@@ -38,9 +38,7 @@ jobs:
           terraform_wrapper: false
 
       - name: Workspace Terraform Init
-        run: |
-          cd ./.github/deploy/databricks_workspace
-          terraform init -backend-config="key=${{ inputs.environmentName }}_terraform_datarbricks_workspace.tfstate"
+        run: terraform -chdir="./.github/deploy/databricks_workspace" init -backend-config="key=${{ inputs.environmentName }}_terraform_datarbricks_workspace.tfstate"
         env:
           ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
           ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}
@@ -49,9 +47,7 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.SPN_SUBSCRIPTION_ID }}
 
       - name: Workspace Terraform Apply
-        run: |
-          cd ./.github/deploy/databricks_workspace
-          erraform apply -auto-approve -var "environment=${{ inputs.environmentName }}"
+        run: terraform -chdir="./.github/deploy/databricks_workspace" apply -auto-approve -var "environment=${{ inputs.environmentName }}"
         env:
           ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
           ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}
