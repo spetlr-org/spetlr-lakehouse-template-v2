@@ -12,6 +12,8 @@ on:
 jobs:
   Deploy-Databricks-Metastore:
     uses: ./.github/workflows/databricks-metastore-template.yml
+    with:
+      environmentName: dev
     secrets: inherit
   Deploy-DEV-Environment:
     needs: Deploy-Databricks-Metastore

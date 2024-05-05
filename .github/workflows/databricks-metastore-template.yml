@@ -4,11 +4,12 @@ on:
   workflow_call:
     inputs:
       environmentName:
-        required: false
+        required: true
         type: string
 
 jobs:
   Databricks-Metastore-Terraform-Deployment:
+    environment: ${{inputs.environmentName}}
     runs-on: ubuntu-latest
 
     steps:
