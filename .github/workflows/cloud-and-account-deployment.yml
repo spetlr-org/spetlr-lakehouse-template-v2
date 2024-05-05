@@ -14,16 +14,19 @@ jobs:
     uses: ./.github/workflows/databricks-metastore-template.yml
     secrets: inherit
   Deploy-DEV-Environment:
+    needs: Deploy-Databricks-Metastore
     uses: ./.github/workflows/cloud-and-account-template.yml
     with:
       environmentName: dev
     secrets: inherit
   Deploy-TEST-Environment:
+    needs: Deploy-DEV-Environment
     uses: ./.github/workflows/cloud-and-account-template.yml
     with:
       environmentName: test
     secrets: inherit
   # Deploy-PROD-Environment:
+  #   needs: Deploy-TEST-Environment
   #   uses: ./.github/workflows/cloud-and-account-template.yml
   #   with:
   #     environmentName: prod
