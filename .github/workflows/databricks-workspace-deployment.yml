@@ -22,11 +22,13 @@ jobs:
       environmentName: dev
     secrets: inherit
   Deploy-Databricks-Workspace-TEST:
+    needs: Deploy-Databricks-Workspace-DEV
     uses: ./.github/workflows/databricks-workspace-template.yml
     with:
       environmentName: test
     secrets: inherit
   # Deploy-Databricks-Workspace-PROD:
+  #   needs: Deploy-Databricks-Workspace-TEST
   #   uses: ./.github/workflows/databricks-workspace-template.yml
   #   with:
   #     environmentName: prod
