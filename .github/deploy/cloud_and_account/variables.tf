@@ -1,6 +1,6 @@
 variable "company_abbreviation" {
-  type = string
-  default = "spetlr"
+  type        = string
+  default     = "spetlr"
   description = "Used in creating resources name. Better to use the abbreviation of your organization"
 }
 
@@ -94,7 +94,7 @@ variable "msi_id" {
 
 variable "db_metastore_spn_name" {
   type = string
-  default = "SpetlrLhV2DbMetaSpn"
+  default = "SpetlrLhV2DbMeta"
   description = "SPN to be added as a Databricks Metastore Admin"
 }
 
@@ -116,12 +116,6 @@ variable "db_metastore_admin_group" {
   description = "Databricks group with Databricks Metastore Admin privilages"
 }
 
-variable "db_metastore_user_group" {
-  type = string
-  default = "SpetlrLhV2-metastore-users"
-  description = "Databricks group with Databricks Metastore use privilages"
-}
-
 variable "databricks_account_id" {
   type = string
   default = "939f40ff-6952-42dc-9aca-3830070d18d3"
@@ -136,7 +130,7 @@ variable "db_metastore_name" {
 
 variable "db_workspace_spn_name" {
   type = string
-  default = "SpetlrLhV2DbWsSpn"
+  default = "SpetlrLhV2DbWs"
   description = "SPN to be added as a Databricks workspace Admin"
 }
 
@@ -170,12 +164,6 @@ variable "db_ws_url" {
   description = "The URL of the created Databricks workspace "
 }
 
-variable "db_ws_id" {
-  type = string
-  default = "Databricks--Workspace-ID"
-  description = "The Id of the created Databricks workspace "
-}
-
 variable "azure_tenant_id" {
   type = string
   default = "Azure--Tenant-ID"
@@ -200,8 +188,31 @@ variable "infrastructure_libraries_folder" {
   description = "The name of a folder inside infrastructure container to store library files (like python wheels)"
 }
 
+# Some of the variables need to be suffixed with the environment name or other unique identifier
 locals {
+  # Resource group name is a combination of system name, environment and service name 
   resource_group_name = "${var.system_name}-${upper(var.environment)}-${var.service_name}"
+
+  # All resources under the resource group have the same name with the following combination
   resource_name = "${var.company_abbreviation}${var.system_abbreviation}${var.environment}"
+
+  # Databricks catalog for infrastructure
   infrastructure_catalog = "infrastructure_${var.environment}"
+
+  # Databricks groups
+  db_metastore_admin_group = "${var.db_metastore_admin_group}-${var.environment}"
+  db_workspace_admin_group = "${var.db_workspace_admin_group}-${var.environment}"
+  db_table_user_group = "${var.db_table_user_group}-${var.environment}"
+
+  # SPN names
+  db_metastore_spn_name = "${var.db_metastore_spn_name}-${var.environment}"
+  db_workspace_spn_name = "${var.db_workspace_spn_name}-${var.environment}"
+
+  # Keyvault secrets
+  azure_tenant_id = "${var.azure_tenant_id}-${var.environment}"
+  db_ws_url = "${var.db_ws_url}-${var.environment}"
+  db_metastore_spn_app_id = "${var.db_metastore_spn_app_id}-${var.environment}"
+  db_metastore_spn_app_password = "${var.db_metastore_spn_app_password}-${var.environment}"
+  db_workspace_spn_app_id = "${var.db_workspace_spn_app_id}-${var.environment}"
+  db_workspace_spn_app_password = "${var.db_workspace_spn_app_password}-${var.environment}"
 }

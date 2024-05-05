@@ -29,7 +29,7 @@ locals {
 # Create a dataplatform directory in the workspace
 resource "databricks_directory" "workspace_dataplatform_directory" {
   provider = databricks.workspace
-  path = local.db_workspace_base_path
+  path     = local.db_workspace_base_path
 }
 
 # Create a Databricks directory for each unique directory found in the workspace

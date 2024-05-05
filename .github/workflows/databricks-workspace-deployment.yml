@@ -13,23 +13,20 @@ on:
       - "setup.cfg"
       - "setup.py"
       - "pyproject.toml"
-  
   workflow_dispatch:
 
 jobs:
-  Deploy-Databricks-Workspace-Application-DEV:
+  Deploy-Databricks-Workspace-DEV:
     uses: ./.github/workflows/databricks-workspace-template.yml
     with:
       environmentName: dev
     secrets: inherit
-  # Deploy-TEST-Application:
-  #   needs: Deploy-DEV-Application
-  #   uses: ./.github/workflows/databricks-workspace-template.yml
-  #   with:
-  #     environmentName: test
-  #   secrets: inherit
-  # Deploy-PROD-Application:
-  #   needs: Deploy-TEST-Application
+  Deploy-Databricks-Workspace-TEST:
+    uses: ./.github/workflows/databricks-workspace-template.yml
+    with:
+      environmentName: test
+    secrets: inherit
+  # Deploy-Databricks-Workspace-PROD:
   #   uses: ./.github/workflows/databricks-workspace-template.yml
   #   with:
   #     environmentName: prod

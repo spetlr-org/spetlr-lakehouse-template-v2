@@ -2,31 +2,31 @@
 
 resource "databricks_job" "nyc_tlc_etl_notebook" {
   provider     = databricks.workspace
-  name        = "NYC TLC ETL Notebook"
-  description = "This job executes multiple tasks for processing NYC TLC data."
+  name         = "NYC TLC ETL Notebook"
+  description  = "This job executes multiple tasks for processing NYC TLC data."
 
   schedule {
     quartz_cron_expression = "0 0 7 * * ?"
-    timezone_id = "Europe/Brussels"
-    pause_status = "PAUSED"
+    timezone_id            = "Europe/Brussels"
+    pause_status           = "PAUSED"
   }
 
   job_cluster {
-    job_cluster_key = "small_job_cluster"
+    job_cluster_key           = "small_job_cluster"
     new_cluster {
-      num_workers   = 1
+      num_workers             = 1
       instance_pool_id        = databricks_instance_pool.default.id
       spark_version           = data.databricks_spark_version.default_spark_config.id
     }
   }
 
   parameter {
-    name = "env"
+    name    = "env"
     default = var.environment
   }
 
   task {
-    task_key = "01_Process_Nyc_Tlc_Bronze"
+    task_key        = "01_Process_Nyc_Tlc_Bronze"
 
     job_cluster_key = "small_job_cluster"
 
@@ -36,7 +36,7 @@ resource "databricks_job" "nyc_tlc_etl_notebook" {
   }
 
   task {
-    task_key = "02_Process_Nyc_Tlc_Silver"
+    task_key   = "02_Process_Nyc_Tlc_Silver"
 
     depends_on {
       task_key = "01_Process_Nyc_Tlc_Bronze"
@@ -50,7 +50,7 @@ resource "databricks_job" "nyc_tlc_etl_notebook" {
   }
 
   task {
-    task_key = "03_Process_Nyc_Tlc_Gold"
+    task_key   = "03_Process_Nyc_Tlc_Gold"
 
     depends_on {
       task_key = "02_Process_Nyc_Tlc_Silver"

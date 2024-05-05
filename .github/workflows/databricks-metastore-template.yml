@@ -1,15 +1,14 @@
-name: "Cloud and Account - Template"
+name: "Databricks Metastore - Template"
 
 on:
   workflow_call:
     inputs:
       environmentName:
-        required: true
+        required: false
         type: string
 
 jobs:
-  Cloud-and-Account-Terraform-Deployment:
-    environment: ${{inputs.environmentName}}
+  Databricks-Metastore-Terraform-Deployment:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,15 +22,15 @@ jobs:
             -p ${{ secrets.SPN_CLIENT_SECRET }} `
             --tenant ${{ secrets.SPN_TENANT_ID }}
 
-      - name: Setup Cloud and Account Terraform
+      - name: Setup Databricks Metastore Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_wrapper: false
 
-      - name: Cloud and Account Terraform Init
+      - name: Databricks Metastore Terraform Init
         run: |
-          cd ./.github/deploy/could_and_account
-          terraform init -backend-config="key=${{ inputs.environmentName }}_terraform_could_and_account.tfstate"
+          cd ./.github/deploy/databricks_metastore
+          terraform init
         env:
           ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
           ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}
@@ -39,10 +38,10 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.SPN_TENANT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.SPN_SUBSCRIPTION_ID }}
 
-      - name: Cloud and Account Terraform Apply
+      - name: Databricks Metastore Terraform Apply
         run: |
-          cd ./.github/deploy/could_and_account
-          terraform apply -auto-approve -var "environment=${{ inputs.environmentName }}"
+          cd ./.github/deploy/databricks_metastore
+          terraform apply -auto-approve
         env:
           ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
           ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}

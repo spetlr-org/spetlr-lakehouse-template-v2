@@ -2,11 +2,11 @@
 
 # Provision resource group
 resource "azurerm_resource_group" "rg" {
-  name = local.resource_group_name
-  location = var.location  # Change this as needed
+  name      = local.resource_group_name
+  location  = var.location  # Change this as needed
   tags = {
     creator = var.creator_tag
-    system = var.system_tag
+    system  = var.system_tag
     service = var.service_tag
   }
 }
@@ -51,7 +51,7 @@ resource "azurerm_storage_account" "storage_account" {
 
   tags = {
     creator = var.creator_tag
-    system = var.system_tag
+    system  = var.system_tag
     service = var.service_tag
   }
   depends_on = [azurerm_resource_group.rg]
@@ -62,25 +62,25 @@ resource "azurerm_storage_account" "storage_account" {
 ## Landing container
 resource "azurerm_storage_container" "landing_storage_containers" {
   name  = var.landing_storage_container
-  storage_account_name = azurerm_storage_account.storage_account.name
+  storage_account_name  = azurerm_storage_account.storage_account.name
   container_access_type = "private"
-  depends_on = [azurerm_storage_account.storage_account]
+  depends_on            = [azurerm_storage_account.storage_account]
 }
 
 ## Data catalog container
 resource "azurerm_storage_container" "data_catalog_container" {
   name  = var.data_catalog_container
-  storage_account_name = azurerm_storage_account.storage_account.name
+  storage_account_name  = azurerm_storage_account.storage_account.name
   container_access_type = "private"
-  depends_on = [azurerm_storage_account.storage_account]
+  depends_on            = [azurerm_storage_account.storage_account]
 }
 
 ## Infrastructure catalog container
 resource "azurerm_storage_container" "infrastructure_volume_container" {
-  name  = var.infrastructure_volume_container
-  storage_account_name = azurerm_storage_account.storage_account.name
+  name                  = var.infrastructure_volume_container
+  storage_account_name  = azurerm_storage_account.storage_account.name
   container_access_type = "private"
-  depends_on = [azurerm_storage_account.storage_account]
+  depends_on            = [azurerm_storage_account.storage_account]
 }
 
 # Provision databricks service
@@ -94,5 +94,5 @@ resource "azurerm_databricks_workspace" "db_workspace" {
     system = var.system_tag
     service = var.service_tag
   }
-  depends_on = [azurerm_resource_group.rg]
+  depends_on                  = [azurerm_resource_group.rg]
 }

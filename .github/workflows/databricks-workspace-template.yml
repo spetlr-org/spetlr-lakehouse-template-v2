@@ -1,4 +1,3 @@
-
 name: Databricks Workspace - Template
 
 on:
@@ -13,7 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
 
       - name: Log in to azure
         shell: pwsh
@@ -31,25 +29,29 @@ jobs:
       - name: Build Spetlr Wheel
         shell: pwsh
         run: .github/deploy/application/build.ps1 `
-            -environmentName "${{ inputs.environmentName }}"
-            -buildId "${{ github.run_id }}"
-      
+          -environmentName "${{ inputs.environmentName }}"
+          -buildId "${{ github.run_id }}"
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_wrapper: false
-  
+
       - name: Workspace Terraform Init
-        run: terraform -chdir="./.github/deploy/databricks_workspace" init
+        run: |
+          cd ./.github/deploy/databricks_workspace
+          terraform init -backend-config="key=${{ inputs.environmentName }}_terraform_datarbricks_workspace.tfstate"
         env:
           ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
           ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.SPN_CLIENT_SECRET }}
           ARM_TENANT_ID: ${{ secrets.SPN_TENANT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.SPN_SUBSCRIPTION_ID }}
-      
+
       - name: Workspace Terraform Apply
-        run: terraform -chdir="./.github/deploy/databricks_workspace" apply -auto-approve -var "environment=${{ inputs.environmentName }}"
+        run: |
+          cd ./.github/deploy/databricks_workspace
+          erraform apply -auto-approve -var "environment=${{ inputs.environmentName }}"
         env:
           ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
           ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}
@@ -60,4 +62,3 @@ jobs:
       - name: Azure logout
         shell: pwsh
         run: az logout
-

@@ -2,9 +2,9 @@
 
 # Giving necessary keyvault access to the cicd service principal 
 resource "azurerm_key_vault_access_policy" "spn_access" {
-  key_vault_id = azurerm_key_vault.key_vault.id
-  tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = data.azuread_service_principal.cicd_spn.object_id
+  key_vault_id       = azurerm_key_vault.key_vault.id
+  tenant_id          = data.azurerm_client_config.current.tenant_id
+  object_id          = data.azuread_service_principal.cicd_spn.object_id
 
   secret_permissions = [
     "Get",
@@ -19,7 +19,7 @@ resource "azurerm_key_vault_access_policy" "spn_access" {
 
 # Provision azure spn for databricks metastore admin, and setting its role
 resource "azuread_application" "db_application" {
-  display_name = var.db_metastore_spn_name
+  display_name = local.db_metastore_spn_name
   owners       = [data.azuread_service_principal.cicd_spn.object_id]
 }
 
@@ -41,7 +41,7 @@ resource "azurerm_role_assignment" "db_meta_spn_role" {
 
 # Provision Azure SPN for Databricks workspace admin, and setting its role
 resource "azuread_application" "db_ws_application" {
-  display_name = var.db_workspace_spn_name
+  display_name = local.db_workspace_spn_name
   owners       = [data.azuread_service_principal.cicd_spn.object_id]
 }
 
