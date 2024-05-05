@@ -80,4 +80,5 @@ locals {
   resource_name          = "${var.company_abbreviation}${var.system_abbreviation}${var.environment}"
   default_catalog        = "data_${var.environment}"
   infrastructure_catalog = "infrastructure_${var.environment}"
+  db_workspace_admin_group = "${var.db_workspace_admin_group}-${var.environment}"
 }
