@@ -10,19 +10,26 @@ on:
       - ".github/deploy/cloud_and_account/**"
       - ".github/workflows/template-cloud-and-account-deployment.yml"
       - ".github/workflows/cloud-and-account-deployment.yml"
-      - ".github/workflows/template-cloud-and-account-pr-pipeline.yml"
+      - ".github/workflows/template-cloud-and-account-plan.yml"
+      - ".github/workflows/template-databricks-metastore-plan.yml"
       - ".github/workflows/cloud-and-account-pr-pipeline.yml"
       - ".github/deploy/databricks_metastore/**"
       - ".github/workflows/template-databricks-metastore-deployment.yml"
 
 jobs:
+  Databricks-Metastore-Plan:
+    uses: ./.github/workflows/template-databricks-metastore-plan.yml
+    with:
+      environmentName: "dev"
+    secrets: inherit
+
   Databricks-Plan-DEV-Environment:
-    uses: ./.github/workflows/template-cloud-and-account-pr-pipeline.yml
+    uses: ./.github/workflows/template-cloud-and-account-plan.yml
     with:
       environmentName: "dev"
     secrets: inherit
   Databricks-Plan-TEST-Environment:
-    uses: ./.github/workflows/template-cloud-and-account-pr-pipeline.yml
+    uses: ./.github/workflows/template-cloud-and-account-plan.yml
     with:
       environmentName: "test"
     secrets: inherit
