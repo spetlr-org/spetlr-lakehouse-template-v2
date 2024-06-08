@@ -24,11 +24,13 @@ jobs:
     secrets: inherit
 
   Databricks-Plan-DEV-Environment:
+    needs: Databricks-Metastore-Plan
     uses: ./.github/workflows/template-cloud-and-account-plan.yml
     with:
       environmentName: "dev"
     secrets: inherit
   Databricks-Plan-TEST-Environment:
+    needs: Databricks-Metastore-Plan
     uses: ./.github/workflows/template-cloud-and-account-plan.yml
     with:
       environmentName: "test"
