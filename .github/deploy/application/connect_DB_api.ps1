@@ -1,3 +1,12 @@
+param (
+    [Parameter(Mandatory = $true)]
+    [ValidateNotNullOrEmpty()]
+    [string]
+    $environmentName
+)
+
+$repoRoot = (git rev-parse --show-toplevel)
+
 . "$repoRoot/.github/deploy/application/check.ps1"
 . "$repoRoot/.github/deploy/application/config.ps1"
 
