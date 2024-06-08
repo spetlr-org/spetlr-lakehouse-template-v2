@@ -2,7 +2,7 @@ import pyspark.sql.functions as f
 from pyspark.sql import DataFrame
 from spetlr.etl import Transformer
 
-from dataplatform.etl.nyc_tlc.gold.nyc_tlc_gold_parameters import NycTlcGoldParameters
+from dataplatform.etl.nyc_tlc.C_gold.nyc_tlc_gold_parameters import NycTlcGoldParameters
 
 
 class NycTlcGoldTransfomer(Transformer):

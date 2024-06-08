@@ -2,10 +2,10 @@ from spetlr.etl import Orchestrator
 from spetlr.etl.extractors import SimpleExtractor
 from spetlr.etl.loaders.simple_loader import SimpleLoader
 
-from dataplatform.etl.nyc_tlc.silver.nyc_tlc_silver_parameters import (
+from dataplatform.etl.nyc_tlc.B_silver.nyc_tlc_silver_parameters import (
     NycTlcSilverParameters,
 )
-from dataplatform.etl.nyc_tlc.silver.nyc_tlc_silver_transformer import (
+from dataplatform.etl.nyc_tlc.B_silver.nyc_tlc_silver_transformer import (
     NycTlcSilverTransfomer,
 )
 

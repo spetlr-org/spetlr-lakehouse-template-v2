@@ -2,8 +2,10 @@ from spetlr.etl import Orchestrator
 from spetlr.etl.extractors import SimpleExtractor
 from spetlr.etl.loaders.simple_loader import SimpleLoader
 
-from dataplatform.etl.nyc_tlc.gold.nyc_tlc_gold_parameters import NycTlcGoldParameters
-from dataplatform.etl.nyc_tlc.gold.nyc_tlc_gold_transformer import NycTlcGoldTransfomer
+from dataplatform.etl.nyc_tlc.C_gold.nyc_tlc_gold_parameters import NycTlcGoldParameters
+from dataplatform.etl.nyc_tlc.C_gold.nyc_tlc_gold_transformer import (
+    NycTlcGoldTransfomer,
+)
 
 
 class NycTlcGoldOrchestrator(Orchestrator):

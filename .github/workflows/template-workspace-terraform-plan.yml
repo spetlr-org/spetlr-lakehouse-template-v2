@@ -1,4 +1,4 @@
-name: Databricks Workspace - Template
+name: Local Test (Unittest) - Template
 
 on:
   workflow_call:
@@ -6,20 +6,24 @@ on:
       environmentName:
         required: true
         type: string
+      buildId:
+        required: true
+        type: string
+
 jobs:
-  deploy_application:
+  Workspace-Terraform-Plan:
     environment: ${{ inputs.environmentName }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
+      # Checkout the repository to the GitHub Actions runner
+      - uses: actions/checkout@v4
       - name: Log in to azure
         shell: pwsh
         run: |
           az login --service-principal `
-          -u ${{ secrets.SPN_CLIENT_ID }} `
-          -p ${{ secrets.SPN_CLIENT_SECRET }} `
-          --tenant ${{ secrets.SPN_TENANT_ID }}
+            -u ${{ secrets.SPN_CLIENT_ID }} `
+            -p ${{ secrets.SPN_CLIENT_SECRET }} `
+            --tenant ${{ secrets.SPN_TENANT_ID }}
 
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -28,11 +32,12 @@ jobs:
 
       - name: Build Spetlr Wheel
         shell: pwsh
-        run: .github/deploy/application/build.ps1 `
-          -environmentName "${{ inputs.environmentName }}"
-          -buildId "${{ github.run_id }}"
+        run: |
+          .github/deploy/application/build.ps1 `
+            -environmentName "${{ inputs.environmentName }}" `
+            -buildId "${{ inputs.buildId }}"
 
-      - name: Setup Terraform
+      - name: Setup Workspace Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_wrapper: false
@@ -46,15 +51,14 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.SPN_TENANT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.SPN_SUBSCRIPTION_ID }}
 
-      - name: Workspace Terraform Apply
-        run: terraform -chdir="./.github/deploy/databricks_workspace" apply -auto-approve -var "environment=${{ inputs.environmentName }}"
+      - name: Workspace Terraform Format
+        run: terraform fmt -check
+
+      - name: Workspace Terraform Plan
+        run: terraform -chdir="./.github/deploy/databricks_workspace" plan -input=false -var "environment=${{ inputs.environmentName }}"
         env:
           ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
           ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.SPN_CLIENT_SECRET }}
           ARM_TENANT_ID: ${{ secrets.SPN_TENANT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.SPN_SUBSCRIPTION_ID }}
-
-      - name: Azure logout
-        shell: pwsh
-        run: az logout

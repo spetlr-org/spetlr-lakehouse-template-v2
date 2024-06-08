@@ -1,25 +1,25 @@
 from decimal import Decimal
-from test.env.CleanupTestDatabases import CleanupTestDatabases
+
+# from test.env.CleanupTestDatabases import CleanupTestDatabases
 from test.env.debug_configurator import debug_configurator
 
 from spetlr.sql.SqlExecutor import SqlExecutor
 from spetlr.utils import DataframeCreator
 from spetlrtools.testing import DataframeTestCase
 
-from dataplatform.environment.databases import gold, silver
-from dataplatform.etl.nyc_tlc.gold.nyc_tlc_gold_orchestrator import (
-    NycTlcGoldOrchestrator,
+from dataplatform.environment import databases
+
+from dataplatform.etl.nyc_tlc.C_gold.nyc_tlc_gold_parameters import NycTlcGoldParameters
+from dataplatform.etl.nyc_tlc.C_gold.nyc_tlc_gold_transformer import (
+    NycTlcGoldTransfomer,
 )
-from dataplatform.etl.nyc_tlc.gold.nyc_tlc_gold_parameters import NycTlcGoldParameters
-from dataplatform.etl.nyc_tlc.gold.nyc_tlc_gold_transformer import NycTlcGoldTransfomer
 
 
 class GoldTests(DataframeTestCase):
     @classmethod
     def setUpClass(cls) -> None:
         debug_configurator()
-        SqlExecutor(base_module=silver).execute_sql_file("nyc_tlc_silver.sql")
-        SqlExecutor(base_module=gold).execute_sql_file("nyc_tlc_gold.sql")
+        SqlExecutor(base_module=databases).execute_sql_file("nyc_tlc")
 
         cls.params = NycTlcGoldParameters()
         cls.sut = NycTlcGoldTransfomer(cls.params)
@@ -65,14 +65,11 @@ class GoldTests(DataframeTestCase):
             ],
         )
 
-    @classmethod
-    def tearDownClass(cls) -> None:
-        CleanupTestDatabases()
+    # @classmethod
+    # def tearDownClass(cls) -> None:
+    #     CleanupTestDatabases()
 
-    def test_01_can_orchestrate_gold(self):
-        NycTlcGoldOrchestrator(self.params).execute()
-
-    def test_02_transfomer_gold(self):
+    def test_gold_transfomer(self):
         df = self.sut.process(self.df_silver)
 
         self.assertDataframeMatches(

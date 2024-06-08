@@ -2,7 +2,7 @@ import pyspark.sql.functions as f
 from pyspark.sql import DataFrame
 from spetlr.etl import Transformer
 
-from dataplatform.etl.nyc_tlc.silver.nyc_tlc_silver_parameters import (
+from dataplatform.etl.nyc_tlc.B_silver.nyc_tlc_silver_parameters import (
     NycTlcSilverParameters,
 )
 

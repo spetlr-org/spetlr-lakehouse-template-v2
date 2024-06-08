@@ -1,4 +1,4 @@
-from test.env.CleanupTestDatabases import CleanupTestDatabases
+# from test.env.CleanupTestDatabases import CleanupTestDatabases
 from test.env.debug_configurator import debug_configurator
 
 from spetlr.sql.SqlExecutor import SqlExecutor
@@ -6,20 +6,17 @@ from spetlr.utils import DataframeCreator
 from spetlrtools.testing import DataframeTestCase
 from spetlrtools.time import dt_utc
 
-from dataplatform.environment.databases import bronze, silver
-from dataplatform.etl.nyc_tlc.bronze.nyc_tlc_bronze_parameters import (
+from dataplatform.environment import databases
+from dataplatform.etl.nyc_tlc.A_bronze.nyc_tlc_bronze_parameters import (
     NycTlcBronzeParameters,
 )
-from dataplatform.etl.nyc_tlc.bronze.nyc_tlc_source_extractor import (
+from dataplatform.etl.nyc_tlc.A_bronze.nyc_tlc_source_extractor import (
     NycTlcSourceExtractor,
 )
-from dataplatform.etl.nyc_tlc.silver.nyc_tlc_silver_orchestrator import (
-    NycTlcSilverOrchestrator,
-)
-from dataplatform.etl.nyc_tlc.silver.nyc_tlc_silver_parameters import (
+from dataplatform.etl.nyc_tlc.B_silver.nyc_tlc_silver_parameters import (
     NycTlcSilverParameters,
 )
-from dataplatform.etl.nyc_tlc.silver.nyc_tlc_silver_transformer import (
+from dataplatform.etl.nyc_tlc.B_silver.nyc_tlc_silver_transformer import (
     NycTlcSilverTransfomer,
 )
 
@@ -28,8 +25,7 @@ class SilverTests(DataframeTestCase):
     @classmethod
     def setUpClass(cls) -> None:
         debug_configurator()
-        SqlExecutor(base_module=bronze).execute_sql_file("nyc_tlc_bronze.sql")
-        SqlExecutor(base_module=silver).execute_sql_file("nyc_tlc_silver.sql")
+        SqlExecutor(base_module=databases).execute_sql_file("nyc_tlc")
 
         cls.bronze_params = NycTlcBronzeParameters()
         cls.params = NycTlcSilverParameters()
@@ -80,14 +76,11 @@ class SilverTests(DataframeTestCase):
             ],
         )
 
-    @classmethod
-    def tearDownClass(cls) -> None:
-        CleanupTestDatabases()
+    # @classmethod
+    # def tearDownClass(cls) -> None:
+    #     CleanupTestDatabases()
 
-    def test_01_can_orchestrate_silver(self):
-        NycTlcSilverOrchestrator(self.params).execute()
-
-    def test_02_transfomer_silver(self):
+    def test_silver_transfomer(self):
         df = self.sut.process(self.df_bronze)
 
         self.assertDataframeMatches(

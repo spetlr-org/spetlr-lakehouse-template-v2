@@ -22,7 +22,7 @@ import pyspark.sql.functions as f
 # MAGIC # Parameters
 
 # COMMAND ----------
-
+catalog = f"data_{env}"
 source_table_name = "nyc_tlc_silver"
 schema_path = (
     f"abfss://data-catalog@spetlrlhv2{env}.dfs.core.windows.net/notebook_nyc_tlc/"
@@ -38,7 +38,7 @@ target_table_name = "nyc_tlc_gold"
 # COMMAND ----------
 
 # Use data catalog
-sql_catalog = f"USE CATALOG data_{env};"
+sql_catalog = f"USE CATALOG {catalog};"
 spark.sql(sql_catalog)
 
 df_silver = spark.read.format("delta").table(f"{schema_name}.{source_table_name}")

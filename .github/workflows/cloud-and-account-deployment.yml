@@ -11,25 +11,25 @@ on:
 
 jobs:
   Deploy-Databricks-Metastore:
-    uses: ./.github/workflows/databricks-metastore-template.yml
+    uses: ./.github/workflows/template-databricks-metastore-deployment.yml
     with:
-      environmentName: dev
+      environmentName: "dev"
     secrets: inherit
   Deploy-DEV-Environment:
     needs: Deploy-Databricks-Metastore
-    uses: ./.github/workflows/cloud-and-account-template.yml
+    uses: ./.github/workflows/template-cloud-and-account-deployment.yml
     with:
-      environmentName: dev
+      environmentName: "dev"
     secrets: inherit
   Deploy-TEST-Environment:
     needs: Deploy-DEV-Environment
-    uses: ./.github/workflows/cloud-and-account-template.yml
+    uses: ./.github/workflows/template-cloud-and-account-deployment.yml
     with:
-      environmentName: test
+      environmentName: "test"
     secrets: inherit
   # Deploy-PROD-Environment:
   #   needs: Deploy-TEST-Environment
-  #   uses: ./.github/workflows/cloud-and-account-template.yml
+  #   uses: ./.github/workflows/template-cloud-and-account-deployment.yml
   #   with:
-  #     environmentName: prod
+  #     environmentName: "prod"
   #   secrets: inherit

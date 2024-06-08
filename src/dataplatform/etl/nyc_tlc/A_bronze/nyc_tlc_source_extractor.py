@@ -2,7 +2,7 @@ from pyspark.sql import DataFrame
 from spetlr.etl import Extractor
 from spetlr.spark import Spark
 
-from dataplatform.etl.nyc_tlc.bronze.nyc_tlc_bronze_parameters import (
+from dataplatform.etl.nyc_tlc.A_bronze.nyc_tlc_bronze_parameters import (
     NycTlcBronzeParameters,
 )
 

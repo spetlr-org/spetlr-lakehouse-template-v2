@@ -1,10 +1,10 @@
 from spetlr.etl import Orchestrator
 from spetlr.etl.loaders.simple_loader import SimpleLoader
 
-from dataplatform.etl.nyc_tlc.bronze.nyc_tlc_bronze_parameters import (
+from dataplatform.etl.nyc_tlc.A_bronze.nyc_tlc_bronze_parameters import (
     NycTlcBronzeParameters,
 )
-from dataplatform.etl.nyc_tlc.bronze.nyc_tlc_source_extractor import (
+from dataplatform.etl.nyc_tlc.A_bronze.nyc_tlc_source_extractor import (
     NycTlcSourceExtractor,
 )
 

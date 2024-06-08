@@ -13,7 +13,7 @@ env = dbutils.widgets.get("env")
 # MAGIC # Parameters
 
 # COMMAND ----------
-
+catalog = f"data_{env}"
 source_path = (
     f"abfss://landing@spetlrlhv2{env}.dfs.core.windows.net/NYC_TLC_dataset.csv"
 )
@@ -45,7 +45,7 @@ df_source = (
 # COMMAND ----------
 
 # Use data catalog
-sql_catalog = f"USE CATALOG data_{env};"
+sql_catalog = f"USE CATALOG {catalog};"
 spark.sql(sql_catalog)
 
 # schema
