@@ -31,9 +31,7 @@ jobs:
       - name: Setup Databricks CLI
         shell: bash
         run: |
-          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-          brew tap databricks/tap
-          brew install databricks
+          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
           databricks -v
 
       - name: Connect to Databricks
