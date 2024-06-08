@@ -32,6 +32,9 @@ jobs:
         shell: bash
         run: |
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          brew tap databricks/tap
+          brew install databricks
+          databricks -v
 
       - name: Connect to Databricks
         shell: pwsh
