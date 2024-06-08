@@ -15,12 +15,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Log in to azure
         shell: pwsh
         run: |
           az login --service-principal `
-            -u ${{ secrets.WORKSPACE_SPN_ID }} `
-            -p ${{ secrets.WORKSPACE_SPN_SECRET }} `
+            -u ${{ secrets.SPN_CLIENT_ID }} `
+            -p ${{ secrets.SPN_CLIENT_SECRET }} `
             --tenant ${{ secrets.SPN_TENANT_ID }}
 
       - name: Setup Python
@@ -39,6 +40,14 @@ jobs:
         run: |
           .github/deploy/application/connect_DB_api.ps1 `
             -environmentName "${{ inputs.environmentName }}"
+
+      - name: Log in to azure
+        shell: pwsh
+        run: |
+          az login --service-principal `
+            -u ${{ secrets.WORKSPACE_SPN_ID }} `
+            -p ${{ secrets.WORKSPACE_SPN_SECRET }} `
+            --tenant ${{ secrets.SPN_TENANT_ID }}
 
       - name: Cluster Test job (integrationtest)
         shell: pwsh
