@@ -41,14 +41,6 @@ jobs:
           .github/deploy/application/connect_DB_api.ps1 `
             -environmentName "${{ inputs.environmentName }}"
 
-      - name: Log in to azure
-        shell: pwsh
-        run: |
-          az login --service-principal `
-            -u ${{ secrets.WORKSPACE_SPN_ID }} `
-            -p ${{ secrets.WORKSPACE_SPN_SECRET }} `
-            --tenant ${{ secrets.SPN_TENANT_ID }}
-
       - name: Cluster Test job (integrationtest)
         shell: pwsh
         run: |

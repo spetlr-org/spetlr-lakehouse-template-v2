@@ -19,16 +19,29 @@ $workspaceUrl = Get-KeyVaultSecret -key $workspaceUrlKeyName -keyVaultName $reso
 $workspaceClientId = Get-KeyVaultSecret -key $workspaceSpnClientIdKeyName -keyVaultName $resourceName
 $workspaceClientSecret = Get-KeyVaultSecret -key $workspaceSpnClientSecretKeyName -keyVaultName $resourceName
 
-$workspaceUrl = $workspaceUrl -replace '"', ''
-$workspaceClientId = $workspaceClientId -replace '"', ''
-$workspaceClientSecret = $workspaceClientSecret -replace '"', ''
+$resourceId = az resource show `
+    --resource-group $resourceGroupName `
+    --name $resourceName `
+    --resource-type "Microsoft.Databricks/workspaces" `
+    --query id `
+    --out tsv
 
-Write-Host $workspaceUrl
+Write-Host "  Add the SPN to the Databricks Workspace as an admin user" -ForegroundColor DarkYellow
+$accessToken = Set-DatabricksSpnAdminUser `
+    -tenantId $tenantId `
+    -clientId $workspaceClientId `
+    -clientSecret $workspaceClientSecret `
+    -workspaceUrl $workspaceUrl `
+    -resourceId $resourceId
 
+Write-Host "  Generate SPN personal access token" -ForegroundColor DarkYellow
+$token = ConvertTo-DatabricksPersonalAccessToken `
+    -workspaceUrl $workspaceUrl `
+    -bearerToken $accessToken `
+    -tokenComment "$tokenComment"
 
 Write-Host "  Generate .databrickscfg" -ForegroundColor DarkYellow
 Set-Content ~/.databrickscfg "[DEFAULT]"
 Add-Content ~/.databrickscfg "host = $workspaceUrl"
-Add-Content ~/.databrickscfg "client_id = $workspaceClientId"
-Add-Content ~/.databrickscfg "client_secret = $workspaceClientSecret"
+Add-Content ~/.databrickscfg "token = $token"
 Add-Content ~/.databrickscfg ""
