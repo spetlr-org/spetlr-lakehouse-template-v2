@@ -11,7 +11,7 @@ on:
         type: string
 jobs:
   Run-Cluster-Test:
-    environment: azure-${{ inputs.environmentName }}
+    environment: ${{ inputs.environmentName }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
