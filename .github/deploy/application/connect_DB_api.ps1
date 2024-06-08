@@ -19,6 +19,13 @@ $workspaceUrl = Get-KeyVaultSecret -key $workspaceUrlKeyName -keyVaultName $reso
 $workspaceClientId = Get-KeyVaultSecret -key $workspaceSpnClientIdKeyName -keyVaultName $resourceName
 $workspaceClientSecret = Get-KeyVaultSecret -key $workspaceSpnClientSecretKeyName -keyVaultName $resourceName
 
+$workspaceUrl = $workspaceUrl -replace '"', ''
+$workspaceClientId = $workspaceClientId -replace '"', ''
+$workspaceClientSecret = $workspaceClientSecret -replace '"', ''
+
+Write-Host $workspaceUrl
+
+
 Write-Host "  Generate .databrickscfg" -ForegroundColor DarkYellow
 Set-Content ~/.databrickscfg "[DEFAULT]"
 Add-Content ~/.databrickscfg "host = $workspaceUrl"
