@@ -18,6 +18,7 @@ Write-Host "Get Databricks workspace admin SPN credentials" -ForegroundColor Gre
 $workspaceUrl = Get-KeyVaultSecret -key $workspaceUrlKeyName -keyVaultName $resourceName
 $workspaceClientId = Get-KeyVaultSecret -key $workspaceSpnClientIdKeyName -keyVaultName $resourceName
 $workspaceClientSecret = Get-KeyVaultSecret -key $workspaceSpnClientSecretKeyName -keyVaultName $resourceName
+$tenantId = Get-KeyVaultSecret -key $azureTenantId -keyVaultName $resourceName
 
 $resourceId = az resource show `
     --resource-group $resourceGroupName `
