@@ -42,50 +42,50 @@ jobs:
         shell: pwsh
         run: flake8 --exclude=workspace .
 
-  # Workspace-LocalTest-DEV-Environment:
-  #   needs: Workspace-Linting
-  #   uses: ./.github/workflows/template-spetlr-unit-test.yml
-  #   with:
-  #     environmentName: "dev"
-  #     buildId: "${{github.run_id}}"
-  #   secrets: inherit
+  Workspace-LocalTest-DEV-Environment:
+    needs: Workspace-Linting
+    uses: ./.github/workflows/template-spetlr-unit-test.yml
+    with:
+      environmentName: "dev"
+      buildId: "${{github.run_id}}"
+    secrets: inherit
 
   Workspace-ClusterTest-DEV-Environment:
-    # needs: Workspace-LocalTest-DEV-Environment
+    needs: Workspace-LocalTest-DEV-Environment
     uses: ./.github/workflows/template-spetlr-cluster-test.yml
     with:
       environmentName: "dev"
       buildId: "${{github.run_id}}"
     secrets: inherit
 
-  # Workspace-Terraform-Plan-DEV-Environment:
-  #   needs: Workspace-LocalTest-DEV-Environment
-  #   uses: ./.github/workflows/template-workspace-terraform-plan.yml
-  #   with:
-  #     environmentName: "dev"
-  #     buildId: "${{github.run_id}}"
-  #   secrets: inherit
+  Workspace-Terraform-Plan-DEV-Environment:
+    needs: Workspace-LocalTest-DEV-Environment
+    uses: ./.github/workflows/template-workspace-terraform-plan.yml
+    with:
+      environmentName: "dev"
+      buildId: "${{github.run_id}}"
+    secrets: inherit
 
-  # Workspace-LocalTest-TEST-Environment:
-  #   needs: Workspace-Linting
-  #   uses: ./.github/workflows/template-spetlr-unit-test.yml
-  #   with:
-  #     environmentName: "test"
-  #     buildId: "${{github.run_id}}"
-  #   secrets: inherit
+  Workspace-LocalTest-TEST-Environment:
+    needs: Workspace-Linting
+    uses: ./.github/workflows/template-spetlr-unit-test.yml
+    with:
+      environmentName: "test"
+      buildId: "${{github.run_id}}"
+    secrets: inherit
 
-  # Workspace-ClusterTest-TEST-Environment:
-  #   needs: Workspace-LocalTest-TEST-Environment
-  #   uses: ./.github/workflows/template-spetlr-cluster-test.yml
-  #   with:
-  #     environmentName: "test"
-  #     buildId: "${{github.run_id}}"
-  #   secrets: inherit
+  Workspace-ClusterTest-TEST-Environment:
+    needs: Workspace-LocalTest-TEST-Environment
+    uses: ./.github/workflows/template-spetlr-cluster-test.yml
+    with:
+      environmentName: "test"
+      buildId: "${{github.run_id}}"
+    secrets: inherit
 
-  # Workspace-Terraform-Plan-TEST-Environment:
-  #   needs: Workspace-LocalTest-TEST-Environment
-  #   uses: ./.github/workflows/template-workspace-terraform-plan.yml
-  #   with:
-  #     environmentName: "test"
-  #     buildId: "${{github.run_id}}"
-  #   secrets: inherit
+  Workspace-Terraform-Plan-TEST-Environment:
+    needs: Workspace-LocalTest-TEST-Environment
+    uses: ./.github/workflows/template-workspace-terraform-plan.yml
+    with:
+      environmentName: "test"
+      buildId: "${{github.run_id}}"
+    secrets: inherit
