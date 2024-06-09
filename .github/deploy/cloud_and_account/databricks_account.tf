@@ -59,6 +59,17 @@ resource "databricks_group_member" "ws_admin_member" {
   ]
 }
 
+# For spetlr test purposes, we need to add cics spn to the workspace admin group
+resource "databricks_group_member" "ws_admin_member_cicd" {
+  provider   = databricks.account
+  group_id   = databricks_group.db_ws_admin_group.id
+  member_id  = data.databricks_service_principal.db_cicd_spn.id
+  depends_on = [
+    databricks_group.db_ws_admin_group,
+    databricks_service_principal.db_ws_spn
+  ]
+}
+
 # We want the workspace admin spn also the role of metastore admin, so adding it to meta admin group
 resource "databricks_group_member" "metastore_admin_member_ws" {
   provider   = databricks.account
