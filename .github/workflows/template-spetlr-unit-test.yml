@@ -1,0 +1,31 @@
+
+name: Local Test (Unittest) - Template
+
+on:
+  workflow_call:
+    inputs:
+      environmentName:
+        required: true
+        type: string
+      buildId:
+        required: true
+        type: string
+jobs:
+  Run-Local-Test:
+    environment: ${{ inputs.environmentName }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+            
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+     
+      - name:  Local Test job (Unit testing)
+        shell: pwsh
+        run: |
+          .github/deploy/application/unittest.ps1 `
+            -environmentName ${{ inputs.environmentName }} `
+            -buildId ${{ inputs.buildId }}
+

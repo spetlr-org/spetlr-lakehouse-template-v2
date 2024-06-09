@@ -7,6 +7,8 @@ on:
     paths:
       - ".github/deploy/databricks_workspace/**"
       - "src/**"
+      - "tests/**"
+      - "workspace/**"
       - ".github/deploy/application/**"
       - "requirements-deploy.txt"
       - "requirements.txt"
@@ -16,20 +18,23 @@ on:
   workflow_dispatch:
 
 jobs:
-  Deploy-Databricks-Workspace-DEV:
-    uses: ./.github/workflows/databricks-workspace-template.yml
+  Deploy-Databricks-Workspace-DEV-Environment:
+    uses: ./.github/workflows/template-databricks-workspace-deployment.yml
     with:
       environmentName: dev
+      buildId: "${{github.run_id}}"
     secrets: inherit
-  Deploy-Databricks-Workspace-TEST:
-    needs: Deploy-Databricks-Workspace-DEV
-    uses: ./.github/workflows/databricks-workspace-template.yml
+  Deploy-Databricks-Workspace-TEST-Environment:
+    needs: Deploy-Databricks-Workspace-DEV-Environment
+    uses: ./.github/workflows/template-databricks-workspace-deployment.yml
     with:
       environmentName: test
+      buildId: "${{github.run_id}}"
     secrets: inherit
   # Deploy-Databricks-Workspace-PROD:
-  #   needs: Deploy-Databricks-Workspace-TEST
-  #   uses: ./.github/workflows/databricks-workspace-template.yml
+  #   needs: Deploy-Databricks-Workspace-TEST-Environment
+  #   uses: ./.github/workflows/template-databricks-workspace-deployment.yml
   #   with:
   #     environmentName: prod
+  #     buildId: ""
   #   secrets: inherit

@@ -4,29 +4,25 @@ param (
   [string]
   $environmentName,
 
-  [Parameter(Mandatory = $false)]
+  [Parameter(Mandatory = $true)]
   [ValidateNotNullOrEmpty()]
   [string]
-  $buildId = "0"
+  $buildId
 )
 
 $repoRoot = (git rev-parse --show-toplevel)
 
 Push-Location -Path $repoRoot
 
-
-# Step 0 Build Dependencies
-Write-Host "Now Installing Build Dependencies"
-python -m pip install --upgrade pip
-pip install -r requirements-deploy.txt
-
+# Set up environment
+Write-Host "Setting up build environment"
 . "$repoRoot/tools/set_lib_env.ps1" `
-  -buildId "0" `
+  -buildId $buildId `
   -environmentName $environmentName
 
 # Step 1 Build
 Write-Host "Now Building"
-.github/application/build.ps1 -environmentName $environmentName
+.github/deploy/application/build.ps1 -environmentName $environmentName -buildId $buildId
 
 # Step 2: submit test
 Write-Host "Now Submitting"
@@ -34,11 +30,11 @@ Write-Host "Now Submitting"
 spetlr-test-job submit `
   --tests test/ `
   --tasks-from test/cluster/ `
-  --cluster-file src/jobs/cluster_env.json `
+  --cluster-file test/test_jobs_cluster_settings/cluster_env.json `
   --requirements-file requirements-test.txt `
-  --sparklibs-file src/jobs/sparklibs.json `
-  --out-json test.json
-
+  --sparklibs-file test/test_jobs_cluster_settings/sparklibs.json `
+  --out-json test.json `
+  --upload-to "workspace"
 
 # Step 3: wait for test
 Write-Host "Now Waiting for test"

@@ -1,8 +1,8 @@
-USE CATALOG data_{ENV};
+USE CATALOG {NycTlcCatalog};
 
-CREATE DATABASE IF NOT EXISTS {NycTlcDb}
+CREATE DATABASE IF NOT EXISTS {NycTlcSchema}
 COMMENT "Bronze Database for NYC TLC"
-MANAGED LOCATION "{NycTlcDb_path}";
+MANAGED LOCATION "{NycTlcSchema_path}";
 
 CREATE TABLE IF NOT EXISTS {NycTlcBronzeTable}
 (

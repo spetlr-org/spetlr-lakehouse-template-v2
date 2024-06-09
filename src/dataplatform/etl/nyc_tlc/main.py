@@ -1,13 +1,16 @@
 from dataplatform.environment.init_configurator import init_configurator
 from dataplatform.environment.setup_environment import setup_environment
-from dataplatform.etl.nyc_tlc.bronze.nyc_tlc_bronze_orchestrator import (
+from dataplatform.etl.nyc_tlc.A_bronze.nyc_tlc_bronze_orchestrator import (
     NycTlcBronzeOrchestrator,
 )
-from dataplatform.etl.nyc_tlc.gold.nyc_tlc_gold_orchestrator import (
+from dataplatform.etl.nyc_tlc.B_silver.nyc_tlc_silver_orchestrator import (
+    NycTlcSilverOrchestrator,
+)
+from dataplatform.etl.nyc_tlc.C_gold.nyc_tlc_gold_orchestrator import (
     NycTlcGoldOrchestrator,
 )
-from dataplatform.etl.nyc_tlc.silver.nyc_tlc_silver_orchestrator import (
-    NycTlcSilverOrchestrator,
+from dataplatform.etl.nyc_tlc.D_governance.nyc_tlc_governance_orchestrator import (
+    NycTlcGovernanceOrchestrator,
 )
 
 
@@ -27,3 +30,6 @@ def main():
 
     print("NYC TLC Gold Orchestrator")
     NycTlcGoldOrchestrator().execute()
+
+    print("NYC TLC Governance Orchestrator")
+    NycTlcGovernanceOrchestrator().execute()
