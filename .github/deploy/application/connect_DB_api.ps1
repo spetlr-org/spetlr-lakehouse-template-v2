@@ -45,7 +45,7 @@ $accessToken = Get-OAuthToken `
     -clientId $clientId `
     -clientSecret $clientSecret
 
-Write-Host "Convert Bearer token to Databricks access token" -ForegroundColor DarkYellow
+Write-Host "Convert Bearer token to Databricks personal access token" -ForegroundColor DarkYellow
 $databricksAccessToken = ConvertTo-DatabricksPersonalAccessToken `
     -workspaceUrl $workspaceUrl `
     -bearerToken $accessToken
