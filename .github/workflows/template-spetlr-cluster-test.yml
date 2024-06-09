@@ -39,9 +39,12 @@ jobs:
         shell: pwsh
         run: |
           .github/deploy/application/connect_DB_api.ps1 `
-            -environmentName "${{ inputs.environmentName }}"
+            -environmentName "${{ inputs.environmentName }}" `
+            -tenantId ${{ secrets.SPN_TENANT_ID }} `
+            -clientId ${{ secrets.SPN_CLIENT_ID }} `
+            -clientSecret ${{ secrets.SPN_CLIENT_SECRET }}
 
-      - name: Cluster Test job (integrationtest)
+      - name: Cluster Test job (integration testing)
         shell: pwsh
         run: |
           .github/deploy/application/test.ps1 `
