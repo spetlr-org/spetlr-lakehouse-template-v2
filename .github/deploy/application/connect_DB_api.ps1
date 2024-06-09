@@ -2,7 +2,22 @@ param (
     [Parameter(Mandatory = $true)]
     [ValidateNotNullOrEmpty()]
     [string]
-    $environmentName
+    $environmentName,
+
+    [Parameter(Mandatory = $true)]
+    [ValidateNotNullOrEmpty()]
+    [string]
+    $tenantId,
+
+    [Parameter(Mandatory = $true)]
+    [ValidateNotNullOrEmpty()]
+    [string]
+    $clientId,
+
+    [Parameter(Mandatory = $true)]
+    [ValidateNotNullOrEmpty()]
+    [string]
+    $clientSecret
 )
 
 $repoRoot = (git rev-parse --show-toplevel)
@@ -13,50 +28,30 @@ $repoRoot = (git rev-parse --show-toplevel)
 ###############################################################################################
 # Connect to Databricks
 ###############################################################################################
-Write-Host "Get Databricks workspace admin SPN credentials" -ForegroundColor Green
-
-$workspaceUrlFull = Get-KeyVaultSecret -key $workspaceUrlKeyName -keyVaultName $resourceName
-$workspaceClientId = Get-KeyVaultSecret -key $workspaceSpnClientIdKeyName -keyVaultName $resourceName
-$workspaceClientSecret = Get-KeyVaultSecret -key $workspaceSpnClientSecretKeyName -keyVaultName $resourceName
-$tenantId = Get-KeyVaultSecret -key $azureTenantId -keyVaultName $resourceName
-
-Write-Host "  Collect resourceId and workspace URL" -ForegroundColor DarkYellow
-$resourceId = az resource show `
-    --resource-group $resourceGroupName `
-    --name $resourceName `
-    --resource-type "Microsoft.Databricks/workspaces" `
-    --query id `
-    --out tsv
-
-Throw-WhenError -output $resourceId
-
+Write-Host "Get Databricks workspace URL" -ForegroundColor Green
 $workspaceUrl = az resource show `
     --resource-group $resourceGroupName `
-    --name $databricksName `
+    --name $resourceName `
     --resource-type "Microsoft.Databricks/workspaces" `
     --query properties.workspaceUrl `
     --out tsv
 
-Throw-WhenError -output $workspaceUrl
+$workspaceUrl = "https://$workspaceUrl"
+Write-Host "Workspace URL is: $workspaceUrl" -ForegroundColor DarkYellow
 
-Write-Host "workspaceUrl is: $($workspaceUrl)"
-
-Write-Host "Add the SPN to the Databricks Workspace as an admin user" -ForegroundColor DarkYellow
-$accessToken = Set-DatabricksSpnAdminUser `
+Write-Host "Get Bearer token for Pipeline SPN" -ForegroundColor DarkYellow
+$accessToken = Get-OAuthToken `
     -tenantId $tenantId `
-    -clientId $workspaceClientId `
-    -clientSecret $workspaceClientSecret `
-    -workspaceUrl $workspaceUrl `
-    -resourceId $resourceId
+    -clientId $clientId `
+    -clientSecret $clientSecret
 
-Write-Host "Generate SPN personal access token" -ForegroundColor DarkYellow
-$token = ConvertTo-DatabricksPersonalAccessToken `
+Write-Host "Convert Bearer token to Databricks access token" -ForegroundColor DarkYellow
+$databricksAccessToken = ConvertTo-DatabricksPersonalAccessToken `
     -workspaceUrl $workspaceUrl `
-    -bearerToken $accessToken `
-    -tokenComment "$tokenComment"
+    -bearerToken $accessToken
 
 Write-Host "Generate .databrickscfg" -ForegroundColor DarkYellow
 Set-Content ~/.databrickscfg "[DEFAULT]"
-Add-Content ~/.databrickscfg "host = $workspaceUrlFull"
-Add-Content ~/.databrickscfg "token = $token"
+Add-Content ~/.databrickscfg "host = $workspaceUrl"
+Add-Content ~/.databrickscfg "token = $databricksAccessToken"
 Add-Content ~/.databrickscfg ""
