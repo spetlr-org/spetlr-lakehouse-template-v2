@@ -38,7 +38,9 @@ $workspaceUrl = az resource show `
 
 Throw-WhenError -output $workspaceUrl
 
-Write-Host "  Add the SPN to the Databricks Workspace as an admin user" -ForegroundColor DarkYellow
+Write-Host "workspaceUrl is: $($workspaceUrl)"
+
+Write-Host "Add the SPN to the Databricks Workspace as an admin user" -ForegroundColor DarkYellow
 $accessToken = Set-DatabricksSpnAdminUser `
     -tenantId $tenantId `
     -clientId $workspaceClientId `
@@ -46,13 +48,13 @@ $accessToken = Set-DatabricksSpnAdminUser `
     -workspaceUrl $workspaceUrl `
     -resourceId $resourceId
 
-Write-Host "  Generate SPN personal access token" -ForegroundColor DarkYellow
+Write-Host "Generate SPN personal access token" -ForegroundColor DarkYellow
 $token = ConvertTo-DatabricksPersonalAccessToken `
     -workspaceUrl $workspaceUrl `
     -bearerToken $accessToken `
     -tokenComment "$tokenComment"
 
-Write-Host "  Generate .databrickscfg" -ForegroundColor DarkYellow
+Write-Host "Generate .databrickscfg" -ForegroundColor DarkYellow
 Set-Content ~/.databrickscfg "[DEFAULT]"
 Add-Content ~/.databrickscfg "host = $workspaceUrlFull"
 Add-Content ~/.databrickscfg "token = $token"
