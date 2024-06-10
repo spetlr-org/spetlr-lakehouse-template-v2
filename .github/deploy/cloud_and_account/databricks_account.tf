@@ -63,7 +63,7 @@ resource "databricks_group_member" "ws_admin_member" {
 resource "databricks_group_member" "ws_admin_member_cicd" {
   provider   = databricks.account
   group_id   = databricks_group.db_ws_admin_group.id
-  member_id  = data.azuread_service_principal.cicd_spn.id
+  member_id  = data.databricks_service_principal.cicd_pipeline_spn.id
   depends_on = [
     databricks_group.db_ws_admin_group,
     databricks_service_principal.db_ws_spn

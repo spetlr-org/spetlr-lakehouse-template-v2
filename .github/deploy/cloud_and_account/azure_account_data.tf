@@ -21,3 +21,8 @@ data "databricks_group" "db_metastore_admin_group" {
   provider     = databricks.account
   display_name = var.db_metastore_admin_group
 }
+
+data "databricks_service_principal" "cicd_pipeline_spn" {
+  provider       = databricks.account
+  application_id = data.azuread_service_principal.cicd_spn.client_id
+}
