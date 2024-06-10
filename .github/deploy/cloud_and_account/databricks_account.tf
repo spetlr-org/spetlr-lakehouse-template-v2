@@ -8,7 +8,7 @@ resource "databricks_group" "db_metastore_admin_group" {
 
 resource "databricks_service_principal" "db_meta_spn" {
   provider       = databricks.account
-  application_id = azuread_service_principal.db_meta_spn.application_id
+  application_id = azuread_service_principal.db_meta_spn.client_id
   display_name   = local.db_metastore_spn_name
   depends_on     = [
     azuread_service_principal.db_meta_spn
@@ -42,7 +42,7 @@ resource "databricks_group" "db_ws_admin_group" {
 
 resource "databricks_service_principal" "db_ws_spn" {
   provider       = databricks.account
-  application_id = azuread_service_principal.db_ws_spn.application_id
+  application_id = azuread_service_principal.db_ws_spn.client_id
   display_name   = local.db_workspace_spn_name
   depends_on     = [
     azuread_service_principal.db_ws_spn
@@ -53,6 +53,17 @@ resource "databricks_group_member" "ws_admin_member" {
   provider   = databricks.account
   group_id   = databricks_group.db_ws_admin_group.id
   member_id  = databricks_service_principal.db_ws_spn.id
+  depends_on = [
+    databricks_group.db_ws_admin_group,
+    databricks_service_principal.db_ws_spn
+  ]
+}
+
+# For spetlr test purposes, we need to add cicd spn to the workspace admin group
+resource "databricks_group_member" "ws_admin_member_cicd" {
+  provider   = databricks.account
+  group_id   = databricks_group.db_ws_admin_group.id
+  member_id  = data.azuread_service_principal.cicd_spn.id
   depends_on = [
     databricks_group.db_ws_admin_group,
     databricks_service_principal.db_ws_spn
