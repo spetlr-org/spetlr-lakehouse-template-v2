@@ -20,19 +20,19 @@ resource "databricks_pipeline" "nyc_tlc_dlt" {
 
   library {
     notebook {
-      path = "/Workspace/Shared/dataplatform/nyc_tlc_dlt/orchestrate_dlt_bronze.py"
+      path = "/Workspace/Shared/dataplatform/nyc_tlc_dlt/01_bronze_dlt_orchestrator.py"
     }
   }
 
   library {
     notebook {
-      path = "/Workspace/Shared/dataplatform/nyc_tlc_dlt/orchestrate_dlt_silver.py"
+      path = "/Workspace/Shared/dataplatform/nyc_tlc_dlt/02_silver_dlt_orchestrator.py"
     }
   }
 
   library {
     notebook {
-      path = "/Workspace/Shared/dataplatform/nyc_tlc_dlt/orchestrate_dlt_gold.py"
+      path = "/Workspace/Shared/dataplatform/nyc_tlc_dlt/03_gold_orchestrator.py"
     }
   }
 
