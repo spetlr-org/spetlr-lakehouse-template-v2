@@ -13,3 +13,17 @@ resource "databricks_catalog" "db_data_catalog" {
     databricks_external_location.ex_data_catalog_location,
   ]
 }
+
+resource "databricks_schema" "db_dlt_nyc_tlc_schema" {
+  provider     = databricks.workspace
+  catalog_name = local.default_catalog
+  name         = var.db_dlt_nyc_tlc_schema
+  comment      = "this schema is for dlt pipeline of nyc_tlc ETL"
+  properties   = {
+    kind = "various"
+  }
+  owner        = data.databricks_group.db_ws_admin_group.display_name
+  depends_on   = [
+    databricks_catalog.db_data_catalog
+  ]
+}

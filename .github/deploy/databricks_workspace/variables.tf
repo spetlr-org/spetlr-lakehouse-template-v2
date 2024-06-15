@@ -75,6 +75,12 @@ variable "db_workspace_admin_group" {
   description = "An Azure Databricks group with Databricks workspace Admin privilages"
 }
 
+variable "db_dlt_nyc_tlc_schema" {
+  type        = string
+  default     = "nyc_tlc_dlt"
+  description = "The schema name for the DLT pipeline of NYC TLC ETL"
+}
+
 locals {
   resource_group_name    = "${var.system_name}-${upper(var.environment)}-${var.service_name}"
   resource_name          = "${var.company_abbreviation}${var.system_abbreviation}${var.environment}"
