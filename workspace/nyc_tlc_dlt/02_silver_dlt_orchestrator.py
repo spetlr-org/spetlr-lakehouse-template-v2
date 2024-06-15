@@ -19,7 +19,7 @@ import pyspark.sql.functions as f
 
 # COMMAND ----------
 
-source = "nyc_tlc_dlt_silver"
+source = "nyc_tlc_dlt_bronze"
 
 # COMMAND ----------
 
@@ -30,23 +30,24 @@ source = "nyc_tlc_dlt_silver"
 
 
 @dlt.table
-def nyc_tlc_dlt_gold(table_properties={"quality": "gold"}):
-    df_target = (
-        dlt.read(source)
-        .filter(f.col("paymentType") == "Credit")
-        .groupBy("vendorId")
-        .agg(
-            f.sum("passengerCount").alias("TotalPassengers"),
-            f.sum("tripDistance").alias("TotalTripDistance"),
-            f.sum("tipAmount").alias("TotalTipAmount"),
-            f.sum("totalAmount").alias("TotalPaidAmount"),
-        )
+def nyc_tlc_dlt_silver(table_properties={"quality": "silver"}):
+    df_target = dlt.read(source).withColumn(
+        "paymentType",
+        f.when(f.col("paymentType") == "1", "Credit")
+        .when(f.col("paymentType") == "2", "Cash")
+        .when(f.col("paymentType") == "3", "No charge")
+        .when(f.col("paymentType") == "4", "Dispute")
+        .when(f.col("paymentType") == "5", "Unknown")
+        .when(f.col("paymentType") == "6", "Voided trip")
+        .otherwise("Undefined"),
     )
+
     df_target = df_target.select(
-        f.col("vendorID").cast("string").alias("VendorID"),
-        f.col("TotalPassengers").cast("int"),
-        f.col("TotalTripDistance").cast("decimal(10,1)"),
-        f.col("TotalTipAmount").cast("decimal(10,1)"),
-        f.col("TotalPaidAmount").cast("decimal(10,1)"),
+        f.col("vendorID").cast("string"),
+        f.col("passengerCount").cast("int"),
+        f.col("tripDistance").cast("double"),
+        f.col("paymentType").cast("string"),
+        f.col("tipAmount").cast("double"),
+        f.col("totalAmount").cast("double"),
     )
     return df_target

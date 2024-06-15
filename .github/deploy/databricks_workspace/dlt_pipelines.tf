@@ -5,6 +5,7 @@ resource "databricks_pipeline" "nyc_tlc_dlt" {
   photon        = false
   channel       = "CURRENT"
   catalog       = "data_${var.environment}"
+  target        = var.db_dlt_nyc_tlc_schema
   continuous    = false
   configuration = {
     env = var.environment
@@ -32,11 +33,12 @@ resource "databricks_pipeline" "nyc_tlc_dlt" {
 
   library {
     notebook {
-      path = "/Workspace/Shared/dataplatform/nyc_tlc_dlt/03_gold_orchestrator.py"
+      path = "/Workspace/Shared/dataplatform/nyc_tlc_dlt/03_gold_dlt_orchestrator.py"
     }
   }
 
   depends_on = [
     databricks_notebook.sync_notebook,
+    databricks_schema.db_dlt_nyc_tlc_schema
     ]
 }
