@@ -91,6 +91,7 @@ After we have set up cloud requirements in the previous step, we can deploy Data
 
 As mentioned previously, we first need our created SPN for gituhub and Databricks Account to be added to the Databricks account as an admin. Then, we use this SPN to deploy the following components:
 
+- Databricks Metastore and attachement to workspaces: We deploy a Metastore in the Databricks' account and attach our workspaces to that Metastore.
 - Databricks Metastore and Workspace SPNs: Here, we add two previously created SPNs in the cloud deployment to the Databricks Account. Note that the Metastore SPN is also elevated as an Account admin because of certain requirements in our deployment.
 - Databricks Metastore Admin, Workspace Admin, and Table User groups: We create admin groups for metastore and workspace and add the corresponding SPNs to these groups. We also create another group for the purpose of reading tables in the catalog.
 - Catalog, schema and volume: We deploy a catalog (infrastructure catalog for managing SPETLR-related files and objects), as well as infrastructure schema and volumes. The catalog is also attached to the workspace. We do not deploy any data-related objects in this level as it is intended to be controlled by the workspace-level deployment.
@@ -102,12 +103,13 @@ As mentioned previously, we first need our created SPN for gituhub and Databrick
 - Default all-purpose cluster
 - Serverless SQL endpoint
 - Data catalog: A catalog to encapsulate all ETL-related objects.
+- Schema: Only schemas related to DLT pipelines are deployed here (for UC-enabled DLT pipelines), as a DLT pipeline needs to point to an already existed schema.
 - Access and privileges: Providing access for objects deployed in the workspace, and granting required privileges.
 - Workflows and jobs: Here we have three objectives:
 
-* A job created from SPETLR-controlled ETL (SPETLR python wheel is also being deployed to already created infrastructure volume)
+* A job created from SPETLR-controlled ETL (SPETLR python wheel is also being deployed to the already created infrastructure volume)
 * A job created from notebooks (Notebooks are also being deployed to the Shared folder of the Databricks workspace)
-* A DLT job created from DLT notebooks (DLT notebooks are also being deployed to the Shared folder of the Databricks workspace)
+* A DLT pipeline created from DLT notebooks (DLT notebooks are also being deployed to the Shared folder of the Databricks workspace)
   All of these jobs will process the same data and will create separate data objects in the catalog to identify which data is created by which job.
 
 ## Medallion architecture
@@ -150,6 +152,10 @@ The silver data is used for presenting a consumption-ready gold table. In this d
 | -------- | --------------- | ----------------- | -------------- | --------------- |
 | 1        | 5083            | 1109              | 7100           | 90023           |
 
+## Governance
+
+After processing data in above layers, we assign certain privilages for catalog, schema and tables to specific groups. In this project, the governance step is only done for objects created by SPETLR-workflow and notebook-workflow, but it is also possible to do it for objects created by DLT-pipeline.
+
 # Databricks Workflow
 
 This demo project showcases an example of a workflow within the Databricks environment. The project demonstrates the implementation of a three-layer medallion architecture, with each layer being represented by a job task.
@@ -165,3 +171,10 @@ This demo project showcases an example of a workflow within the Databricks envir
 - ETL from DLT pipelines: We can also create DLT notebooks and a pipeline uses those notebooks to process our medallion data:
 
 ![spetlr-job](/img/ETL_from_DLT.png)
+
+# Unit and integration testing with SPETLR
+
+This is only applicable for ETL flows that are developed using SPETLR (no test for ETL objects created by notebook workflows or DLT pipelines). Theses tests are automatically starts when there is a change related to the databricks workspace deployment upon creating/ updating a pull request. Tests are divided into local and cluster tests, which local tests are deployed in the Github action pipeline (they only need a pyhon-installed environment), and also cluster tests that are deployed to the databricks workspace and using a cluster for testing.
+
+- Unit tests: They are for checking the correctness of transformations in the ETL process. These are both tested locally and on cluster.
+- Integration tests: For EtE testing of the full ETL process from from bronze to gold layers. These are only tested on cluster, as they are not possible to be tested locally.
