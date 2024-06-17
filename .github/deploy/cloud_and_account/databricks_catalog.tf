@@ -7,10 +7,10 @@ resource "databricks_catalog" "db_infrastructure_catalog" {
   comment        = "Catalog to encapsulate all data schema under this workspace"
   isolation_mode = "ISOLATED"
   storage_root   = databricks_external_location.ex_infrastructure_catalog_location.url
-  owner = databricks_group.db_metastore_admin_group.display_name
+  owner = data.databricks_group.db_metastore_admin_group.display_name
   depends_on     = [
     databricks_external_location.ex_infrastructure_catalog_location,
-    databricks_group.db_metastore_admin_group
+    data.databricks_group.db_metastore_admin_group
   ]
 }
 
@@ -22,7 +22,7 @@ resource "databricks_schema" "db_infrastructure_schema" {
   properties   = {
     kind = "various"
   }
-  owner        = databricks_group.db_metastore_admin_group.display_name
+  owner        = data.databricks_group.db_metastore_admin_group.display_name
   storage_root = databricks_external_location.ex_infrastructure_catalog_location.url
   depends_on   = [
     databricks_catalog.db_infrastructure_catalog,
@@ -38,7 +38,7 @@ resource "databricks_volume" "db_infrastructure_libraries_volume" {
   volume_type      = "EXTERNAL"
   storage_location = databricks_external_location.ex_infrastructure_libraries_volume_location.url
   comment          = "External volume to store infrastructure library files"
-  owner            = databricks_group.db_metastore_admin_group.display_name
+  owner            = data.databricks_group.db_metastore_admin_group.display_name
   depends_on       = [
     databricks_schema.db_infrastructure_schema,
     databricks_grants.ex_infrastructure_libraries_volume_grants
@@ -53,7 +53,7 @@ resource "databricks_volume" "db_infrastructure_tests_volume" {
   volume_type      = "EXTERNAL"
   storage_location = databricks_external_location.ex_infrastructure_tests_volume_location.url
   comment          = "External volume to store infrastructure test files"
-  owner            = databricks_group.db_metastore_admin_group.display_name
+  owner            = data.databricks_group.db_metastore_admin_group.display_name
   depends_on       = [
     databricks_schema.db_infrastructure_schema,
     databricks_grants.ex_infrastructure_tests_volume_grants
