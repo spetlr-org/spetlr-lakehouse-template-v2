@@ -106,7 +106,7 @@ resource "databricks_grants" "ex_creds" {
     privileges = ["ALL_PRIVILEGES"]
   }
   grant {
-    principal  = local.db_metastore_admin_group
+    principal  = var.db_metastore_admin_group
     privileges = ["ALL_PRIVILEGES"]
   }
   depends_on = [
@@ -234,7 +234,7 @@ resource "databricks_grants" "infrastructure_catalog_grants" {
     privileges = ["ALL_PRIVILEGES"]
   }
    grant {
-    principal  = databricks_group.db_metastore_admin_group.display_name
+    principal  = data.databricks_group.db_metastore_admin_group.display_name
     privileges = ["ALL_PRIVILEGES"]
   }
   depends_on = [

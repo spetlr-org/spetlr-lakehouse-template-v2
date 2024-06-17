@@ -10,7 +10,7 @@ resource "databricks_catalog" "db_infrastructure_catalog" {
   owner = data.databricks_group.db_metastore_admin_group.display_name
   depends_on     = [
     databricks_external_location.ex_infrastructure_catalog_location,
-    databricks_group.db_metastore_admin_group
+    data.databricks_group.db_metastore_admin_group
   ]
 }
 
