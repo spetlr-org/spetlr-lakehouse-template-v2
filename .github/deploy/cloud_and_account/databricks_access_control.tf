@@ -63,7 +63,7 @@ resource "databricks_grants" "metastore_admin_grants" {
   provider  = databricks.workspace
   metastore = data.databricks_metastore.db_metastore.id
   grant {
-    principal  = local.db_metastore_admin_group
+    principal  = var.db_metastore_admin_group
     privileges = ["CREATE_CATALOG", "CREATE_CONNECTION", "CREATE_EXTERNAL_LOCATION", "CREATE_STORAGE_CREDENTIAL"]
   }
   depends_on = [
