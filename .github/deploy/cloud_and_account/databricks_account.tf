@@ -41,7 +41,7 @@ resource "databricks_group_member" "metastore_admin_member_env" {
   member_id = databricks_service_principal.db_meta_spn.id
   depends_on = [
     data.databricks_group.db_metastore_admin_group,
-    databricks_service_principal.db_meta_spn.id
+    databricks_service_principal.db_meta_spn
   ]
 }
 
@@ -87,7 +87,7 @@ resource "databricks_group_member" "metastore_admin_member_ws" {
   group_id   = data.databricks_group.db_metastore_admin_group.id
   member_id  = databricks_service_principal.db_ws_spn.id
   depends_on = [
-    data.databricks_group.db_metastore_admin_group.id,
+    data.databricks_group.db_metastore_admin_group,
     databricks_service_principal.db_ws_spn
   ]
 }
