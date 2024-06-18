@@ -199,7 +199,8 @@ locals {
   # Databricks catalog for infrastructure
   infrastructure_catalog = "infrastructure_${var.environment}"
 
-  # Databricks environment-dependant groups
+  # Databricks groups
+  db_metastore_admin_group = "${var.db_metastore_admin_group}-${var.environment}"
   db_workspace_admin_group = "${var.db_workspace_admin_group}-${var.environment}"
   db_table_user_group = "${var.db_table_user_group}-${var.environment}"
 

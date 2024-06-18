@@ -23,11 +23,11 @@ resource "time_sleep" "wait_for_metastore_assign" {
 resource "databricks_mws_permission_assignment" "add_metastore_admin_group_to_workspace" {
   provider      = databricks.account
   workspace_id  = azurerm_databricks_workspace.db_workspace.workspace_id
-  principal_id  = data.databricks_group.db_metastore_admin_group.id
+  principal_id  = databricks_group.db_metastore_admin_group.id
   permissions   = ["ADMIN"]
   depends_on    = [
     azurerm_databricks_workspace.db_workspace,
-    data.databricks_group.db_metastore_admin_group,
+    databricks_group.db_metastore_admin_group,
     time_sleep.wait_for_metastore_assign
   ]
 }
@@ -63,12 +63,12 @@ resource "databricks_grants" "metastore_admin_grants" {
   provider  = databricks.workspace
   metastore = data.databricks_metastore.db_metastore.id
   grant {
-    principal  = var.db_metastore_admin_group
+    principal  = local.db_metastore_admin_group
     privileges = ["CREATE_CATALOG", "CREATE_CONNECTION", "CREATE_EXTERNAL_LOCATION", "CREATE_STORAGE_CREDENTIAL"]
   }
   depends_on = [
     data.databricks_metastore.db_metastore,
-    data.databricks_group.db_metastore_admin_group,
+    databricks_group.db_metastore_admin_group,
     databricks_metastore_assignment.db_metastore_assign_workspace,
     databricks_mws_permission_assignment.add_metastore_admin_group_to_workspace,
     databricks_mws_permission_assignment.add_workspace_group_to_workspace
@@ -106,7 +106,7 @@ resource "databricks_grants" "ex_creds" {
     privileges = ["ALL_PRIVILEGES"]
   }
   grant {
-    principal  = var.db_metastore_admin_group
+    principal  = local.db_metastore_admin_group
     privileges = ["ALL_PRIVILEGES"]
   }
   depends_on = [
@@ -147,7 +147,7 @@ resource "databricks_grants" "ex_infrastructure_catalog_grants" {
     privileges = ["ALL_PRIVILEGES"]
   }
   grant {
-    principal  = data.databricks_group.db_metastore_admin_group.display_name
+    principal  = databricks_group.db_metastore_admin_group.display_name
     privileges = ["ALL_PRIVILEGES"]
   }
   depends_on   = [databricks_external_location.ex_infrastructure_catalog_location]
@@ -234,7 +234,7 @@ resource "databricks_grants" "infrastructure_catalog_grants" {
     privileges = ["ALL_PRIVILEGES"]
   }
    grant {
-    principal  = data.databricks_group.db_metastore_admin_group.display_name
+    principal  = databricks_group.db_metastore_admin_group.display_name
     privileges = ["ALL_PRIVILEGES"]
   }
   depends_on = [
@@ -242,7 +242,6 @@ resource "databricks_grants" "infrastructure_catalog_grants" {
     databricks_mws_permission_assignment.add_metastore_admin_group_to_workspace,
     databricks_mws_permission_assignment.add_workspace_group_to_workspace,
     databricks_group.db_ws_admin_group,
-    data.databricks_group.db_metastore_admin_group
+    databricks_group.db_metastore_admin_group
     ]
 }
-
