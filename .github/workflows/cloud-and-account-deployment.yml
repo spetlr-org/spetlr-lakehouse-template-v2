@@ -27,9 +27,9 @@ jobs:
     with:
       environmentName: "test"
     secrets: inherit
-  # Deploy-PROD-Environment:
-  #   needs: Deploy-TEST-Environment
-  #   uses: ./.github/workflows/template-cloud-and-account-deployment.yml
-  #   with:
-  #     environmentName: "prod"
-  #   secrets: inherit
+  Deploy-PROD-Environment:
+    needs: Deploy-TEST-Environment
+    uses: ./.github/workflows/template-cloud-and-account-deployment.yml
+    with:
+      environmentName: "prod"
+    secrets: inherit
