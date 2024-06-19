@@ -31,10 +31,10 @@ jobs:
       environmentName: test
       buildId: "${{github.run_id}}"
     secrets: inherit
-  # Deploy-Databricks-Workspace-PROD:
-  #   needs: Deploy-Databricks-Workspace-TEST-Environment
-  #   uses: ./.github/workflows/template-databricks-workspace-deployment.yml
-  #   with:
-  #     environmentName: prod
-  #     buildId: ""
-  #   secrets: inherit
+  Deploy-Databricks-Workspace-PROD:
+    needs: Deploy-Databricks-Workspace-TEST-Environment
+    uses: ./.github/workflows/template-databricks-workspace-deployment.yml
+    with:
+      environmentName: prod
+      buildId: "${{github.run_id}}"
+    secrets: inherit
