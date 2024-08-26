@@ -3,7 +3,7 @@
 # First, we want to exctract all directories nested in the workspace folder
 locals {
   # Replace this with the path to your 'dataplatform' directory
-  base_directory = "${dirname(dirname(dirname(path.cwd)))}/workspace"
+  base_directory = "${path.cwd}/workspace"
 
   db_workspace_base_path = "/Workspace/Shared/dataplatform"
 
