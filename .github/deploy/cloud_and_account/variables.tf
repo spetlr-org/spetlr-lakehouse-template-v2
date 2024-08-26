@@ -37,6 +37,11 @@ variable "db_table_user_group" {
   description = "A Databricks workspace group with table usage privilages"
 }
 
+variable "db_account_id" {
+  type        = string
+  description = "The databricks Account Id for Spetlr subscription."
+}
+
 # Some of the variables need to be suffixed with the environment name or other unique identifier
 locals {
   # Azure resources 
