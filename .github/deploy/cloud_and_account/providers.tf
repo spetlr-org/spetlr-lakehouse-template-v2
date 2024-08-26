@@ -23,13 +23,13 @@ provider "azurerm" {
 provider "databricks" {
   alias      = "account"
   host       = "https://accounts.azuredatabricks.net"
-  account_id = var.databricks_account_id
+  account_id = module.global_variables.db_account_id
 }
 
 provider "databricks" {
   alias               = "workspace"
   host                = azurerm_key_vault_secret.db_ws_url.value
-  azure_client_id     = azuread_service_principal.db_meta_spn.client_id
+  azure_client_id     = data.azuread_service_principal.db_meta_spn.client_id
   azure_client_secret = azuread_service_principal_password.db_meta_spn_password.value
   azure_tenant_id     = data.azurerm_client_config.current.tenant_id
 }
