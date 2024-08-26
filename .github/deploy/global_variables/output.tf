@@ -80,7 +80,3 @@ output db_metastore_admin_group {
 output db_workspace_admin_group {
   value = var.db_workspace_admin_group
 }
-
-output db_account_id {
-  value = var.db_account_id
-}

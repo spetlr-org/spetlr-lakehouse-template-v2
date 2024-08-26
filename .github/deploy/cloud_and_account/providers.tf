@@ -23,7 +23,7 @@ provider "azurerm" {
 provider "databricks" {
   alias      = "account"
   host       = "https://accounts.azuredatabricks.net"
-  account_id = module.global_variables.db_account_id
+  account_id = var.db_account_id
 }
 
 provider "databricks" {

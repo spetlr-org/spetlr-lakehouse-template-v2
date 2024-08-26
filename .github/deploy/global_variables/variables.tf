@@ -120,9 +120,3 @@ variable "db_workspace_admin_group" {
   default     = "SpetlrLhV2-workspace-admins"
   description = "Databricks group with Databricks workspace Admin privilages"
 }
-
-variable "db_account_id" {
-  type        = string
-  default     = "939f40ff-6952-42dc-9aca-3830070d18d3"
-  description = "The databricks Account Id for Spetlr subscription"
-}

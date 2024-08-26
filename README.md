@@ -24,8 +24,8 @@ We use Terraform to set up our cloud infrastructure on Azure. With Terraform, we
 
 ### Create a service principal (SPN) for the github actions pipeline and Databricks Account Admin:
 
-To ease our deployment and management, we use a single SPN serving two roles, i.e., github cloud deployment principal and Databricks account admin principal.
-For the github deployment pipeline, we need first to create a SPN with right access in our Azure subscription and store its secrets in the github project secrets. We have a module in .github/deploy/github_SPN.ps1 to create such a SPN. Thus, you need to deploy it manually and store its secrets in your github project. Note that this module requires some utility functions that are stored in .github/deploy/Utilities folder that you need to run those before running github_SPN.ps1.
+To ease our deployment and management, we use a single SPN serving two roles, i.e., github cloud deployment principal and Databricks account admin principal. We call this SPN as the continuous integration and deployment (CICD) SPN.
+For the github deployment pipeline, we need first to create a SPN with right accesses in our Azure subscription. We have a module in .github/deploy/github_SPN.ps1 to create such a SPN. Thus, you need to deploy it manually and store its secrets in your github project. Note that this module requires some utility functions that are stored in .github/deploy/Utilities folder that you need to run those before running github_SPN.ps1.
 After the deployment, you need to manually add this SPN to your Databricks Account Console with the "Admin" privilege.
 
 ### Create Azure resources for the terraform backend:
@@ -68,11 +68,22 @@ az storage account keys list \
     --query '[0].value' -o tsv
 ```
 
+### Save secrets in the github environments:
+
+We store our confidential values in our project's secrets and retrieve them for our deployments. So, you need to create the following secrets in your github project's environments:
+
+- SPN_CLIENT_ID: The application id of CICD SPN
+- SPN_CLIENT_SECRET: The application secret of CICD SPN
+- SPN_TENANT_ID: Azure Subscription tenant/ directory id
+- SPN_SUBSCRIPTION_ID: Azure Subscription id
+- SPN_STORAGE_ACCESS_KEY: Azure storage account access key, where we created above for the Terraform backend.
+- SPN_DATABRICKS_ACCOUNT_ID: Databricks Account id that is avaialble in the Databricks Account console.
+
 ## Software deployment practices
 
 Here we follow a common practice of the software deployment, i.e., deploying to three environments (dev, test and prod).
 
-For automating our continuous integration and deployment (CICD), we rely on Azure SPNs (These SPNs will be added to the Databricks Account) and Databricks groups. Below is the schematic for the deployment of the entire project that are automated by several SPNs:
+For automating our CICD, we rely on Azure SPNs (These SPNs will be added to the Databricks Account) and Databricks groups. Below is the schematic for the deployment of the entire project that are automated by several SPNs:
 
 ![project_deployment](/img/SpetlrLakehouseV2_cicd.png)
 
