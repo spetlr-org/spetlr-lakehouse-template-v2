@@ -24,9 +24,7 @@ import pyspark.sql.functions as f
 # COMMAND ----------
 catalog = f"data_{env}"
 source_table_name = "nyc_tlc_bronze"
-schema_path = (
-    f"abfss://data-catalog@spetlrlhv2{env}.dfs.core.windows.net/notebook_nyc_tlc/"
-)
+schema_path = f"abfss://data@spetlrlhv2{env}.dfs.core.windows.net/notebook_nyc_tlc/"
 schema_name = "notebook_nyc_tlc"
 target_table_name = "nyc_tlc_silver"
 

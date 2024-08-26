@@ -18,7 +18,7 @@ source_path = (
     f"abfss://landing@spetlrlhv2{env}.dfs.core.windows.net/NYC_TLC_dataset.csv"
 )
 target_schema_path = (
-    f"abfss://data-catalog@spetlrlhv2{env}.dfs.core.windows.net/notebook_nyc_tlc/"
+    f"abfss://data@spetlrlhv2{env}.dfs.core.windows.net/notebook_nyc_tlc/"
 )
 target_schema_name = "notebook_nyc_tlc"
 target_table_name = "nyc_tlc_bronze"

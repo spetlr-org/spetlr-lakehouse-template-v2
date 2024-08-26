@@ -1,8 +1,11 @@
-## Extrenal location for medallion data components 
+## This module is responsible for creating the necessary resources for ##
+## Databricks account and workspace access control ##
+
+# Extrenal location for medallion data components ------------------------------
 resource "databricks_external_location" "ex_data_catalog_location" {
   provider        = databricks.workspace
-  name            = "${var.environment}-${var.data_catalog_container}"
-  url             = "abfss://${var.data_catalog_container}@${local.resource_name}.dfs.core.windows.net/"
+  name            = "${var.environment}-${module.global_variables.az_data_container}"
+  url             = "abfss://${module.global_variables.az_data_container}@${local.resource_name}.dfs.core.windows.net/"
   credential_name = data.databricks_storage_credential.ex_storage_cred.name
   comment         = "Databricks external location for data catalog"
   depends_on      = [
@@ -20,7 +23,7 @@ resource "databricks_grants" "ex_data_catalog_location_grants" {
   depends_on = [databricks_external_location.ex_data_catalog_location]
 }
 
-# Catalog permissions
+# Catalog permissions ---------------------------------------------------------
 resource "databricks_grants" "data_catalog_grants" {
   provider     = databricks.workspace
   catalog      = databricks_catalog.db_data_catalog.name

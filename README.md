@@ -8,7 +8,7 @@ Utilizing the popular NYC taxi dataset as the example data, we have structured t
 
 **Key Features**
 
-- Automated terraform deployment for Azure cloud resources, Databricks account- and workspace-level elements and artifacts.
+- Automated terraform deployment for Azure cloud resources, Databricks Account- and Workspace-level elements and artifacts.
 - Govern and manage accesses for the entire project.
 - Fully unit and integration tested Lakehouse platform using SPETLR: We utilize SPETLR for managing and orchestrating ETL processes and also include a comprehensive suite of tests that ensure the reliability and accuracy of the codebase (this is not implemented for the notebook job, as well as the DLT pipeline).
 - NYC Taxi dataset example: Learn how to work with a real-world dataset that demonstrates the power of Databricks and the Lakehouse platform.
@@ -35,7 +35,7 @@ To manage deployment with terraform, we need to preserve the state files of the 
 1. Create a resource group ($RESOURCE_GROUP_NAME = 'Terraform-State-Stoarge'). Note that, we choose this resource group in the same location as our other resources.
 
 ```powershell
-az group create --name $RESOURCE_GROUP_NAME --location westeurope
+az group create --name $RESOURCE_GROUP_NAME --location northeurope
 ```
 
 2. Create a storage account ($STORAGE_ACCOUNT_NAME = 'spetlrlhv2tfstate')
@@ -68,9 +68,28 @@ az storage account keys list \
     --query '[0].value' -o tsv
 ```
 
+## Software deployment practices
+
+Here we follow a common practice of the software deployment, i.e., deploying to three environments (dev, test and prod).
+
+For automating our continuous integration and deployment (CICD), we rely on Azure SPNs (These SPNs will be added to the Databricks Account) and Databricks groups. Below is the schematic for the deployment of the entire project that are automated by several SPNs:
+
+![project_deployment](/img/SpetlrLakehouseV2_cicd.png)
+
+We will break down deployment steps in the following.
+
+## Deploy Databricks Metastore
+
+Since we can create one Metastore per region, we cannot include Metastore deployment together with the rest of resources, as they will be deployed in dev, test and prod environments, which will result in a deployment error. Therefore, we have a seperate deployment that will be a one time deployment in the Databricks Account level as follows:
+
+- Databricks Metastore: This is the top-level container for all components in Unity Catalog.
+- Databricks Metastore Admin Group: A group of users/ SPNs that owns the Metastore.
+- Azure SPN: An Azure SPN as the Databricks Metastore Admin principal. This is the SPN for automating Databricks Account-level deployments.
+- Databricks Metastore SPN: Adding the above SPN to Databricks Account. Note that the Metastore SPN is also elevated as an Account admin because of certain requirements in our deployment. This SPN will be also added to the Metastore Admin Group.
+
 ## Deploy Azure cloud components
 
-Here, we deploy Azure cloud components that we need:
+Here, we deploy Azure cloud components in three environments:
 
 - Resource Group: Contains all resources
 - Key Vault: This is a secure and centralized store for managing secrets, keys, and certificates. It helps protect sensitive information and ensures secure access to resources.
@@ -78,22 +97,23 @@ Here, we deploy Azure cloud components that we need:
 - Storage Account: This is a scalable and durable cloud storage service that provides the ability to store and manage file shares, blobs, tables, and queues.
 - Containers: Utilized within the Storage Account, containers are used to store and organize large volumes of data in the form of blobs - one container for landing, one container for ETL data in the medallion architecture, and one container to hold infrastructure files.
 - Databricks Access Connector: The Access connector for Azure Databricks lets you connect managed identities to an Azure Databricks account for the purpose of accessing data registered in Unity Catalog
-- Service principals: The deployment will deploy two other service principals, one as the Databricks Metastore Admin principal and the other as the Databricks Workspace Admin principal. Please note that we will not assign these two SPNs as the corresponding admins directly, rather we will add them as a member to their related admin groups.
-- Key Vault secrets: We create secrets for the following: SPNs credentials, Databricks Workspace Id and URL, our Azure Subscription Tenant Id.
+- Azure SPN: An Azure SPN and adding it to Databricks Account to act as the Databricks Workspace Admin principal.
+- Key Vault secrets: We create secrets for the following: SPNs credentials, Databricks Workspace URL, Azure Subscription and Tenant Id.
 
 ![az_arch](/img/azure_arhitecture.png)
 
 ## Deploy Databricks components:
 
-After we have set up cloud requirements in the previous step, we can deploy Databricks Account and Workspace elements.
+After we have set up cloud requirements in the previous step, we can deploy Databricks Account and Workspace elements in three environments.
 
 ### Account-level deployments:
 
 As mentioned previously, we first need our created SPN for gituhub and Databricks Account to be added to the Databricks account as an admin. Then, we use this SPN to deploy the following components:
 
-- Databricks Metastore and attachement to workspaces: We deploy a Metastore in the Databricks' account and attach our workspaces to that Metastore.
-- Databricks Metastore and Workspace SPNs: Here, we add two previously created SPNs in the cloud deployment to the Databricks Account. Note that the Metastore SPN is also elevated as an Account admin because of certain requirements in our deployment.
-- Databricks Metastore Admin, Workspace Admin, and Table User groups: We create admin groups for metastore and workspace and add the corresponding SPNs to these groups. We also create another group for the purpose of reading tables in the catalog.
+- Databricks Metastore attachement to workspace: Attach our workspaces to the created Metastore.
+- Databricks Workspace SPN: Here, we add the previously created Azure SPN in the cloud deployment to the Databricks Account.
+- Databricks Workspace Admin and Table User groups: We create Workspace Admin group and add the Workspace SPN to it. We also create another group for the purpose of reading tables in the catalog. This group will get the "User" privilage in the Workspace.
+
 - Catalog, schema and volume: We deploy a catalog (infrastructure catalog for managing SPETLR-related files and objects), as well as infrastructure schema and volumes. The catalog is also attached to the workspace. We do not deploy any data-related objects in this level as it is intended to be controlled by the workspace-level deployment.
 - Access and privileges: We provide all required access to cloud objects needed to enable the Databricks workspace to read and write data (like external locations), as well as needed privileges to Databricks deployed objects like catalog and schema to correct admin groups.
 
@@ -122,11 +142,11 @@ The diagram illustrates the Medallion Architecture followed in this template pro
 
 ### NYC Taxi & Limousine Commission - yellow taxi trip records
 
-In the SPETLR Lakehouse template storage account, a copy of the NYC TLC dataset in uploaded. A smaller version of the file is located in `/data` folder.
-
 _"The yellow taxi trip records include fields capturing pick-up and drop-off dates/times, pick-up and drop-off locations, trip distances, itemized fares, rate types, payment types, and driver-reported passenger counts."_ - [learn.microsoft.com](https://learn.microsoft.com/en-us/azure/open-datasets/dataset-taxi-yellow?tabs=azureml-opendatasets)
 
 [Link to original dataset location](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page)
+
+We have a subsset of the data as a csv file in the /data folder of the repository. Make sure to copy it to your created "landing" storage container to run ETL jobs/ pipelines in the Workspace.
 
 ## Bronze
 

@@ -6,7 +6,7 @@ NycTlcCatalog:
 
 NycTlcSchema:
   name: nyc_tlc{ID}
-  path: abfss://data-catalog@spetlrlhv2{ENV}.dfs.core.windows.net/nyc_tlc{ID}
+  path: abfss://data@spetlrlhv2{ENV}.dfs.core.windows.net/nyc_tlc{ID}
 
 NycTlcBronzeTable:
   name: "{NycTlcSchema}.nyc_tlc_bronze"

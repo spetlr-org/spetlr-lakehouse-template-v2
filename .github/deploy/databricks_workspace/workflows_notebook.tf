@@ -1,5 +1,6 @@
-# This mocules is to define Databricks jobs.
+## This module is to define Databricks workflows from notebooks ##
 
+# Define the Databricks job for NYC TLC ETL from notebooks ---------------------
 resource "databricks_job" "nyc_tlc_etl_notebook" {
   provider     = databricks.workspace
   name         = "NYC TLC ETL Notebook"
@@ -14,9 +15,14 @@ resource "databricks_job" "nyc_tlc_etl_notebook" {
   job_cluster {
     job_cluster_key           = "small_job_cluster"
     new_cluster {
-      num_workers             = 1
-      instance_pool_id        = databricks_instance_pool.default.id
+      policy_id               = data.databricks_cluster_policy.job.id
+      data_security_mode      = "USER_ISOLATION" 
       spark_version           = data.databricks_spark_version.default_spark_config.id
+      node_type_id            = data.databricks_node_type.default.id
+      autoscale {
+        min_workers = 1
+        max_workers = 1
+      }
     }
   }
 
