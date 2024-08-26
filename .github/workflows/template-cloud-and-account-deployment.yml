@@ -36,6 +36,7 @@ jobs:
           ARM_CLIENT_SECRET: ${{ secrets.SPN_CLIENT_SECRET }}
           ARM_TENANT_ID: ${{ secrets.SPN_TENANT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.SPN_SUBSCRIPTION_ID }}
+          DATABRICKS_ACCOUNT_ID: ${{ secrets.SPN_DATABRICKS_ACCOUNT_ID }}
 
       - name: Cloud and Account Terraform Apply
         run: terraform -chdir="./.github/deploy/cloud_and_account" apply -auto-approve -var "environment=${{ inputs.environmentName }}"
@@ -45,6 +46,7 @@ jobs:
           ARM_CLIENT_SECRET: ${{ secrets.SPN_CLIENT_SECRET }}
           ARM_TENANT_ID: ${{ secrets.SPN_TENANT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.SPN_SUBSCRIPTION_ID }}
+          DATABRICKS_ACCOUNT_ID: ${{ secrets.SPN_DATABRICKS_ACCOUNT_ID }}
 
       - name: Azure logout
         shell: pwsh

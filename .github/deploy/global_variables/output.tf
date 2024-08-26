@@ -82,5 +82,5 @@ output db_workspace_admin_group {
 }
 
 output db_account_id {
-  value = var.db_account_id
+  value = local.db_account_id
 }

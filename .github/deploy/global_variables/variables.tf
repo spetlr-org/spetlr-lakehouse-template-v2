@@ -123,6 +123,11 @@ variable "db_workspace_admin_group" {
 
 variable "db_account_id" {
   type        = string
-  default     = "939f40ff-6952-42dc-9aca-3830070d18d3"
-  description = "The databricks Account Id for Spetlr subscription"
+  default     = "" # You can set your account id here or use the below local if you save it in your project secrets.
+  description = "The databricks Account Id for Spetlr subscription."
+}
+
+# Use the environment variable if the variable is not set directly
+locals {
+  db_account_id = var.db_account_id != "" ? var.db_account_id : env("DATABRICKS_ACCOUNT_ID")
 }
