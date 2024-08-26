@@ -1,5 +1,6 @@
-# This mocules is to define Databricks jobs.
+## This module is to define Databricks workflows from spetlr library ##
 
+# Define the Databricks job for NYC TLC ETL from spetlr library ---------------------
 resource "databricks_job" "nyc_tlc_etl" {
   provider    = databricks.workspace
   name        = "NYC TLC ETL"
@@ -14,9 +15,14 @@ resource "databricks_job" "nyc_tlc_etl" {
   job_cluster {
     job_cluster_key    = "small_job_cluster"
     new_cluster {
-      num_workers      = 1
-      instance_pool_id = databricks_instance_pool.default.id
-      spark_version    = data.databricks_spark_version.default_spark_config.id
+      policy_id               = data.databricks_cluster_policy.job.id
+      data_security_mode      = "USER_ISOLATION" 
+      spark_version           = data.databricks_spark_version.default_spark_config.id
+      node_type_id            = data.databricks_node_type.default.id
+      autoscale {
+        min_workers = 1
+        max_workers = 1
+      }
     }
   }
 
@@ -31,7 +37,22 @@ resource "databricks_job" "nyc_tlc_etl" {
     }
 
     library {
-        whl = "/Volumes/${local.infrastructure_catalog}/${var.company_abbreviation}${var.system_abbreviation}_${var.infrastructure_volume_container}/${var.infrastructure_libraries_folder}/dataplatform-latest-py3-none-any.whl"
+        whl = join(
+          "",
+          [
+            "/Volumes/",
+            "${local.infrastructure_catalog}",
+            "/",
+            "${module.global_variables.company_abbreviation}",
+            "${module.global_variables.system_abbreviation}",
+            "_",
+            "${module.global_variables.az_infrastructure_container}",
+            "/",
+            "${module.global_variables.az_infrastructure_libraries_folder}",
+            "/",
+            "dataplatform-latest-py3-none-any.whl"
+          ]
+        )
     }
   }
 }

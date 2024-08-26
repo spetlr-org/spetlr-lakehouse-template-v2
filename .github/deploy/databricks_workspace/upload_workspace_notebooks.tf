@@ -1,9 +1,9 @@
-# This module is for uploading all notebooks reside in the workspace folder to databricks workspace /Shared/dataplatform
+## This module is for uploading all notebooks reside in the workspace folder to databricks workspace /Shared/dataplatform ##
 
 # First, we want to exctract all directories nested in the workspace folder
 locals {
   # Replace this with the path to your 'dataplatform' directory
-  base_directory = "${path.cwd}/workspace"
+  base_directory = "${dirname(dirname(dirname(path.cwd)))}/workspace"
 
   db_workspace_base_path = "/Workspace/Shared/dataplatform"
 

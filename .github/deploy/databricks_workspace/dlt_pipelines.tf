@@ -1,10 +1,13 @@
+## This module is for creating DLT pipelines ##
+
+# Create DLT pipeline for NYC TLC ETL -----------------------------------------
 resource "databricks_pipeline" "nyc_tlc_dlt" {
   provider      = databricks.workspace
   name          = "NYC TLC DLT ETL"
   edition       = "ADVANCED"
   photon        = false
   channel       = "CURRENT"
-  catalog       = "data_${var.environment}"
+  catalog       = local.default_catalog
   target        = var.db_dlt_nyc_tlc_schema
   continuous    = false
   configuration = {
