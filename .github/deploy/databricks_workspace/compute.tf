@@ -42,14 +42,3 @@ resource "databricks_cluster" "default" {
       )
     }
 }
-
-# SQL Warehouse configuration ----------------------------------------------------
-resource "databricks_sql_endpoint" "serverless" {
-    provider                  = databricks.workspace
-    name                      = "Serverless"
-    cluster_size              = "2X-Small"
-    max_num_clusters          = 1
-    enable_photon             = false
-    auto_stop_mins            = 5
-    enable_serverless_compute = true
-}
