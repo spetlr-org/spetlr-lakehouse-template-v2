@@ -55,8 +55,8 @@ variable "cicdSpnName" {
 }
 
 variable "db_metastore_spn_name" {
-  type = string
-  default = "SpetlrLhV2DbMeta"
+  type        = string
+  default     = "SpetlrLhV2DbMeta"
   description = "SPN to be added as a Databricks Metastore Admin"
 }
 

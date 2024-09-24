@@ -11,15 +11,15 @@ resource "databricks_service_principal" "db_ws_spn" {
   provider       = databricks.account
   application_id = azuread_service_principal.db_ws_spn.client_id
   display_name   = local.db_workspace_spn_name
-  depends_on     = [
+  depends_on = [
     azuread_service_principal.db_ws_spn
   ]
 }
 
 resource "databricks_group_member" "ws_admin_member" {
-  provider   = databricks.account
-  group_id   = databricks_group.db_ws_admin_group.id
-  member_id  = databricks_service_principal.db_ws_spn.id
+  provider  = databricks.account
+  group_id  = databricks_group.db_ws_admin_group.id
+  member_id = databricks_service_principal.db_ws_spn.id
   depends_on = [
     databricks_group.db_ws_admin_group,
     databricks_service_principal.db_ws_spn
@@ -28,9 +28,9 @@ resource "databricks_group_member" "ws_admin_member" {
 
 ## For spetlr test purposes, we need to add cicd spn to the workspace admin group
 resource "databricks_group_member" "ws_admin_member_cicd" {
-  provider   = databricks.account
-  group_id   = databricks_group.db_ws_admin_group.id
-  member_id  = data.databricks_service_principal.cicd_pipeline_spn.id
+  provider  = databricks.account
+  group_id  = databricks_group.db_ws_admin_group.id
+  member_id = data.databricks_service_principal.cicd_pipeline_spn.id
   depends_on = [
     databricks_group.db_ws_admin_group,
     databricks_service_principal.db_ws_spn
@@ -39,9 +39,9 @@ resource "databricks_group_member" "ws_admin_member_cicd" {
 
 ## We want the workspace admin spn also the role of metastore admin, so adding it to meta admin group
 resource "databricks_group_member" "metastore_admin_member_ws" {
-  provider   = databricks.account
-  group_id   = data.databricks_group.db_metastore_admin_group.id
-  member_id  = databricks_service_principal.db_ws_spn.id
+  provider  = databricks.account
+  group_id  = data.databricks_group.db_metastore_admin_group.id
+  member_id = databricks_service_principal.db_ws_spn.id
   depends_on = [
     data.databricks_group.db_metastore_admin_group,
     databricks_service_principal.db_ws_spn

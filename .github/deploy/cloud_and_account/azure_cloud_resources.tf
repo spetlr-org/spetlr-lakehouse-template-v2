@@ -2,8 +2,8 @@
 
 # Provision resource group -----------------------------------------------------
 resource "azurerm_resource_group" "rg" {
-  name      = local.resource_group_name
-  location  = module.global_variables.location
+  name     = local.resource_group_name
+  location = module.global_variables.location
   tags = {
     creator = module.global_variables.creator_tag
     system  = module.global_variables.system_tag
@@ -18,8 +18,7 @@ resource "azurerm_storage_account" "storage_account" {
   location                 = azurerm_resource_group.rg.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
-  is_hns_enabled = true
-
+  is_hns_enabled           = true
   tags = {
     creator = module.global_variables.creator_tag
     system  = module.global_variables.system_tag
@@ -36,7 +35,7 @@ resource "azurerm_key_vault" "key_vault" {
   tenant_id                  = data.azurerm_client_config.current.tenant_id
   sku_name                   = "standard"
   soft_delete_retention_days = 7
-  depends_on = [azurerm_resource_group.rg]
+  depends_on                 = [azurerm_resource_group.rg]
 }
 
 # Provision access connector and setting its role ------------------------------
@@ -53,21 +52,18 @@ resource "azurerm_databricks_access_connector" "ext_access_connector" {
 resource "azurerm_role_assignment" "ext_storage_role" {
   scope                = azurerm_storage_account.storage_account.id
   role_definition_name = "Storage Blob Data Contributor"
-  principal_id         = join(
-    "",
-    [azurerm_databricks_access_connector.ext_access_connector.identity[0].principal_id]
-  )
+  principal_id         = azurerm_databricks_access_connector.ext_access_connector.identity[0].principal_id
   depends_on = [
     azurerm_databricks_access_connector.ext_access_connector,
     azurerm_storage_account.storage_account
-    ]
+  ]
 }
 
 # Provision containers ---------------------------------------------------------
 
 ## Landing container
 resource "azurerm_storage_container" "landing" {
-  name  = var.az_landing_storage_container
+  name                  = var.az_landing_storage_container
   storage_account_name  = azurerm_storage_account.storage_account.name
   container_access_type = "private"
   depends_on            = [azurerm_storage_account.storage_account]
@@ -75,7 +71,7 @@ resource "azurerm_storage_container" "landing" {
 
 ## Data container
 resource "azurerm_storage_container" "data" {
-  name  = module.global_variables.az_data_container
+  name                  = module.global_variables.az_data_container
   storage_account_name  = azurerm_storage_account.storage_account.name
   container_access_type = "private"
   depends_on            = [azurerm_storage_account.storage_account]
@@ -91,14 +87,14 @@ resource "azurerm_storage_container" "infrastructure" {
 
 # Provision databricks service ------------------------------------------------
 resource "azurerm_databricks_workspace" "db_workspace" {
-  name                        = local.resource_name
-  resource_group_name         = azurerm_resource_group.rg.name
-  location                    = azurerm_resource_group.rg.location
-  sku                         = "premium"
+  name                = local.resource_name
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  sku                 = "premium"
   tags = {
     creator = module.global_variables.creator_tag
     system  = module.global_variables.system_tag
     service = module.global_variables.service_tag
   }
-  depends_on                  = [azurerm_resource_group.rg]
+  depends_on = [azurerm_resource_group.rg]
 }
