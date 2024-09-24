@@ -161,11 +161,11 @@ resource "databricks_grants" "infrastructure" {
 ## Create external location and grant privilages for landing data storage 
 resource "databricks_external_location" "landing" {
   provider = databricks.workspace
-  name     = "${var.environment}-${var.az_landing_storage_container}"
+  name     = "${var.environment}-${module.global_variables.az_landing_container}"
   url = join(
     "",
     [
-      "abfss://${var.az_landing_storage_container}",
+      "abfss://${module.global_variables.az_landing_container}",
       "@${azurerm_storage_account.storage_account.name}.dfs.core.windows.net/"
     ]
   )

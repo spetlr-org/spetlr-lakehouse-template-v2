@@ -96,6 +96,12 @@ variable "az_infrastructure_libraries_folder" {
   description = "The name of a folder inside infrastructure container to store library files (like python wheels)"
 }
 
+variable "az_landing_container" {
+  type        = string
+  default     = "landing"
+  description = "Container in the storage account for raw data"
+}
+
 variable "az_data_container" {
   type        = string
   default     = "data"

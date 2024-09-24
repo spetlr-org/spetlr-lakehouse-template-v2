@@ -63,7 +63,7 @@ resource "azurerm_role_assignment" "ext_storage_role" {
 
 ## Landing container
 resource "azurerm_storage_container" "landing" {
-  name                  = var.az_landing_storage_container
+  name                  = module.global_variables.az_landing_container
   storage_account_name  = azurerm_storage_account.storage_account.name
   container_access_type = "private"
   depends_on            = [azurerm_storage_account.storage_account]

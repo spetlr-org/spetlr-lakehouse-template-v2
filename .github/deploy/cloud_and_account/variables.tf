@@ -13,12 +13,6 @@ variable "db_workspace_spn_name" {
   description = "SPN to be added as a Databricks workspace Admin"
 }
 
-variable "az_landing_storage_container" {
-  type        = string
-  default     = "landing"
-  description = "Containers in the storage account as the external location for corresponding data layers"
-}
-
 variable "az_kv_db_metastore_spn_app_id" {
   type        = string
   default     = "Databricks--Metastore--SPN-ID"
