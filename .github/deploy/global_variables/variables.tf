@@ -25,7 +25,7 @@ variable "service_name" {
 
 variable "location" {
   type        = string
-  default     = "swedencentral"
+  default     = "westeurope"
   description = "The location where the Azure resource group to be deployed"
 }
 
