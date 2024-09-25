@@ -4,11 +4,7 @@
 resource "azurerm_resource_group" "rg" {
   name     = local.resource_group_name
   location = module.global_variables.location
-  tags = {
-    creator = module.global_variables.creator_tag
-    system  = module.global_variables.system_tag
-    service = module.global_variables.service_tag
-  }
+  tags     = module.global_variables.tags
 }
 
 # Provision storage account -----------------------------------------------------
@@ -19,12 +15,8 @@ resource "azurerm_storage_account" "storage_account" {
   account_tier             = "Standard"
   account_replication_type = "LRS"
   is_hns_enabled           = true
-  tags = {
-    creator = module.global_variables.creator_tag
-    system  = module.global_variables.system_tag
-    service = module.global_variables.service_tag
-  }
-  depends_on = [azurerm_resource_group.rg]
+  tags                     = module.global_variables.tags
+  depends_on               = [azurerm_resource_group.rg]
 }
 
 # Provision keyvault -----------------------------------------------------------
@@ -91,10 +83,6 @@ resource "azurerm_databricks_workspace" "db_workspace" {
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   sku                 = "premium"
-  tags = {
-    creator = module.global_variables.creator_tag
-    system  = module.global_variables.system_tag
-    service = module.global_variables.service_tag
-  }
-  depends_on = [azurerm_resource_group.rg]
+  tags                = module.global_variables.tags
+  depends_on          = [azurerm_resource_group.rg]
 }

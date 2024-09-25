@@ -47,6 +47,14 @@ variable "creator_tag" {
   description = "Use for tagging"
 }
 
+locals {
+  tags = {
+    creator = var.creator_tag
+    system  = var.system_tag
+    service = var.service_tag
+  }
+}
+
 # Azure variables
 variable "cicdSpnName" {
   type        = string
@@ -94,6 +102,12 @@ variable "az_infrastructure_libraries_folder" {
   type        = string
   default     = "libraries"
   description = "The name of a folder inside infrastructure container to store library files (like python wheels)"
+}
+
+variable "az_ingestion_container" {
+  type        = string
+  default     = "ingestion"
+  description = "Container in the external read-only storage"
 }
 
 variable "az_landing_container" {

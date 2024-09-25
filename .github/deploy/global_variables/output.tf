@@ -31,6 +31,10 @@ output "creator_tag" {
   value = var.creator_tag
 }
 
+output "tags" {
+  value = local.tags
+}
+
 # Output for Azure variables
 output "cicdSpnName" {
   value = var.cicdSpnName
@@ -62,6 +66,10 @@ output "az_infrastructure_container" {
 
 output "az_infrastructure_libraries_folder" {
   value = var.az_infrastructure_libraries_folder
+}
+
+output "az_ingestion_container" {
+  value = var.az_ingestion_container
 }
 
 output "az_landing_container" {
