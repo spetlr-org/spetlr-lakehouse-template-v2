@@ -7,5 +7,5 @@ pytest
 black
 isort
 flake8
-spetlr-tools>=0.1.66
+spetlr-tools
 pydantic>=1.10.8,<2.0.0
