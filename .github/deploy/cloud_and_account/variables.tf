@@ -42,6 +42,9 @@ locals {
   resource_group_name = "${module.global_variables.system_name}-${upper(var.environment)}-${module.global_variables.service_name}"
   resource_name       = "${module.global_variables.company_abbreviation}${module.global_variables.system_abbreviation}${var.environment}"
 
+  # Specific name for datalake used for ingestion with only read access
+  datalake_ingestion_resource_name = "${module.global_variables.company_abbreviation}${module.global_variables.system_abbreviation}ingestion${var.environment}"
+
   # Databricks groups
   db_workspace_admin_group_env = "${module.global_variables.db_workspace_admin_group}-${var.environment}"
   db_table_user_group          = "${var.db_table_user_group}-${var.environment}"

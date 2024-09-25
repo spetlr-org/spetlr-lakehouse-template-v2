@@ -7,7 +7,18 @@ resource "azurerm_resource_group" "rg" {
   tags     = module.global_variables.tags
 }
 
-# Provision storage account -----------------------------------------------------
+# Provision storage accounts -----------------------------------------------------
+resource "azurerm_storage_account" "storage_account_ingestion" {
+  name                     = local.datalake_ingestion_resource_name
+  resource_group_name      = azurerm_resource_group.rg.name
+  location                 = azurerm_resource_group.rg.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+  is_hns_enabled           = true
+  tags                     = module.global_variables.tags
+  depends_on               = [azurerm_resource_group.rg]
+}
+
 resource "azurerm_storage_account" "storage_account" {
   name                     = local.resource_name
   resource_group_name      = azurerm_resource_group.rg.name
@@ -30,7 +41,7 @@ resource "azurerm_key_vault" "key_vault" {
   depends_on                 = [azurerm_resource_group.rg]
 }
 
-# Provision access connector and setting its role ------------------------------
+# Provision access connector and setting its roles ------------------------------
 resource "azurerm_databricks_access_connector" "ext_access_connector" {
   name                = local.resource_name
   resource_group_name = azurerm_resource_group.rg.name
@@ -39,6 +50,16 @@ resource "azurerm_databricks_access_connector" "ext_access_connector" {
     type = "SystemAssigned"
   }
   depends_on = [azurerm_resource_group.rg]
+}
+
+resource "azurerm_role_assignment" "ext_storage_role_ingestion_data_reader" {
+  scope                = azurerm_storage_account.storage_account_ingestion.id
+  role_definition_name = "Storage Blob Data Reader"
+  principal_id         = azurerm_databricks_access_connector.ext_access_connector.identity[0].principal_id
+  depends_on = [
+    azurerm_databricks_access_connector.ext_access_connector,
+    azurerm_storage_account.storage_account_ingestion
+  ]
 }
 
 resource "azurerm_role_assignment" "ext_storage_role" {
@@ -52,6 +73,14 @@ resource "azurerm_role_assignment" "ext_storage_role" {
 }
 
 # Provision containers ---------------------------------------------------------
+
+## Ingestion container
+resource "azurerm_storage_container" "ingestion" {
+  name                  = module.global_variables.az_ingestion_container
+  storage_account_name  = azurerm_storage_account.storage_account_ingestion.name
+  container_access_type = "private"
+  depends_on            = [azurerm_storage_account.storage_account_ingestion]
+}
 
 ## Landing container
 resource "azurerm_storage_container" "landing" {
