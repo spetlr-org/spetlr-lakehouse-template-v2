@@ -1,6 +1,6 @@
 terraform {
   required_providers {
-    azurerm   = {
+    azurerm = {
       source  = "hashicorp/azurerm"
       version = ">= 3.7.0"
     }
@@ -9,10 +9,10 @@ terraform {
     }
   }
   backend "azurerm" {
-      resource_group_name  = "Terraform-State-Stoarge"
-      storage_account_name = "spetlrlhv2tfstate"
-      container_name       = "tfstate"
-      key                  = "terraform_databricks_metastore.tfstate"
+    resource_group_name  = "Terraform-State-Stoarge"
+    storage_account_name = "spetlrlhv2tfstate"
+    container_name       = "tfstate"
+    key                  = "terraform_databricks_metastore.tfstate"
   }
 }
 
