@@ -13,5 +13,5 @@ resource "azuread_service_principal" "db_meta_spn" {
 resource "azurerm_role_assignment" "db_meta_spn_role" {
   scope                = data.azurerm_subscription.primary.id
   role_definition_name = "Contributor"
-  principal_id         = azuread_service_principal.db_meta_spn.id
+  principal_id         = azuread_service_principal.db_meta_spn.object_id
 }

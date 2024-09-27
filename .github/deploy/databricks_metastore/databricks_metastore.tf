@@ -5,7 +5,7 @@ resource "databricks_metastore" "db_metastore" {
   owner         = databricks_group.db_metastore_admin_group.display_name
   force_destroy = true
   region        = module.global_variables.location
-  depends_on    = [
+  depends_on = [
     databricks_group.db_metastore_admin_group,
   ]
 }
