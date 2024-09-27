@@ -41,5 +41,5 @@ resource "azuread_service_principal_password" "db_ws_spn_password" {
 resource "azurerm_role_assignment" "db_ws_spn_role" {
   scope                = data.azurerm_subscription.primary.id
   role_definition_name = "Contributor"
-  principal_id         = azuread_service_principal.db_ws_spn.id
+  principal_id         = azuread_service_principal.db_ws_spn.object_id
 }
