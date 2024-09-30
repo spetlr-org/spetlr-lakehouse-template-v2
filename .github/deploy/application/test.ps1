@@ -7,7 +7,11 @@ param (
   [Parameter(Mandatory = $true)]
   [ValidateNotNullOrEmpty()]
   [string]
-  $buildId
+  $buildId,
+
+  [Parameter(Mandatory = $false)]
+  [string]
+  $testDirectory
 )
 
 $repoRoot = (git rev-parse --show-toplevel)
@@ -27,14 +31,26 @@ Write-Host "Now Building"
 # Step 2: submit test
 Write-Host "Now Submitting"
 
-spetlr-test-job submit `
-  --tests test/ `
-  --tasks-from test/cluster/ `
-  --cluster-file test/test_jobs_cluster_settings/cluster_env.json `
-  --requirements-file requirements-test.txt `
-  --sparklibs-file test/test_jobs_cluster_settings/sparklibs.json `
-  --out-json test.json `
-  --upload-to "workspace"
+if ($testDirectory) {
+  spetlr-test-job submit `
+    --tests test/ `
+    --task $testDirectory `
+    --cluster-file test/test_jobs_cluster_settings/cluster_env.json `
+    --requirements-file requirements-test.txt `
+    --sparklibs-file test/test_jobs_cluster_settings/sparklibs.json `
+    --out-json test.json `
+    --upload-to "workspace"
+}
+else {
+  spetlr-test-job submit `
+    --tests test/ `
+    --tasks-from test/cluster/ `
+    --cluster-file test/test_jobs_cluster_settings/cluster_env.json `
+    --requirements-file requirements-test.txt `
+    --sparklibs-file test/test_jobs_cluster_settings/sparklibs.json `
+    --out-json test.json `
+    --upload-to "workspace"
+}
 
 # Step 3: wait for test
 Write-Host "Now Waiting for test"
