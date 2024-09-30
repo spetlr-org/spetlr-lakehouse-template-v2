@@ -5,10 +5,10 @@
 
 ## Assign the workspace to the created Metastore
 resource "databricks_metastore_assignment" "db_metastore_assign_workspace" {
-  provider      = databricks.account
-  metastore_id  = data.databricks_metastore.db_metastore.id
-  workspace_id  = azurerm_databricks_workspace.db_workspace.workspace_id
-  depends_on    = [
+  provider     = databricks.account
+  metastore_id = data.databricks_metastore.db_metastore.id
+  workspace_id = azurerm_databricks_workspace.db_workspace.workspace_id
+  depends_on = [
     data.databricks_metastore.db_metastore,
     azurerm_databricks_workspace.db_workspace
   ]
@@ -16,20 +16,20 @@ resource "databricks_metastore_assignment" "db_metastore_assign_workspace" {
 
 resource "time_sleep" "wait_for_metastore_assign" {
   create_duration = "10s"
-  depends_on      = [
+  depends_on = [
     databricks_metastore_assignment.db_metastore_assign_workspace
-    ]
+  ]
 }
 
 # Access control for users, groups and principals ---------------------------------------------------------
 
 ## Add metastore admin group to the workspace as the workspace admin
 resource "databricks_mws_permission_assignment" "add_metastore_admin_group_to_workspace" {
-  provider      = databricks.account
-  workspace_id  = azurerm_databricks_workspace.db_workspace.workspace_id
-  principal_id  = data.databricks_group.db_metastore_admin_group.id
-  permissions   = ["ADMIN"]
-  depends_on    = [
+  provider     = databricks.account
+  workspace_id = azurerm_databricks_workspace.db_workspace.workspace_id
+  principal_id = data.databricks_group.db_metastore_admin_group.id
+  permissions  = ["ADMIN"]
+  depends_on = [
     azurerm_databricks_workspace.db_workspace,
     data.databricks_group.db_metastore_admin_group,
     time_sleep.wait_for_metastore_assign
@@ -38,11 +38,11 @@ resource "databricks_mws_permission_assignment" "add_metastore_admin_group_to_wo
 
 ## Add workspace admin group to the workspace as the workspace admin
 resource "databricks_mws_permission_assignment" "add_workspace_group_to_workspace" {
-  provider      = databricks.account
-  workspace_id  = azurerm_databricks_workspace.db_workspace.workspace_id
-  principal_id  = databricks_group.db_ws_admin_group.id
-  permissions   = ["ADMIN"]
-  depends_on    = [
+  provider     = databricks.account
+  workspace_id = azurerm_databricks_workspace.db_workspace.workspace_id
+  principal_id = databricks_group.db_ws_admin_group.id
+  permissions  = ["ADMIN"]
+  depends_on = [
     azurerm_databricks_workspace.db_workspace,
     databricks_group.db_ws_admin_group,
     time_sleep.wait_for_metastore_assign
@@ -55,7 +55,7 @@ resource "databricks_mws_permission_assignment" "add_table_user_group_to_workspa
   workspace_id = azurerm_databricks_workspace.db_workspace.workspace_id
   principal_id = databricks_group.db_table_user_group.id
   permissions  = ["USER"]
-  depends_on   = [
+  depends_on = [
     azurerm_databricks_workspace.db_workspace,
     databricks_group.db_table_user_group,
     time_sleep.wait_for_metastore_assign
@@ -65,23 +65,23 @@ resource "databricks_mws_permission_assignment" "add_table_user_group_to_workspa
 ## Wait for syncing groups from account to the workspace
 resource "time_sleep" "wait_for_groups_sync" {
   create_duration = "10s"
-  depends_on      = [
+  depends_on = [
     databricks_mws_permission_assignment.add_metastore_admin_group_to_workspace,
     databricks_mws_permission_assignment.add_workspace_group_to_workspace,
     databricks_mws_permission_assignment.add_table_user_group_to_workspace
-    ]
+  ]
 }
 
-# Access control for Extrenal location --------------------------------------------------------------------
+# Access control for External location --------------------------------------------------------------------
 
 ## Create storage credential and grant privileges
 resource "databricks_storage_credential" "ex_storage_cred" {
   provider = databricks.workspace
   name     = local.resource_name
+  comment  = "Datrabricks external storage credentials"
   azure_managed_identity {
     access_connector_id = azurerm_databricks_access_connector.ext_access_connector.id
   }
-  comment    = "Datrabricks external storage credentials"
   depends_on = [
     databricks_metastore_assignment.db_metastore_assign_workspace,
     time_sleep.wait_for_groups_sync
@@ -90,9 +90,9 @@ resource "databricks_storage_credential" "ex_storage_cred" {
 
 resource "time_sleep" "wait_for_ex_storage_cred" {
   create_duration = "15s"
-  depends_on      = [
+  depends_on = [
     databricks_storage_credential.ex_storage_cred
-    ]
+  ]
 }
 
 resource "databricks_grants" "ex_creds" {
@@ -110,16 +110,16 @@ resource "databricks_grants" "ex_creds" {
 
 resource "time_sleep" "wait_for_ex_storage_cred_grants" {
   create_duration = "15s"
-  depends_on      = [
+  depends_on = [
     databricks_grants.ex_creds
-    ]
+  ]
 }
 
-## Create extrenal location and grant privilages for infrastructure catalog data storage ---------------
+## Create external location and grant privilages for infrastructure catalog data storage ---------------
 resource "databricks_external_location" "infrastructure" {
-  provider        = databricks.workspace
-  name            = "${var.environment}-${module.global_variables.az_infrastructure_container}"
-  url             = join(
+  provider = databricks.workspace
+  name     = "${var.environment}-${module.global_variables.az_infrastructure_container}"
+  url = join(
     "",
     [
       "abfss://${module.global_variables.az_infrastructure_container}",
@@ -136,9 +136,9 @@ resource "databricks_external_location" "infrastructure" {
 
 resource "time_sleep" "wait_for_infrastructure_ext_location" {
   create_duration = "5s"
-  depends_on      = [
+  depends_on = [
     databricks_external_location.infrastructure
-    ]
+  ]
 }
 
 resource "databricks_grants" "infrastructure" {
@@ -152,20 +152,20 @@ resource "databricks_grants" "infrastructure" {
     principal  = data.databricks_group.db_metastore_admin_group.display_name
     privileges = ["ALL_PRIVILEGES"]
   }
-  depends_on   = [
+  depends_on = [
     databricks_external_location.infrastructure,
     time_sleep.wait_for_infrastructure_ext_location
-    ]
+  ]
 }
 
-## Create extrenal location and grant privilages for landing data storage 
+## Create external location and grant privilages for landing data storage 
 resource "databricks_external_location" "landing" {
   provider = databricks.workspace
-  name     = "${var.environment}-${var.az_landing_storage_container}"
-  url      = join(
+  name     = "${var.environment}-${module.global_variables.az_landing_container}"
+  url = join(
     "",
     [
-      "abfss://${var.az_landing_storage_container}",
+      "abfss://${module.global_variables.az_landing_container}",
       "@${azurerm_storage_account.storage_account.name}.dfs.core.windows.net/"
     ]
   )
@@ -179,7 +179,7 @@ resource "databricks_external_location" "landing" {
 
 resource "time_sleep" "wait_for_landing_ext_location" {
   create_duration = "5s"
-  depends_on      = [
+  depends_on = [
     databricks_external_location.landing
   ]
 }
@@ -201,12 +201,51 @@ resource "databricks_grants" "landing" {
   ]
 }
 
+## Create external location and grant privilages for imgestion data storage
+resource "databricks_external_location" "ingestion" {
+  provider        = databricks.workspace
+  name            = "${var.environment}-${module.global_variables.az_ingestion_container}"
+  credential_name = databricks_storage_credential.ex_storage_cred.id
+  comment         = "Databricks external location for ingestion data"
+  read_only       = true
+  skip_validation = true # The validation step is not working for read-only external locations. The external location works fine after creation.
+  url             = "abfss://${module.global_variables.az_ingestion_container}@${azurerm_storage_account.storage_account_ingestion.name}.dfs.core.windows.net/"
+  depends_on = [
+    databricks_grants.ex_creds,
+    time_sleep.wait_for_ex_storage_cred_grants
+  ]
+}
+
+resource "time_sleep" "wait_for_ingestion_ext_location" {
+  create_duration = "5s"
+  depends_on = [
+    databricks_external_location.ingestion
+  ]
+}
+
+resource "databricks_grants" "ingestion" {
+  provider          = databricks.workspace
+  external_location = databricks_external_location.ingestion.id
+  grant {
+    principal  = databricks_group.db_ws_admin_group.display_name
+    privileges = ["READ_FILES"]
+  }
+  grant {
+    principal  = data.databricks_group.db_metastore_admin_group.display_name
+    privileges = ["READ_FILES"]
+  }
+  depends_on = [
+    databricks_external_location.landing,
+    time_sleep.wait_for_ingestion_ext_location
+  ]
+}
+
 # Access control for catalogs -------------------------------------------------------------------------
 
 ## Grant privilages for the infrastructure catalog
 resource "databricks_grants" "infrastructure_catalog" {
-  provider     = databricks.workspace
-  catalog      = databricks_catalog.db_infrastructure_catalog.name
+  provider = databricks.workspace
+  catalog  = databricks_catalog.db_infrastructure_catalog.name
   grant {
     principal  = databricks_group.db_ws_admin_group.display_name
     privileges = ["ALL_PRIVILEGES"]
@@ -217,5 +256,5 @@ resource "databricks_grants" "infrastructure_catalog" {
     databricks_mws_permission_assignment.add_workspace_group_to_workspace,
     databricks_group.db_ws_admin_group,
     data.databricks_group.db_metastore_admin_group
-    ]
+  ]
 }

@@ -17,8 +17,8 @@ data "azuread_service_principal" "db_meta_spn" {
 data "azuread_client_config" "current" {}
 
 data "databricks_metastore" "db_metastore" {
-  provider     = databricks.account
-  name         = module.global_variables.db_metastore_name
+  provider = databricks.account
+  name     = module.global_variables.db_metastore_name
 }
 
 data "databricks_group" "db_metastore_admin_group" {
