@@ -1,6 +1,3 @@
-from test.env.CleanupTestDatabases import CleanupTestDatabases
-from test.env.debug_configurator import debug_configurator
-
 from spetlr.sql.SqlExecutor import SqlExecutor
 from spetlrtools.testing import DataframeTestCase
 
@@ -11,7 +8,6 @@ from dataplatform.etl.nyc_tlc.A_bronze.nyc_tlc_bronze_orchestrator import (
 from dataplatform.etl.nyc_tlc.A_bronze.nyc_tlc_bronze_parameters import (
     NycTlcBronzeParameters,
 )
-
 from dataplatform.etl.nyc_tlc.B_silver.nyc_tlc_silver_orchestrator import (
     NycTlcSilverOrchestrator,
 )
@@ -28,6 +24,8 @@ from dataplatform.etl.nyc_tlc.D_governance.nyc_tlc_governance_orchestrator impor
 from dataplatform.etl.nyc_tlc.D_governance.nyc_tlc_governance_parameters import (
     NycTlcGovernanceParameters,
 )
+from test.env.CleanupTestDatabases import CleanupTestDatabases
+from test.env.debug_configurator import debug_configurator
 
 
 class MainTests(DataframeTestCase):
@@ -41,7 +39,6 @@ class MainTests(DataframeTestCase):
         CleanupTestDatabases()
 
     def test_main_orchestrator(self):
-
         # Bronze orchestrator
         bronze_params = NycTlcBronzeParameters()
         NycTlcBronzeOrchestrator(bronze_params).execute()

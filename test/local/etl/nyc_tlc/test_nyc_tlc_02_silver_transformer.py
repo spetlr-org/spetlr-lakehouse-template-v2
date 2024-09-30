@@ -1,9 +1,11 @@
-import pyspark.sql.types as T
+from pyspark.testing import assertDataFrameEqual
 from spetlr.spark import Spark
+from spetlr.utils import DataframeCreator
 from spetlrtools.testing import DataframeTestCase
 
-from dataplatform.etl.nyc_tlc.B_silver.nyc_tlc_silver_parameters import (
-    NycTlcSilverParameters,
+from dataplatform.environment.data_models.nyc_tlc import (
+    NycTlcBronzeSchema,
+    NycTlcSilverSchema,
 )
 from dataplatform.etl.nyc_tlc.B_silver.nyc_tlc_silver_transformer import (
     NycTlcSilverTransfomer,
@@ -12,21 +14,6 @@ from dataplatform.etl.nyc_tlc.B_silver.nyc_tlc_silver_transformer import (
 
 class SilverTransfomerTests(DataframeTestCase):
     def test_01_transfomer_silver(self):
-        nyc_schema = T.StructType(
-            [
-                T.StructField("vendorID", T.StringType(), True),
-                T.StructField("tpepPickupDateTime", T.StringType(), True),
-                T.StructField("passengerCount", T.StringType(), True),
-                T.StructField("tripDistance", T.StringType(), True),
-                T.StructField("puLocationId", T.StringType(), True),
-                T.StructField("rateCodeId", T.StringType(), True),
-                T.StructField("paymentType", T.StringType(), True),
-                T.StructField("tipAmount", T.StringType(), True),
-                T.StructField("tollsAmount", T.StringType(), True),
-                T.StructField("totalAmount", T.StringType(), True),
-            ]
-        )
-
         nyc_data = [
             (  # Row 1
                 "1",  # vendorID
@@ -54,13 +41,23 @@ class SilverTransfomerTests(DataframeTestCase):
             ),
         ]
 
-        self.df_bronze = Spark.get().createDataFrame(data=nyc_data, schema=nyc_schema)
-        self.silver_params = NycTlcSilverParameters(
-            "NycTlcBronzeTable", "NycTlcSilverTable"
+        df_bronze = DataframeCreator.make_partial(
+            data=nyc_data,
+            schema=NycTlcBronzeSchema,
+            columns=[
+                "vendorID",
+                "tpepPickupDateTime",
+                "passengerCount",
+                "tripDistance",
+                "puLocationId",
+                "rateCodeId",
+                "paymentType",
+                "tipAmount",
+                "tollsAmount",
+                "totalAmount",
+            ],
         )
-        df_transformed = NycTlcSilverTransfomer(self.silver_params).process(
-            self.df_bronze
-        )
+        df_transformed = NycTlcSilverTransfomer().process(df_bronze)
 
         expected_data = [
             # row 1
@@ -82,5 +79,8 @@ class SilverTransfomerTests(DataframeTestCase):
                 200.2,  # totalAmount
             ),
         ]
+        df_expected = Spark.get().createDataFrame(
+            data=expected_data, schema=NycTlcSilverSchema
+        )
 
-        self.assertDataframeMatches(df=df_transformed, expected_data=expected_data)
+        assertDataFrameEqual(actual=df_transformed, expected=df_expected)

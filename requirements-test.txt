@@ -1,3 +1,5 @@
 spetlr-tools>=0.1.66
 spetlr
 pyspark
+PyArrow
+numpy==1.26.3
