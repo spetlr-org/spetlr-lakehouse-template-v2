@@ -14,29 +14,29 @@ data "azurerm_key_vault" "key_vault" {
 }
 
 data "azurerm_key_vault_secret" "workspace_url" {
-  name                = module.global_variables.az_kv_db_ws_url
-  key_vault_id        = data.azurerm_key_vault.key_vault.id
+  name         = module.global_variables.az_kv_db_ws_url
+  key_vault_id = data.azurerm_key_vault.key_vault.id
 }
 
 data "azurerm_key_vault_secret" "workspace_admin_spn_app_id" {
-  name                = module.global_variables.az_kv_db_workspace_spn_app_id
-  key_vault_id        = data.azurerm_key_vault.key_vault.id
+  name         = module.global_variables.az_kv_db_workspace_spn_app_id
+  key_vault_id = data.azurerm_key_vault.key_vault.id
 }
 
 data "azurerm_key_vault_secret" "workspace_admin_spn_app_password" {
-  name                = module.global_variables.az_kv_db_workspace_spn_app_password
-  key_vault_id        = data.azurerm_key_vault.key_vault.id
+  name         = module.global_variables.az_kv_db_workspace_spn_app_password
+  key_vault_id = data.azurerm_key_vault.key_vault.id
 }
 
 data "azurerm_key_vault_secret" "tenant_id" {
-  name                = module.global_variables.az_kv_tenant_id
-  key_vault_id        = data.azurerm_key_vault.key_vault.id
+  name         = module.global_variables.az_kv_tenant_id
+  key_vault_id = data.azurerm_key_vault.key_vault.id
 }
 
 # Databricks workspace compute data --------------------------------------------
 data "databricks_node_type" "default" {
-    provider   = databricks.workspace
-    local_disk = true
+  provider   = databricks.workspace
+  local_disk = true
 }
 
 data "databricks_cluster_policy" "all_purpose" {
@@ -50,7 +50,7 @@ data "databricks_cluster_policy" "job" {
 }
 
 data "databricks_spark_version" "default_spark_config" {
-    provider          = databricks.workspace
-    spark_version     = "3.5"
-    long_term_support = true
+  provider          = databricks.workspace
+  spark_version     = "3.5"
+  long_term_support = true
 }

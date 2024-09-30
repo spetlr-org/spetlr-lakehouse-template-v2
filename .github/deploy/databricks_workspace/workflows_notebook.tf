@@ -2,9 +2,9 @@
 
 # Define the Databricks job for NYC TLC ETL from notebooks ---------------------
 resource "databricks_job" "nyc_tlc_etl_notebook" {
-  provider     = databricks.workspace
-  name         = "NYC TLC ETL Notebook"
-  description  = "This job executes multiple tasks for processing NYC TLC data."
+  provider    = databricks.workspace
+  name        = "NYC TLC ETL Notebook"
+  description = "This job executes multiple tasks for processing NYC TLC data."
 
   schedule {
     quartz_cron_expression = "0 0 7 * * ?"
@@ -13,12 +13,12 @@ resource "databricks_job" "nyc_tlc_etl_notebook" {
   }
 
   job_cluster {
-    job_cluster_key           = "small_job_cluster"
+    job_cluster_key = "small_job_cluster"
     new_cluster {
-      policy_id               = data.databricks_cluster_policy.job.id
-      data_security_mode      = "USER_ISOLATION" 
-      spark_version           = data.databricks_spark_version.default_spark_config.id
-      node_type_id            = data.databricks_node_type.default.id
+      policy_id          = data.databricks_cluster_policy.job.id
+      data_security_mode = "USER_ISOLATION"
+      spark_version      = data.databricks_spark_version.default_spark_config.id
+      node_type_id       = data.databricks_node_type.default.id
       autoscale {
         min_workers = 1
         max_workers = 1
@@ -32,7 +32,7 @@ resource "databricks_job" "nyc_tlc_etl_notebook" {
   }
 
   task {
-    task_key        = "01_Process_Nyc_Tlc_Bronze"
+    task_key = "01_Process_Nyc_Tlc_Bronze"
 
     job_cluster_key = "small_job_cluster"
 
@@ -42,7 +42,7 @@ resource "databricks_job" "nyc_tlc_etl_notebook" {
   }
 
   task {
-    task_key   = "02_Process_Nyc_Tlc_Silver"
+    task_key = "02_Process_Nyc_Tlc_Silver"
 
     depends_on {
       task_key = "01_Process_Nyc_Tlc_Bronze"
@@ -56,7 +56,7 @@ resource "databricks_job" "nyc_tlc_etl_notebook" {
   }
 
   task {
-    task_key   = "03_Process_Nyc_Tlc_Gold"
+    task_key = "03_Process_Nyc_Tlc_Gold"
 
     depends_on {
       task_key = "02_Process_Nyc_Tlc_Silver"
@@ -85,5 +85,5 @@ resource "databricks_job" "nyc_tlc_etl_notebook" {
 
   depends_on = [
     databricks_notebook.sync_notebook,
-    ]
+  ]
 }

@@ -10,9 +10,7 @@ resource "databricks_pipeline" "nyc_tlc_dlt" {
   catalog       = local.default_catalog
   target        = var.db_dlt_nyc_tlc_schema
   continuous    = false
-  configuration = {
-    env = var.environment
-  }
+  configuration = { env = var.environment }
 
   cluster {
     label       = "default"
@@ -43,5 +41,5 @@ resource "databricks_pipeline" "nyc_tlc_dlt" {
   depends_on = [
     databricks_notebook.sync_notebook,
     databricks_schema.db_dlt_nyc_tlc_schema
-    ]
+  ]
 }
