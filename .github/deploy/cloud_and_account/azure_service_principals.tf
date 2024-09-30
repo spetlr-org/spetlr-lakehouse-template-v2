@@ -19,7 +19,7 @@ resource "azurerm_key_vault_access_policy" "spn_access" {
 
 # Create a password for the metastore admin SPN ------------------------------------
 resource "azuread_service_principal_password" "db_meta_spn_password" {
-  service_principal_id = data.azuread_service_principal.db_meta_spn.object_id
+  service_principal_id = data.azuread_service_principal.db_meta_spn.id
 }
 
 # Provision Azure SPN for Databricks workspace admin, and setting its role ---------
@@ -35,7 +35,7 @@ resource "azuread_service_principal" "db_ws_spn" {
 }
 
 resource "azuread_service_principal_password" "db_ws_spn_password" {
-  service_principal_id = azuread_service_principal.db_ws_spn.object_id
+  service_principal_id = azuread_service_principal.db_ws_spn.id
 }
 
 resource "azurerm_role_assignment" "db_ws_spn_role" {
