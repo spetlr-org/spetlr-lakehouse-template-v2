@@ -9,12 +9,12 @@ from dataplatform.environment.data_models.nyc_tlc import (
     NycTlcSilverSchema,
 )
 from dataplatform.etl.nyc_tlc.C_gold.nyc_tlc_gold_transformer import (
-    NycTlcGoldTransfomer,
+    NycTlcGoldTransformer,
 )
 
 
-class GoldTransfomerTests(DataframeTestCase):
-    def test_01_transfomer_gold(self):
+class GoldTransformerTests(DataframeTestCase):
+    def test_01_transformer_gold(self):
         nyc_silver_data = [
             # row 1
             (
@@ -48,7 +48,7 @@ class GoldTransfomerTests(DataframeTestCase):
         df_silver = Spark.get().createDataFrame(
             data=nyc_silver_data, schema=NycTlcSilverSchema
         )
-        df_transformed = NycTlcGoldTransfomer().process(df_silver)
+        df_transformed = NycTlcGoldTransformer().process(df_silver)
 
         expected_data = [
             # row 1

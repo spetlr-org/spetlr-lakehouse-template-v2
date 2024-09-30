@@ -8,12 +8,12 @@ from dataplatform.environment.data_models.nyc_tlc import (
     NycTlcSilverSchema,
 )
 from dataplatform.etl.nyc_tlc.B_silver.nyc_tlc_silver_transformer import (
-    NycTlcSilverTransfomer,
+    NycTlcSilverTransformer,
 )
 
 
-class SilverTransfomerTests(DataframeTestCase):
-    def test_01_transfomer_silver(self):
+class SilverTransformerTests(DataframeTestCase):
+    def test_01_transformer_silver(self):
         nyc_data = [
             (  # Row 1
                 "1",  # vendorID
@@ -57,7 +57,7 @@ class SilverTransfomerTests(DataframeTestCase):
                 "totalAmount",
             ],
         )
-        df_transformed = NycTlcSilverTransfomer().process(df_bronze)
+        df_transformed = NycTlcSilverTransformer().process(df_bronze)
 
         expected_data = [
             # row 1

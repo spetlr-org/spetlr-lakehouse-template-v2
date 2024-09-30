@@ -6,7 +6,7 @@ from dataplatform.etl.nyc_tlc.B_silver.nyc_tlc_silver_parameters import (
     NycTlcSilverParameters,
 )
 from dataplatform.etl.nyc_tlc.B_silver.nyc_tlc_silver_transformer import (
-    NycTlcSilverTransfomer,
+    NycTlcSilverTransformer,
 )
 
 
@@ -18,6 +18,6 @@ class NycTlcSilverOrchestrator(Orchestrator):
 
         self.extract_from(SimpleExtractor(self.params.dh_source, "bronze"))
 
-        self.transform_with(NycTlcSilverTransfomer(self.params))
+        self.transform_with(NycTlcSilverTransformer(self.params))
 
         self.load_into(SimpleLoader(self.params.dh_target))

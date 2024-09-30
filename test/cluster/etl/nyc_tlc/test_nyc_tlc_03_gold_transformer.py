@@ -12,7 +12,7 @@ from dataplatform.environment.data_models.nyc_tlc import (
     NycTlcSilverSchema,
 )
 from dataplatform.etl.nyc_tlc.C_gold.nyc_tlc_gold_transformer import (
-    NycTlcGoldTransfomer,
+    NycTlcGoldTransformer,
 )
 from test.env.CleanupTestDatabases import CleanupTestDatabases
 from test.env.debug_configurator import debug_configurator
@@ -24,7 +24,7 @@ class GoldTests(DataframeTestCase):
         debug_configurator()
         SqlExecutor(base_module=databases).execute_sql_file("nyc_tlc")
 
-        cls.sut = NycTlcGoldTransfomer()
+        cls.sut = NycTlcGoldTransformer()
 
         cls.df_silver = DataframeCreator.make_partial(
             NycTlcSilverSchema,
@@ -71,7 +71,7 @@ class GoldTests(DataframeTestCase):
     def tearDownClass(cls) -> None:
         CleanupTestDatabases()
 
-    def test_gold_transfomer(self):
+    def test_gold_transformer(self):
         df_transformed = self.sut.process(self.df_silver)
 
         expected_data = [
