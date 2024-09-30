@@ -5,8 +5,8 @@ from spetlr.etl import Transformer
 from dataplatform.etl.nyc_tlc.C_gold.nyc_tlc_gold_parameters import NycTlcGoldParameters
 
 
-class NycTlcGoldTransfomer(Transformer):
-    def __init__(self, params: NycTlcGoldParameters):
+class NycTlcGoldTransformer(Transformer):
+    def __init__(self, params: NycTlcGoldParameters = None):
         super().__init__()
         self.params = params or NycTlcGoldParameters()
 

@@ -6,28 +6,7 @@ MANAGED LOCATION "{NycTlcSchema_path}";
 
 CREATE TABLE IF NOT EXISTS {NycTlcBronzeTable}
 (
-  _c0 STRING,
-  vendorID STRING,
-  tpepPickupDateTime STRING,
-  tpepDropoffDateTime STRING,
-  passengerCount STRING,
-  tripDistance STRING,
-  puLocationId STRING,
-  doLocationId STRING,
-  startLon STRING,
-  startLat STRING,
-  endLon STRING,
-  endLat STRING,
-  rateCodeId STRING,
-  storeAndFwdFlag STRING,
-  paymentType STRING,
-  fareAmount STRING,
-  extra STRING,
-  mtaTax STRING,
-  improvementSurcharge STRING,
-  tipAmount STRING,
-  tollsAmount STRING,
-  totalAmount STRING
+  {NycTlcBronzeTable_schema}
 )
 USING DELTA
 COMMENT "This table contains bronze data for NYC TLC"
@@ -35,12 +14,7 @@ LOCATION "{NycTlcBronzeTable_path}";
 
 CREATE TABLE IF NOT EXISTS {NycTlcSilverTable}
 (
-  vendorID STRING,
-  passengerCount INTEGER,
-  tripDistance DOUBLE,
-  paymentType STRING,
-  tipAmount DOUBLE,
-  totalAmount DOUBLE
+  {NycTlcSilverTable_schema}
 )
 USING DELTA
 COMMENT "This table contains silver NYC TLC data"
@@ -48,11 +22,7 @@ LOCATION "{NycTlcSilverTable_path}";
 
 CREATE TABLE IF NOT EXISTS {NycTlcGoldTable}
 (
-  VendorID STRING,
-  TotalPassengers INTEGER,
-  TotalTripDistance DECIMAL(10, 1),
-  TotalTipAmount DECIMAL(10, 1),
-  TotalPaidAmount DECIMAL(10, 1)
+  {NycTlcGoldTable_schema}
 )
 USING delta
 COMMENT "This table contains gold NYC TLC data, that are paid by credit cards and grouped by VendorId"

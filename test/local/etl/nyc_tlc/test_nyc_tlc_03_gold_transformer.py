@@ -1,28 +1,20 @@
 from decimal import Decimal
 
-import pyspark.sql.types as T
+from pyspark.testing import assertDataFrameEqual
 from spetlr.spark import Spark
 from spetlrtools.testing import DataframeTestCase
 
-from dataplatform.etl.nyc_tlc.C_gold.nyc_tlc_gold_parameters import NycTlcGoldParameters
+from dataplatform.environment.data_models.nyc_tlc import (
+    NycTlcGoldSchema,
+    NycTlcSilverSchema,
+)
 from dataplatform.etl.nyc_tlc.C_gold.nyc_tlc_gold_transformer import (
-    NycTlcGoldTransfomer,
+    NycTlcGoldTransformer,
 )
 
 
-class GoldTransfomerTests(DataframeTestCase):
-    def test_01_transfomer_gold(self):
-        nyc_silver_schema = T.StructType(
-            [
-                T.StructField("vendorID", T.StringType(), False),
-                T.StructField("passengerCount", T.IntegerType(), True),
-                T.StructField("tripDistance", T.DoubleType(), True),
-                T.StructField("paymentType", T.StringType(), True),
-                T.StructField("tipAmount", T.DoubleType(), True),
-                T.StructField("totalAmount", T.DoubleType(), True),
-            ]
-        )
-
+class GoldTransformerTests(DataframeTestCase):
+    def test_01_transformer_gold(self):
         nyc_silver_data = [
             # row 1
             (
@@ -53,11 +45,10 @@ class GoldTransfomerTests(DataframeTestCase):
             ),
         ]
 
-        self.df_silver = Spark.get().createDataFrame(
-            data=nyc_silver_data, schema=nyc_silver_schema
+        df_silver = Spark.get().createDataFrame(
+            data=nyc_silver_data, schema=NycTlcSilverSchema
         )
-        self.gold_params = NycTlcGoldParameters("NycTlcSilverTable", "NycTlcGoldTable")
-        df_transformed = NycTlcGoldTransfomer(self.gold_params).process(self.df_silver)
+        df_transformed = NycTlcGoldTransformer().process(df_silver)
 
         expected_data = [
             # row 1
@@ -69,5 +60,8 @@ class GoldTransfomerTests(DataframeTestCase):
                 Decimal("300.3"),  # TotalPaidAmount
             ),
         ]
+        df_expected = Spark.get().createDataFrame(
+            data=expected_data, schema=NycTlcGoldSchema
+        )
 
-        self.assertDataframeMatches(df=df_transformed, expected_data=expected_data)
+        assertDataFrameEqual(actual=df_transformed, expected=df_expected)

@@ -1,18 +1,21 @@
 from decimal import Decimal
 
-# from test.env.CleanupTestDatabases import CleanupTestDatabases
-from test.env.debug_configurator import debug_configurator
-
+from pyspark.testing import assertDataFrameEqual
+from spetlr.spark import Spark
 from spetlr.sql.SqlExecutor import SqlExecutor
 from spetlr.utils import DataframeCreator
 from spetlrtools.testing import DataframeTestCase
 
 from dataplatform.environment import databases
-
-from dataplatform.etl.nyc_tlc.C_gold.nyc_tlc_gold_parameters import NycTlcGoldParameters
-from dataplatform.etl.nyc_tlc.C_gold.nyc_tlc_gold_transformer import (
-    NycTlcGoldTransfomer,
+from dataplatform.environment.data_models.nyc_tlc import (
+    NycTlcGoldSchema,
+    NycTlcSilverSchema,
 )
+from dataplatform.etl.nyc_tlc.C_gold.nyc_tlc_gold_transformer import (
+    NycTlcGoldTransformer,
+)
+from test.env.CleanupTestDatabases import CleanupTestDatabases
+from test.env.debug_configurator import debug_configurator
 
 
 class GoldTests(DataframeTestCase):
@@ -21,11 +24,10 @@ class GoldTests(DataframeTestCase):
         debug_configurator()
         SqlExecutor(base_module=databases).execute_sql_file("nyc_tlc")
 
-        cls.params = NycTlcGoldParameters()
-        cls.sut = NycTlcGoldTransfomer(cls.params)
+        cls.sut = NycTlcGoldTransformer()
 
         cls.df_silver = DataframeCreator.make_partial(
-            cls.params.dh_source.read().schema,
+            NycTlcSilverSchema,
             [
                 "vendorID",
                 "passengerCount",
@@ -65,30 +67,25 @@ class GoldTests(DataframeTestCase):
             ],
         )
 
-    # @classmethod
-    # def tearDownClass(cls) -> None:
-    #     CleanupTestDatabases()
+    @classmethod
+    def tearDownClass(cls) -> None:
+        CleanupTestDatabases()
 
-    def test_gold_transfomer(self):
-        df = self.sut.process(self.df_silver)
+    def test_gold_transformer(self):
+        df_transformed = self.sut.process(self.df_silver)
 
-        self.assertDataframeMatches(
-            df,
-            [
-                "VendorID",
-                "TotalPassengers",
-                "TotalTripDistance",
-                "TotalTipAmount",
-                "TotalPaidAmount",
-            ],
-            [
-                # row 1
-                (
-                    "1",  # VendorID
-                    3,  # TotalPassengers
-                    Decimal("30.3"),  # TotalTripDistance
-                    Decimal("10.1"),  # TotalTipAmount
-                    Decimal("300.3"),  # TotalPaidAmount
-                ),
-            ],
+        expected_data = [
+            # row 1
+            (
+                "1",  # VendorID
+                3,  # TotalPassengers
+                Decimal("30.3"),  # TotalTripDistance
+                Decimal("10.1"),  # TotalTipAmount
+                Decimal("300.3"),  # TotalPaidAmount
+            ),
+        ]
+        df_expected = Spark.get().createDataFrame(
+            data=expected_data, schema=NycTlcGoldSchema
         )
+
+        assertDataFrameEqual(actual=df_transformed, expected=df_expected)

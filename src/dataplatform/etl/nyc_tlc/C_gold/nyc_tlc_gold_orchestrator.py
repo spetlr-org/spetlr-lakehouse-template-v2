@@ -4,7 +4,7 @@ from spetlr.etl.loaders.simple_loader import SimpleLoader
 
 from dataplatform.etl.nyc_tlc.C_gold.nyc_tlc_gold_parameters import NycTlcGoldParameters
 from dataplatform.etl.nyc_tlc.C_gold.nyc_tlc_gold_transformer import (
-    NycTlcGoldTransfomer,
+    NycTlcGoldTransformer,
 )
 
 
@@ -16,10 +16,6 @@ class NycTlcGoldOrchestrator(Orchestrator):
 
         self.extract_from(SimpleExtractor(self.params.dh_source, "silver"))
 
-        self.transform_with(NycTlcGoldTransfomer(self.params))
+        self.transform_with(NycTlcGoldTransformer(self.params))
 
-        self.load_into(
-            SimpleLoader(
-                self.params.dh_target,
-            )
-        )
+        self.load_into(SimpleLoader(self.params.dh_target))

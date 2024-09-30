@@ -7,7 +7,7 @@ from dataplatform.etl.nyc_tlc.B_silver.nyc_tlc_silver_parameters import (
 )
 
 
-class NycTlcSilverTransfomer(Transformer):
+class NycTlcSilverTransformer(Transformer):
     def __init__(self, params: NycTlcSilverParameters = None):
         super().__init__()
         self.params = params or NycTlcSilverParameters()
