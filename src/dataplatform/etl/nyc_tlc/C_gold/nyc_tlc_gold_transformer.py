@@ -6,7 +6,7 @@ from dataplatform.etl.nyc_tlc.C_gold.nyc_tlc_gold_parameters import NycTlcGoldPa
 
 
 class NycTlcGoldTransfomer(Transformer):
-    def __init__(self, params: NycTlcGoldParameters):
+    def __init__(self, params: NycTlcGoldParameters = None):
         super().__init__()
         self.params = params or NycTlcGoldParameters()
 
