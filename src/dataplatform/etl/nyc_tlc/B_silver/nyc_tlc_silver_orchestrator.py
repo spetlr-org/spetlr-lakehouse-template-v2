@@ -20,8 +20,4 @@ class NycTlcSilverOrchestrator(Orchestrator):
 
         self.transform_with(NycTlcSilverTransfomer(self.params))
 
-        self.load_into(
-            SimpleLoader(
-                self.params.dh_target,
-            )
-        )
+        self.load_into(SimpleLoader(self.params.dh_target))

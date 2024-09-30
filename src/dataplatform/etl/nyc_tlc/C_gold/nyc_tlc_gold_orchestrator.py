@@ -18,8 +18,4 @@ class NycTlcGoldOrchestrator(Orchestrator):
 
         self.transform_with(NycTlcGoldTransfomer(self.params))
 
-        self.load_into(
-            SimpleLoader(
-                self.params.dh_target,
-            )
-        )
+        self.load_into(SimpleLoader(self.params.dh_target))

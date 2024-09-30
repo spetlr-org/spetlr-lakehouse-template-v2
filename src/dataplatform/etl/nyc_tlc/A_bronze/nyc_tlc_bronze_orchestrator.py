@@ -17,8 +17,4 @@ class NycTlcBronzeOrchestrator(Orchestrator):
 
         self.extract_from(NycTlcSourceExtractor(self.params))
 
-        self.load_into(
-            SimpleLoader(
-                self.params.dh_target,
-            )
-        )
+        self.load_into(SimpleLoader(self.params.dh_target))
