@@ -11,11 +11,14 @@ NycTlcSchema:
 NycTlcBronzeTable:
   name: "{NycTlcSchema}.nyc_tlc_bronze"
   path: "{NycTlcSchema_path}/nyc_tlc_bronze"
+  schema: "NycTlcBronzeSchema"
 
 NycTlcSilverTable:
   name: "{NycTlcSchema}.nyc_tlc_silver"
   path: "{NycTlcSchema_path}/nyc_tlc_silver"
+  schema: "NycTlcSilverSchema"
 
 NycTlcGoldTable:
   name: "{NycTlcSchema}.nyc_tlc_gold"
   path: "{NycTlcSchema_path}/nyc_tlc_gold"
+  schema: "NycTlcGoldSchema"
