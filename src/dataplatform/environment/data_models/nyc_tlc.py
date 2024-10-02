@@ -10,6 +10,33 @@ from pyspark.sql.types import (
 )
 from spetlr.schema_manager import SchemaManager
 
+NycTlcSourceSchema = StructType(
+    [
+        StructField("_c0", StringType(), True),
+        StructField("vendorID", StringType(), True),
+        StructField("tpepPickupDateTime", StringType(), True),
+        StructField("tpepDropoffDateTime", StringType(), True),
+        StructField("passengerCount", StringType(), True),
+        StructField("tripDistance", StringType(), True),
+        StructField("puLocationId", StringType(), True),
+        StructField("doLocationId", StringType(), True),
+        StructField("startLon", StringType(), True),
+        StructField("startLat", StringType(), True),
+        StructField("endLon", StringType(), True),
+        StructField("endLat", StringType(), True),
+        StructField("rateCodeId", StringType(), True),
+        StructField("storeAndFwdFlag", StringType(), True),
+        StructField("paymentType", StringType(), True),
+        StructField("fareAmount", StringType(), True),
+        StructField("extra", StringType(), True),
+        StructField("mtaTax", StringType(), True),
+        StructField("improvementSurcharge", StringType(), True),
+        StructField("tipAmount", StringType(), True),
+        StructField("tollsAmount", StringType(), True),
+        StructField("totalAmount", StringType(), True),
+    ]
+)
+
 NycTlcBronzeSchema = StructType(
     [
         StructField("_c0", StringType(), True),
@@ -65,6 +92,7 @@ NycTlcGoldSchema = StructType(
 def init_schema_manager_nyc_tic():
     sc = SchemaManager()
 
+    sc.register_schema("NycTlcSourceSchema", NycTlcSourceSchema)
     sc.register_schema("NycTlcBronzeSchema", NycTlcBronzeSchema)
     sc.register_schema("NycTlcSilverSchema", NycTlcSilverSchema)
     sc.register_schema("NycTlcGoldSchema", NycTlcGoldSchema)

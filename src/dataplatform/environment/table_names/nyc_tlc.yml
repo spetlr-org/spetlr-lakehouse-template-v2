@@ -7,6 +7,8 @@ NycTlcCatalog:
 NycTlcSchema:
   name: nyc_tlc{ID}
   path: abfss://data@spetlrlhv2{ENV}.dfs.core.windows.net/nyc_tlc{ID}
+  format: "csv"
+  schema: "NycTlcSourceSchema"
 
 NycTlcBronzeTable:
   name: "{NycTlcSchema}.nyc_tlc_bronze"
