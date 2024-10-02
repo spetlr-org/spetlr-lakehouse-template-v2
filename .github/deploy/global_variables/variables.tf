@@ -134,3 +134,9 @@ variable "db_workspace_admin_group" {
   default     = "SpetlrLhV2-workspace-admins"
   description = "Databricks group with Databricks workspace Admin privilages"
 }
+
+variable "db_table_user_group" {
+  type        = string
+  default     = "SpetlrLhV2-table-users"
+  description = "A Databricks workspace group with table usage privilages"
+}

@@ -5,7 +5,7 @@ data "databricks_group" "db_ws_admin_group" {
 
 data "databricks_group" "db_table_user_group" {
   provider     = databricks.workspace
-  display_name = local.db_workspace_user_group_env
+  display_name = local.db_table_user_group_env
 }
 
 data "databricks_storage_credential" "ex_storage_cred" {
