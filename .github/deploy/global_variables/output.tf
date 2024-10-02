@@ -88,3 +88,7 @@ output "db_metastore_admin_group" {
 output "db_workspace_admin_group" {
   value = var.db_workspace_admin_group
 }
+
+output "db_table_user_group" {
+  value = var.db_table_user_group
+}

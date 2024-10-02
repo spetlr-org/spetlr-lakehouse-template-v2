@@ -25,12 +25,6 @@ variable "az_kv_db_metastore_spn_app_password" {
   description = "The Azure Keyvault secret for Application password of the metastore admin SPN"
 }
 
-variable "db_table_user_group" {
-  type        = string
-  default     = "SpetlrLhV2-table-users"
-  description = "A Databricks workspace group with table usage privilages"
-}
-
 variable "db_account_id" {
   type        = string
   description = "The databricks Account Id for Spetlr subscription."
@@ -47,7 +41,7 @@ locals {
 
   # Databricks groups
   db_workspace_admin_group_env = "${module.global_variables.db_workspace_admin_group}-${var.environment}"
-  db_table_user_group_env          = "${var.db_table_user_group}-${var.environment}"
+  db_table_user_group_env      = "${module.global_variables.db_table_user_group}-${var.environment}"
 
   # Databricks catalog and schema for infrastructure
   infrastructure_catalog = "${module.global_variables.az_infrastructure_container}_${var.environment}"
