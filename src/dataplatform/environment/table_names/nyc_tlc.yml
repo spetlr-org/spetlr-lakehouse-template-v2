@@ -1,5 +1,5 @@
 NycTlcSource:
-  path: abfss://landing@spetlrlhv2{ENV}.dfs.core.windows.net/NYC_TLC_dataset.csv
+  path: abfss://landing@spetlrlhv2ingestion{ENV}.dfs.core.windows.net/NYC_TLC_dataset.csv
 
 NycTlcCatalog:
   name: data_{ENV}

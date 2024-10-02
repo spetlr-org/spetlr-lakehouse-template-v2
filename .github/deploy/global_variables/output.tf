@@ -68,10 +68,6 @@ output "az_infrastructure_libraries_folder" {
   value = var.az_infrastructure_libraries_folder
 }
 
-output "az_ingestion_container" {
-  value = var.az_ingestion_container
-}
-
 output "az_landing_container" {
   value = var.az_landing_container
 }

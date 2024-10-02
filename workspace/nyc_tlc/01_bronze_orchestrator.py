@@ -15,7 +15,7 @@ env = dbutils.widgets.get("env")
 # COMMAND ----------
 catalog = f"data_{env}"
 source_path = (
-    f"abfss://landing@spetlrlhv2{env}.dfs.core.windows.net/NYC_TLC_dataset.csv"
+    f"abfss://landing@spetlrlhv2ingestion{env}.dfs.core.windows.net/NYC_TLC_dataset.csv"
 )
 target_schema_path = (
     f"abfss://data@spetlrlhv2{env}.dfs.core.windows.net/notebook_nyc_tlc/"

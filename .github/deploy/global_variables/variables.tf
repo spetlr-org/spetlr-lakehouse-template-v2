@@ -104,12 +104,6 @@ variable "az_infrastructure_libraries_folder" {
   description = "The name of a folder inside infrastructure container to store library files (like python wheels)"
 }
 
-variable "az_ingestion_container" {
-  type        = string
-  default     = "ingestion"
-  description = "Container in the external read-only storage"
-}
-
 variable "az_landing_container" {
   type        = string
   default     = "landing"
