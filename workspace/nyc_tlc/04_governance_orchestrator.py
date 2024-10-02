@@ -25,13 +25,6 @@ spetlr_table_users = f"`SpetlrLhV2-table-users-{env}`"
 
 # COMMAND ----------
 
-catalog_grants = f"""
-GRANT USE CATALOG
-ON CATALOG {catalog}
-TO {spetlr_table_users};
-"""
-spark.sql(catalog_grants)
-
 schema_grants = f"""
 GRANT
 USE SCHEMA, EXECUTE, READ VOLUME, SELECT
