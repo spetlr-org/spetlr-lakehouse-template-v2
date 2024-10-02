@@ -24,12 +24,24 @@ resource "databricks_grants" "ex_data_catalog_location_grants" {
 }
 
 # Catalog permissions ---------------------------------------------------------
-resource "databricks_grants" "data_catalog_grants" {
+resource "databricks_grants" "data_catalog_grants_admins" {
   provider = databricks.workspace
   catalog  = databricks_catalog.db_data_catalog.name
   grant {
     principal  = data.databricks_group.db_ws_admin_group.display_name
     privileges = ["ALL_PRIVILEGES"]
+  }
+  depends_on = [
+    databricks_catalog.db_data_catalog,
+  ]
+}
+
+resource "databricks_grants" "data_catalog_grants_users" {
+  provider = databricks.workspace
+  catalog  = databricks_catalog.db_data_catalog.name
+  grant {
+    principal  = data.databricks_group.db_table_user_group.display_name
+    privileges = ["USE_CATALOG"]
   }
   depends_on = [
     databricks_catalog.db_data_catalog,

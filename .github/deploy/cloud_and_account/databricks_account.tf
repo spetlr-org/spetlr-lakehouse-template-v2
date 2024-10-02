@@ -51,5 +51,5 @@ resource "databricks_group_member" "metastore_admin_member_ws" {
 # Manage Workspace user groups, SPNs and members ----------------------------------------------
 resource "databricks_group" "db_table_user_group" {
   provider     = databricks.account
-  display_name = local.db_table_user_group
+  display_name = local.db_table_user_group_env
 }
