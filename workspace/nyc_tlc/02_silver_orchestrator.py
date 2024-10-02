@@ -53,6 +53,8 @@ sql_table = f"""
 CREATE TABLE IF NOT EXISTS {schema_name}.{target_table_name}
   (
   vendorID STRING,
+  tpepPickupDateTime TIMESTAMP,
+  tpepDropoffDateTime TIMESTAMP,
   passengerCount INTEGER,
   tripDistance DOUBLE,
   paymentType STRING,
@@ -86,6 +88,8 @@ df_target = df_bronze.withColumn(
 
 df_target = df_target.select(
     f.col("vendorID").cast("string"),
+    f.col("tpepPickupDateTime").cast("timestamp"),
+    f.col("tpepDropoffDateTime").cast("timestamp"),
     f.col("passengerCount").cast("int"),
     f.col("tripDistance").cast("double"),
     f.col("paymentType").cast("string"),
@@ -104,5 +108,6 @@ df_target = df_target.select(
 (
     df_target.write.format("delta")
     .mode("overwrite")
+    .option("overwriteSchema", "true")
     .save(f"{schema_path}/{target_table_name}")
 )

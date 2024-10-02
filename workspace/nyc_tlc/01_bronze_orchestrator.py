@@ -99,5 +99,6 @@ spark.sql(sql_table)
 (
     df_source.write.format("delta")
     .mode("overwrite")
+    .option("overwriteSchema", "True")
     .save(f"{target_schema_path}/{target_table_name}")
 )
