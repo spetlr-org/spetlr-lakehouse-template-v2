@@ -44,6 +44,8 @@ def nyc_tlc_dlt_silver(table_properties={"quality": "silver"}):
 
     df_target = df_target.select(
         f.col("vendorID").cast("string"),
+        f.col("tpepPickupDateTime").cast("timestamp"),
+        f.col("tpepDropoffDateTime").cast("timestamp"),
         f.col("passengerCount").cast("int"),
         f.col("tripDistance").cast("double"),
         f.col("paymentType").cast("string"),
