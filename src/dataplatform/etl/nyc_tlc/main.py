@@ -1,4 +1,3 @@
-from dataplatform.environment.init_configurator import init_configurator
 from dataplatform.environment.setup_environment import setup_environment
 from dataplatform.etl.nyc_tlc.A_bronze.nyc_tlc_bronze_orchestrator import (
     NycTlcBronzeOrchestrator,
@@ -15,10 +14,6 @@ from dataplatform.etl.nyc_tlc.D_governance.nyc_tlc_governance_orchestrator impor
 
 
 def main():
-
-    print("NYC TLC main job")
-    init_configurator()
-
     print("Setting up NYC TLC environment")
     setup_environment(database="nyc_tlc")
 

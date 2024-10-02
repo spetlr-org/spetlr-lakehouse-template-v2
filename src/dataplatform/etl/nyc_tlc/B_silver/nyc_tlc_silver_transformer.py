@@ -26,6 +26,8 @@ class NycTlcSilverTransformer(Transformer):
 
         df_final = df.select(
             f.col("vendorID").cast("string"),
+            f.col("tpepPickupDateTime").cast("timestamp"),
+            f.col("tpepDropoffDateTime").cast("timestamp"),
             f.col("passengerCount").cast("int"),
             f.col("tripDistance").cast("double"),
             f.col("paymentType").cast("string"),

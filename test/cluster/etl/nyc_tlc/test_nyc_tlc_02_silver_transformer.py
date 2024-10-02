@@ -3,6 +3,7 @@ from spetlr.spark import Spark
 from spetlr.sql.SqlExecutor import SqlExecutor
 from spetlr.utils import DataframeCreator
 from spetlrtools.testing import DataframeTestCase
+from spetlrtools.time import dt_utc
 
 from dataplatform.environment import databases
 from dataplatform.environment.data_models.nyc_tlc import (
@@ -25,10 +26,11 @@ class SilverTests(DataframeTestCase):
         cls.sut = NycTlcSilverTransformer()
 
         cls.df_bronze = DataframeCreator.make_partial(
-            NycTlcBronzeSchema,
-            [
+            schema=NycTlcBronzeSchema,
+            columns=[
                 "vendorID",
                 "tpepPickupDateTime",
+                "tpepDropoffDateTime",
                 "passengerCount",
                 "tripDistance",
                 "puLocationId",
@@ -38,10 +40,11 @@ class SilverTests(DataframeTestCase):
                 "tollsAmount",
                 "totalAmount",
             ],
-            [
+            data=[
                 (  # Row 1
                     "1",  # vendorID
-                    "2023-08-30",  # tpepPickupDateTime
+                    "2018-05-01 00:00:35",  # tpepPickupDateTime
+                    "2018-05-01 00:30:45",  # tpepDropoffDateTime
                     "1",  # passengerCount
                     "10.1",  # tripDistance
                     "10",  # puLocationId
@@ -53,7 +56,8 @@ class SilverTests(DataframeTestCase):
                 ),
                 (  # Row 2
                     "2",  # vendorID
-                    "2023-08-30",  # tpepPickupDateTime
+                    "2018-05-01 00:00:35",  # tpepPickupDateTime
+                    "2018-05-01 00:30:45",  # tpepDropoffDateTime
                     "2",  # passengerCount
                     "20.2",  # tripDistance
                     "20",  # puLocationId
@@ -77,6 +81,8 @@ class SilverTests(DataframeTestCase):
             # row 1
             (
                 "1",  # vendorID
+                dt_utc(2018, 5, 1, 0, 0, 35),  # tpepPickupDateTime
+                dt_utc(2018, 5, 1, 0, 30, 45),  # tpepDropoffDateTime
                 1,  # passengerCount
                 10.1,  # tripDistance
                 "Credit",  # paymentType
@@ -86,6 +92,8 @@ class SilverTests(DataframeTestCase):
             # row 2
             (
                 "2",  # vendorID
+                dt_utc(2018, 5, 1, 0, 0, 35),  # tpepPickupDateTime
+                dt_utc(2018, 5, 1, 0, 30, 45),  # tpepDropoffDateTime
                 2,  # passengerCount
                 20.2,  # tripDistance
                 "Cash",  # paymentType

@@ -1,10 +1,12 @@
 from pyspark.sql.types import (
+    DateType,
     DecimalType,
     DoubleType,
     IntegerType,
     StringType,
     StructField,
     StructType,
+    TimestampType,
 )
 from spetlr.schema_manager import SchemaManager
 
@@ -38,6 +40,8 @@ NycTlcBronzeSchema = StructType(
 NycTlcSilverSchema = StructType(
     [
         StructField("vendorID", StringType(), True),
+        StructField("tpepPickupDateTime", TimestampType(), True),
+        StructField("tpepDropoffDateTime", TimestampType(), True),
         StructField("passengerCount", IntegerType(), True),
         StructField("tripDistance", DoubleType(), True),
         StructField("paymentType", StringType(), True),
@@ -49,6 +53,7 @@ NycTlcSilverSchema = StructType(
 NycTlcGoldSchema = StructType(
     [
         StructField("VendorID", StringType(), True),
+        StructField("PickupDate", DateType(), True),
         StructField("TotalPassengers", IntegerType(), True),
         StructField("TotalTripDistance", DecimalType(10, 1), True),
         StructField("TotalTipAmount", DecimalType(10, 1), True),
