@@ -53,6 +53,7 @@ sql_table = f"""
 CREATE TABLE IF NOT EXISTS {schema_name}.{target_table_name}
   (
   VendorID STRING,
+  PickupHour TIMESTAMP,
   TotalPassengers INTEGER,
   TotalTripDistance DECIMAL(10, 1),
   TotalTipAmount DECIMAL(10, 1),
@@ -74,7 +75,8 @@ spark.sql(sql_table)
 
 df_target = (
     df_silver.filter(f.col("paymentType") == "Credit")
-    .groupBy("vendorId")
+    .withColumn("PickupHour", f.date_trunc("HOUR", "tpepPickupDateTime"))
+    .groupBy("vendorId", "PickupHour")
     .agg(
         f.sum("passengerCount").alias("TotalPassengers"),
         f.sum("tripDistance").alias("TotalTripDistance"),
@@ -84,6 +86,7 @@ df_target = (
 )
 df_target = df_target.select(
     f.col("vendorID").cast("string").alias("VendorID"),
+    f.col("PickupHour").cast("timestamp"),
     f.col("TotalPassengers").cast("int"),
     f.col("TotalTripDistance").cast("decimal(10,1)"),
     f.col("TotalTipAmount").cast("decimal(10,1)"),
@@ -101,5 +104,6 @@ df_target = df_target.select(
 (
     df_target.write.format("delta")
     .mode("overwrite")
+    .option("overwriteSchema", "true")
     .save(f"{schema_path}/{target_table_name}")
 )

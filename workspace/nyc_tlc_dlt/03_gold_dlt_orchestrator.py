@@ -34,7 +34,8 @@ def nyc_tlc_dlt_gold(table_properties={"quality": "gold"}):
     df_target = (
         dlt.read(source)
         .filter(f.col("paymentType") == "Credit")
-        .groupBy("vendorId")
+        .withColumn("PickupHour", f.date_trunc("HOUR", "tpepPickupDateTime"))
+        .groupBy("vendorId", "PickupHour")
         .agg(
             f.sum("passengerCount").alias("TotalPassengers"),
             f.sum("tripDistance").alias("TotalTripDistance"),
@@ -44,6 +45,7 @@ def nyc_tlc_dlt_gold(table_properties={"quality": "gold"}):
     )
     df_target = df_target.select(
         f.col("vendorID").cast("string").alias("VendorID"),
+        f.col("PickupHour").cast("timestamp"),
         f.col("TotalPassengers").cast("int"),
         f.col("TotalTripDistance").cast("decimal(10,1)"),
         f.col("TotalTipAmount").cast("decimal(10,1)"),
