@@ -23,7 +23,7 @@ import dlt
 # COMMAND ----------
 
 source_path = (
-    f"abfss://landing@spetlrlhv2{env}.dfs.core.windows.net/NYC_TLC_dataset.csv"
+    f"abfss://landing@spetlrlhv2ingestion{env}.dfs.core.windows.net/NYC_TLC_dataset.csv"
 )
 
 # COMMAND ----------

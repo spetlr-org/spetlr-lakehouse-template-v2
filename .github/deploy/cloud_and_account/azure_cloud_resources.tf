@@ -74,20 +74,12 @@ resource "azurerm_role_assignment" "ext_storage_role" {
 
 # Provision containers ---------------------------------------------------------
 
-## Ingestion container
-resource "azurerm_storage_container" "ingestion" {
-  name                  = module.global_variables.az_ingestion_container
-  storage_account_name  = azurerm_storage_account.storage_account_ingestion.name
-  container_access_type = "private"
-  depends_on            = [azurerm_storage_account.storage_account_ingestion]
-}
-
 ## Landing container
 resource "azurerm_storage_container" "landing" {
   name                  = module.global_variables.az_landing_container
-  storage_account_name  = azurerm_storage_account.storage_account.name
+  storage_account_name  = azurerm_storage_account.storage_account_ingestion.name
   container_access_type = "private"
-  depends_on            = [azurerm_storage_account.storage_account]
+  depends_on            = [azurerm_storage_account.storage_account_ingestion]
 }
 
 ## Data container

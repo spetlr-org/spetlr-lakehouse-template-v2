@@ -117,15 +117,9 @@ resource "time_sleep" "wait_for_ex_storage_cred_grants" {
 
 ## Create external location and grant privilages for infrastructure catalog data storage ---------------
 resource "databricks_external_location" "infrastructure" {
-  provider = databricks.workspace
-  name     = "${var.environment}-${module.global_variables.az_infrastructure_container}"
-  url = join(
-    "",
-    [
-      "abfss://${module.global_variables.az_infrastructure_container}",
-      "@${azurerm_storage_account.storage_account.name}.dfs.core.windows.net/"
-    ]
-  )
+  provider        = databricks.workspace
+  name            = "${var.environment}-${module.global_variables.az_infrastructure_container}"
+  url             = "abfss://${module.global_variables.az_infrastructure_container}@${azurerm_storage_account.storage_account.name}.dfs.core.windows.net/"
   credential_name = databricks_storage_credential.ex_storage_cred.id
   comment         = "Databricks external location for infrastructure catalog"
   depends_on = [
@@ -160,17 +154,13 @@ resource "databricks_grants" "infrastructure" {
 
 ## Create external location and grant privilages for landing data storage 
 resource "databricks_external_location" "landing" {
-  provider = databricks.workspace
-  name     = "${var.environment}-${module.global_variables.az_landing_container}"
-  url = join(
-    "",
-    [
-      "abfss://${module.global_variables.az_landing_container}",
-      "@${azurerm_storage_account.storage_account.name}.dfs.core.windows.net/"
-    ]
-  )
+  provider        = databricks.workspace
+  name            = "${var.environment}-${module.global_variables.az_landing_container}"
   credential_name = databricks_storage_credential.ex_storage_cred.id
   comment         = "Databricks external location for landing data"
+  read_only       = true
+  skip_validation = true # The validation step is not working for read-only external locations. The external location works fine after creation.
+  url             = "abfss://${module.global_variables.az_landing_container}@${azurerm_storage_account.storage_account_ingestion.name}.dfs.core.windows.net/"
   depends_on = [
     databricks_grants.ex_creds,
     time_sleep.wait_for_ex_storage_cred_grants
@@ -189,54 +179,15 @@ resource "databricks_grants" "landing" {
   external_location = databricks_external_location.landing.id
   grant {
     principal  = databricks_group.db_ws_admin_group.display_name
-    privileges = ["ALL_PRIVILEGES"]
+    privileges = ["READ_FILES"]
   }
   grant {
     principal  = data.databricks_group.db_metastore_admin_group.display_name
-    privileges = ["ALL_PRIVILEGES"]
+    privileges = ["READ_FILES"]
   }
   depends_on = [
     databricks_external_location.landing,
     time_sleep.wait_for_landing_ext_location
-  ]
-}
-
-## Create external location and grant privilages for imgestion data storage
-resource "databricks_external_location" "ingestion" {
-  provider        = databricks.workspace
-  name            = "${var.environment}-${module.global_variables.az_ingestion_container}"
-  credential_name = databricks_storage_credential.ex_storage_cred.id
-  comment         = "Databricks external location for ingestion data"
-  read_only       = true
-  skip_validation = true # The validation step is not working for read-only external locations. The external location works fine after creation.
-  url             = "abfss://${module.global_variables.az_ingestion_container}@${azurerm_storage_account.storage_account_ingestion.name}.dfs.core.windows.net/"
-  depends_on = [
-    databricks_grants.ex_creds,
-    time_sleep.wait_for_ex_storage_cred_grants
-  ]
-}
-
-resource "time_sleep" "wait_for_ingestion_ext_location" {
-  create_duration = "5s"
-  depends_on = [
-    databricks_external_location.ingestion
-  ]
-}
-
-resource "databricks_grants" "ingestion" {
-  provider          = databricks.workspace
-  external_location = databricks_external_location.ingestion.id
-  grant {
-    principal  = databricks_group.db_ws_admin_group.display_name
-    privileges = ["READ_FILES"]
-  }
-  grant {
-    principal  = data.databricks_group.db_metastore_admin_group.display_name
-    privileges = ["READ_FILES"]
-  }
-  depends_on = [
-    databricks_external_location.landing,
-    time_sleep.wait_for_ingestion_ext_location
   ]
 }
 
