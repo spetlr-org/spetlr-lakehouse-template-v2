@@ -52,6 +52,7 @@ df_bronze = spark.read.format("delta").table(f"{schema_name}.{source_table_name}
 sql_table = f"""
 CREATE TABLE IF NOT EXISTS {schema_name}.{target_table_name}
   (
+  Id STRING,
   vendorID STRING,
   tpepPickupDateTime TIMESTAMP,
   tpepDropoffDateTime TIMESTAMP,
@@ -87,6 +88,7 @@ df_target = df_bronze.withColumn(
 )
 
 df_target = df_target.select(
+    f.col("_c0").alias("Id"),
     f.col("vendorID").cast("string"),
     f.col("tpepPickupDateTime").cast("timestamp"),
     f.col("tpepDropoffDateTime").cast("timestamp"),
