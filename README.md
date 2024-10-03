@@ -9,7 +9,7 @@ Utilizing the popular NYC taxi dataset as the example data, we have structured t
 **Key Features**
 
 - Automated terraform deployment for Azure cloud resources, Databricks Account- and Workspace-level elements and artifacts.
-- Govern and manage accesses for the entire project.
+- Govern and manage accesses for the entire project with Unity Catalog.
 - Fully unit and integration tested Lakehouse platform using SPETLR: We utilize SPETLR for managing and orchestrating ETL processes and also include a comprehensive suite of tests that ensure the reliability and accuracy of the codebase (this is not implemented for the notebook job, as well as the DLT pipeline).
 - NYC Taxi dataset example: Learn how to work with a real-world dataset that demonstrates the power of Databricks and the Lakehouse platform.
 - Best practices implementation: Benefit from a template that follows best practices in data engineering for a scalable and maintainable platform.
