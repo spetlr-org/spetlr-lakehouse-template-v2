@@ -24,13 +24,13 @@ jobs:
       environmentName: dev
       buildId: "${{github.run_id}}"
     secrets: inherit
-  # Deploy-Databricks-Workspace-TEST-Environment:
-  #   needs: Deploy-Databricks-Workspace-DEV-Environment
-  #   uses: ./.github/workflows/template-databricks-workspace-deployment.yml
-  #   with:
-  #     environmentName: test
-  #     buildId: "${{github.run_id}}"
-  #   secrets: inherit
+  Deploy-Databricks-Workspace-TEST-Environment:
+    needs: Deploy-Databricks-Workspace-DEV-Environment
+    uses: ./.github/workflows/template-databricks-workspace-deployment.yml
+    with:
+      environmentName: test
+      buildId: "${{github.run_id}}"
+    secrets: inherit
   # Deploy-Databricks-Workspace-PROD:
   #   needs: Deploy-Databricks-Workspace-TEST-Environment
   #   uses: ./.github/workflows/template-databricks-workspace-deployment.yml
