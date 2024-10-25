@@ -1,0 +1,29 @@
+name: Databricks MLOps Deployment
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/deploy/databricks_mlops/**"
+      - "mlops_notebooks/**"
+  workflow_dispatch:
+
+jobs:
+  Deploy-Databricks-MLOps-DEV-Environment:
+    uses: ./.github/workflows/template-databricks-mlops-deployment.yml
+    with:
+      environmentName: dev
+    secrets: inherit
+  Deploy-Databricks-MLOps-TEST-Environment:
+    needs: Deploy-Databricks-MLOps-DEV-Environment
+    uses: ./.github/workflows/template-databricks-mlops-deployment.yml
+    with:
+      environmentName: test
+    secrets: inherit
+  # Deploy-Databricks-MLOps-PROD:
+  #   needs: Deploy-Databricks-MLOps-TEST-Environment
+  #   uses: ./.github/workflows/template-databricks-MLOps-deployment.yml
+  #   with:
+  #     environmentName: prod
+  #   secrets: inherit

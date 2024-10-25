@@ -1,0 +1,50 @@
+name: Databricks MLOps - Template
+
+on:
+  workflow_call:
+    inputs:
+      environmentName:
+        required: true
+        type: string
+
+jobs:
+  deploy_mlops:
+    environment: ${{ inputs.environmentName }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to azure
+        shell: pwsh
+        run: |
+          az login --service-principal `
+          -u ${{ secrets.SPN_CLIENT_ID }} `
+          -p ${{ secrets.SPN_CLIENT_SECRET }} `
+          --tenant ${{ secrets.SPN_TENANT_ID }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+
+      - name: MLOps Terraform Init
+        run: terraform -chdir="./.github/deploy/databricks_mlops" init -backend-config="key=${{ inputs.environmentName }}_terraform_datarbricks_mlops.tfstate"
+        env:
+          ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
+          ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.SPN_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ secrets.SPN_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.SPN_SUBSCRIPTION_ID }}
+
+      - name: MLOps Terraform Apply
+        run: terraform -chdir="./.github/deploy/databricks_mlops" apply -auto-approve -var "environment=${{ inputs.environmentName }}"
+        env:
+          ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
+          ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.SPN_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ secrets.SPN_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.SPN_SUBSCRIPTION_ID }}
+
+      - name: Azure logout
+        shell: pwsh
+        run: az logout
