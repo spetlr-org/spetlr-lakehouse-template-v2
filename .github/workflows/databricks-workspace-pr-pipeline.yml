@@ -37,10 +37,10 @@ jobs:
         run: black --check .
       - name: iSort
         shell: pwsh
-        run: isort --skip=workspace/* .
+        run: isort --skip=workspace/*,mlops_notebooks/* .
       - name: Flake8
         shell: pwsh
-        run: flake8 --exclude=workspace .
+        run: flake8 --exclude=workspace,mlops_notebooks .
 
   Workspace-LocalTest-DEV-Environment:
     needs: Workspace-Linting
