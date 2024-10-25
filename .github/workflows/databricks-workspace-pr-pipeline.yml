@@ -15,6 +15,10 @@ on:
       - ".github/workflows/cloud-and-account-pr-pipeline.yml"
       - ".github/deploy/databricks_metastore/**"
       - ".github/workflows/template-databricks-metastore-deployment.yml"
+      - ".github/deploy/databricks_mlops/**"
+      - ".github/workflows/template-databricks-mlops-deployment.yml"
+      - ".github/workflows/databricks-mlops-deployment.yml"
+      - "mlops_notebooks/**"
       - "img/**"
       - "README.md"
 
