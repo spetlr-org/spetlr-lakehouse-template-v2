@@ -32,7 +32,7 @@ jobs:
           terraform_wrapper: false
 
       - name: Cloud and Account Terraform Init
-        run: terraform -chdir="./.github/deploy/databricks_mlops" init -backend-config="key=dev_terraform_databricks_mlops.tfstate"
+        run: terraform -chdir="./.github/deploy/databricks_mlops" init -backend-config="key=dev_terraform_datarbricks_mlops.tfstate"
         env:
           ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
           ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}
@@ -45,7 +45,7 @@ jobs:
         run: terraform fmt -check
 
       - name: Cloud and Account Terraform Plan
-        run: terraform -chdir="./.github/deploy/databricks_mlops" init -backend-config="key=dev_terraform_databricks_mlops.tfstate"
+        run: terraform -chdir="./.github/deploy/databricks_mlops" plan -input=false -var "environment=dev"
         env:
           ARM_ACCESS_KEY: ${{ secrets.SPN_STORAGE_ACCESS_KEY }}
           ARM_CLIENT_ID: ${{ secrets.SPN_CLIENT_ID }}
