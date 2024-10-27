@@ -18,6 +18,7 @@ on:
       - ".github/deploy/databricks_mlops/**"
       - ".github/workflows/template-databricks-mlops-deployment.yml"
       - ".github/workflows/databricks-mlops-deployment.yml"
+      - ".github/workflows/databricks-mlops-pr-pipeline.yml"
       - "mlops_notebooks/**"
       - "img/**"
       - "README.md"
