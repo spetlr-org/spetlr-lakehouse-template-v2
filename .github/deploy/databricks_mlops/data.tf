@@ -22,3 +22,21 @@ data "azurerm_key_vault_secret" "tenant_id" {
   name         = module.global_variables.az_kv_tenant_id
   key_vault_id = data.azurerm_key_vault.key_vault.id
 }
+
+# Databricks workspace compute data --------------------------------------------
+data "databricks_node_type" "default" {
+  provider   = databricks.workspace
+  local_disk = true
+}
+
+# data "databricks_cluster_policy" "ml_policy" {
+#   provider = databricks.workspace
+#   name     = "Personal Compute"
+# }
+
+data "databricks_spark_version" "ml_3_5" {
+  provider          = databricks.workspace
+  spark_version     = "3.5"
+  long_term_support = true
+  ml                = true
+}
