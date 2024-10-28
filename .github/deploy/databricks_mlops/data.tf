@@ -24,14 +24,9 @@ data "azurerm_key_vault_secret" "tenant_id" {
 }
 
 # Databricks workspace compute data --------------------------------------------
-data "databricks_node_type" "default" {
-  provider   = databricks.workspace
-  local_disk = true
-}
-
 data "databricks_cluster_policy" "ml_policy" {
   provider = databricks.workspace
-  name     = "Personal Compute"
+  name     = "Job Compute"
 }
 
 data "databricks_spark_version" "ml_3_5" {
