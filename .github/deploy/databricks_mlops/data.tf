@@ -29,10 +29,10 @@ data "databricks_node_type" "default" {
   local_disk = true
 }
 
-# data "databricks_cluster_policy" "ml_policy" {
-#   provider = databricks.workspace
-#   name     = "Personal Compute"
-# }
+data "databricks_cluster_policy" "ml_policy" {
+  provider = databricks.workspace
+  name     = "Personal Compute"
+}
 
 data "databricks_spark_version" "ml_3_5" {
   provider          = databricks.workspace
