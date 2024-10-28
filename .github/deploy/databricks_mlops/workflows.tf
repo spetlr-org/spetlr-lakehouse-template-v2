@@ -18,7 +18,7 @@ resource "databricks_job" "nyc_tlc_ml" {
       policy_id          = data.databricks_cluster_policy.ml_policy.id
       data_security_mode = "SINGLE_USER"
       spark_version      = data.databricks_spark_version.ml_3_5.id
-      node_type_id       = data.databricks_node_type.default.id
+      node_type_id       = "Standard_DS3_v2"
       autoscale {
         min_workers = 1
         max_workers = 1
