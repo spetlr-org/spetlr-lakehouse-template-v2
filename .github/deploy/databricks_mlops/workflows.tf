@@ -21,7 +21,7 @@ resource "databricks_job" "nyc_tlc_ml" {
       node_type_id       = "Standard_DS3_v2"
       autoscale {
         min_workers = 1
-        max_workers = 1
+        max_workers = 2
       }
     }
   }

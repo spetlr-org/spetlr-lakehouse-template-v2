@@ -117,7 +117,7 @@ automl_run = automl.regress(
     dataset=df_features,
     target_col="TotalAmount",
     split_col="Split",  # This required DBRML 15.3+
-    timeout_minutes=5,
+    timeout_minutes=7,
     exclude_cols="Id",
 )
 
