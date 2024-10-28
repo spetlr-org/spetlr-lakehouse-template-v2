@@ -15,7 +15,8 @@ resource "databricks_job" "nyc_tlc_ml" {
   job_cluster {
     job_cluster_key = "small_job_cluster"
     new_cluster {
-      # policy_id          = data.databricks_cluster_policy.ml_policy.id
+      policy_id          = data.databricks_cluster_policy.ml_policy.id
+      data_security_mode = "SINGLE_USER"
       spark_version      = data.databricks_spark_version.ml_3_5.id
       node_type_id       = data.databricks_node_type.default.id
       autoscale {
