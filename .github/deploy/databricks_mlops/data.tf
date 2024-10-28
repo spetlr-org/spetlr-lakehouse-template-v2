@@ -31,7 +31,7 @@ data "databricks_node_type" "default" {
 
 data "databricks_cluster_policy" "ml_policy" {
   provider = databricks.workspace
-  name     = "Single User"
+  name     = "Personal Compute"
 }
 
 data "databricks_spark_version" "ml_3_5" {
