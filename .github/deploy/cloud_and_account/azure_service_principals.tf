@@ -46,7 +46,7 @@ resource "azurerm_role_assignment" "db_ws_spn_role" {
 
 # Giving necessary keyvault access to the workspace admin spn --------------------------------
 resource "azurerm_key_vault_access_policy" "ws_admin_spn_access" {
-  key_vault_id = data.azurerm_key_vault.key_vault.id
+  key_vault_id = azurerm_key_vault.key_vault.id
   tenant_id    = data.azurerm_client_config.current.tenant_id
   object_id    = azuread_service_principal.db_ws_spn.object_id
 
