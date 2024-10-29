@@ -27,4 +27,6 @@ locals {
   db_table_user_group_env      = "${module.global_variables.db_table_user_group}-${var.environment}"
   default_catalog              = "${var.default_catalog}_${var.environment}"
   infrastructure_catalog       = "${module.global_variables.az_infrastructure_container}_${var.environment}"
+
+  db_workspace_spn_name = "${module.global_variables.db_workspace_spn_name}-${var.environment}"
 }

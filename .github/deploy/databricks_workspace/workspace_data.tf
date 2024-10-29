@@ -1,3 +1,10 @@
+data "azurerm_client_config" "current" {
+}
+
+data "azuread_service_principal" "db_workspace_admin_spn" {
+  display_name = local.db_workspace_spn_name
+}
+
 data "databricks_group" "db_ws_admin_group" {
   provider     = databricks.workspace
   display_name = local.db_workspace_admin_group_env
