@@ -55,6 +55,20 @@ resource "databricks_job" "nyc_tlc_ml" {
     }
   }
 
+  task {
+    task_key = "03_Process_Nyc_Tlc_Endpoint"
+
+    depends_on {
+      task_key = "02_Process_Nyc_Tlc_Prediction"
+    }
+
+    job_cluster_key = "small_job_cluster"
+
+    notebook_task {
+      notebook_path = "/Workspace/Shared/mlops/nyc_tlc/nyc_tlc_ml_endpoint.py"
+    }
+  }
+
   depends_on = [
     databricks_notebook.sync_notebook,
   ]
