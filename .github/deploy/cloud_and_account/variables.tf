@@ -7,12 +7,6 @@ variable "environment" {
   type        = string
 }
 
-variable "db_workspace_spn_name" {
-  type        = string
-  default     = "SpetlrLhV2DbWs"
-  description = "SPN to be added as a Databricks workspace Admin"
-}
-
 variable "az_kv_db_metastore_spn_app_id" {
   type        = string
   default     = "Databricks--Metastore--SPN-ID"
@@ -56,5 +50,5 @@ locals {
   )
 
   # SPN names
-  db_workspace_spn_name = "${var.db_workspace_spn_name}-${var.environment}"
+  db_workspace_spn_name = "${module.global_variables.db_workspace_spn_name}-${var.environment}"
 }

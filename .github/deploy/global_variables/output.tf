@@ -44,6 +44,10 @@ output "db_metastore_spn_name" {
   value = var.db_metastore_spn_name
 }
 
+output "db_workspace_spn_name" {
+value =  var.db_workspace_spn_name
+}
+
 output "az_kv_tenant_id" {
   value = var.az_kv_tenant_id
 }

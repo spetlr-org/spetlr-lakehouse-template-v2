@@ -68,6 +68,12 @@ variable "db_metastore_spn_name" {
   description = "SPN to be added as a Databricks Metastore Admin"
 }
 
+variable "db_workspace_spn_name" {
+  type        = string
+  default     = "SpetlrLhV2DbWs"
+  description = "SPN to be added as a Databricks workspace Admin"
+}
+
 variable "az_kv_tenant_id" {
   type        = string
   default     = "Azure--Tenant-ID"
