@@ -68,10 +68,3 @@ resource "azurerm_key_vault_secret" "db_ws_admin_spn_app_password" {
     azurerm_key_vault_access_policy.spn_access
   ]
 }
-
-# Store the Databricks token in Azure Key Vault
-resource "azurerm_key_vault_secret" "ws_admin_oauth_token_secret" {
-  name         = "Workspace--Admin-OAuth-Token"
-  value        = databricks_service_principal_secret.db_ws_spn_secret.secret
-  key_vault_id = azurerm_key_vault.key_vault.id
-}

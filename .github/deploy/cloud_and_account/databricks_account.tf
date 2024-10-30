@@ -15,10 +15,6 @@ resource "databricks_service_principal" "db_ws_spn" {
     azuread_service_principal.db_ws_spn
   ]
 }
-resource "databricks_service_principal_secret" "db_ws_spn_secret" {
-  provider = databricks.account
-  service_principal_id = databricks_service_principal.db_ws_spn.id
-}
 
 resource "databricks_group_member" "ws_admin_member" {
   provider  = databricks.account
