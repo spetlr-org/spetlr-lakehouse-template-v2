@@ -5,7 +5,9 @@
 # COMMAND ----------
 
 dbutils.widgets.text("env", "dev")
+dbutils.widgets.text("debug", "false")
 env = dbutils.widgets.get("env")
+debug = dbutils.widgets.get("debug")
 
 # COMMAND ----------
 
@@ -39,7 +41,7 @@ feature_table = f"nyc_features"
 feature_table_location = f"{schema_path}{feature_table}"
 model_name = f"{catalog}.{schema_name}.nyc_prediction"
 
-xp_path = "/Shared/dataplatform/nyc_ml/experiments"
+xp_path = "/Shared/mlops/nyc_tlc/experiments"
 xp_name = f"nyc_automl_{datetime.now().strftime('%Y-%m-%d_%H:%M:%S')}"
 
 # COMMAND ----------
@@ -57,7 +59,8 @@ df_source = spark.read.format("delta").table(f"{schema_name}.{source_table_name}
 
 # COMMAND ----------
 
-display(df_source)
+if debug.lower() == "true":
+    display(df_source)
 
 # COMMAND ----------
 
@@ -81,7 +84,8 @@ df_features = df_features.select(
 
 # COMMAND ----------
 
-display(df_features)
+if debug.lower() == "true":
+    display(df_features)
 
 # COMMAND ----------
 
@@ -195,8 +199,14 @@ client.set_registered_model_alias(
 
 try:
     # Compare the challenger r2 score to the existing champion if it exists
-    champion_model = client.get_model_version_by_alias(model_name, "Champion")
-    champion_r2 = mlflow.get_run(champion_model.run_id).data.metrics["test_r2_score"]
+    client_tracking = mlflow.tracking.MlflowClient()
+    champion_model = client_tracking.get_model_version_by_alias(
+        name=model_name, alias="Champion"
+    )
+    champion_version = champion_model.version
+    model = mlflow.pyfunc.load_model(f"models:/{model_name}/{champion_version}")
+    champion_run_id = model.metadata.run_id
+    champion_r2 = mlflow.get_run(champion_run_id).data.metrics["test_r2_score"]
     print(f"Champion r2 score: {champion_r2}. Challenger f1 score: {r2_score}.")
     metric_f1_passed = r2_score >= champion_r2
 except:
@@ -218,15 +228,17 @@ if metric_f1_passed:
 
 # COMMAND ----------
 
-champion_model = mlflow.pyfunc.spark_udf(
-    spark, model_uri=f"models:/{model_name}@Champion"
-)
+if debug.lower() == "true":
+    champion_model = mlflow.pyfunc.spark_udf(
+        spark, model_uri=f"models:/{model_name}@Champion"
+    )
 
 # COMMAND ----------
 
-df_preds = df_features.withColumn(
-    "predictions",
-    champion_model(*champion_model.metadata.get_input_schema().input_names()),
-)
+if debug.lower() == "true":
+    df_preds = df_features.withColumn(
+        "predictions",
+        champion_model(*champion_model.metadata.get_input_schema().input_names()),
+    )
 
-display(df_preds)
+    display(df_preds)
