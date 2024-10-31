@@ -78,7 +78,8 @@ if response.status_code == 200:
     print("Access Token created successfully")
 else:
     raise BaseException(
-        f"Failed to retrieve access token with code: {response.status_code} and response: {response.json()}"
+        f"Failed to retrieve access token with code: {response.status_code}"
+        f" and response: {response.json()}"
     )
 
 # COMMAND ----------
@@ -103,39 +104,51 @@ response_endpoint = requests.get(
 # Update endpoint name and version if exists
 if response_endpoint.status_code == 200:
     print(
-        f"The endpoint {endpoint_name} already exists, updating model entity name to {model_name}-{model_version} and version to {model_version}"
+        f"The endpoint {endpoint_name} already exists, updating model entity name"
+        f" to {model_name}-{model_version} and version to {model_version}"
     )
     existing_endpoint_config = response_endpoint.json()["config"]
-    existing_endpoint_config["served_entities"][0]["entity_version"] = model_version
-    existing_endpoint_config["served_entities"][0][
-        "name"
-    ] = f"{model_name}-{model_version}"
-    existing_endpoint_config["traffic_config"]["routes"][0][
-        "served_model_name"
-    ] = f"{model_name}-{model_version}"
-    existing_endpoint_config["traffic_config"]["routes"][0][
-        "served_entity_name"
-    ] = f"{model_name}-{model_version}"
-    existing_endpoint_config.pop(
-        "served_models"
-    )  # Databricks resommends to use served_entities and both served_entities and served_models cannot be used.
-
-    response_updated_endpoint = requests.put(
-        f"{DATABRICKS_HOST}api/2.0/serving-endpoints/{endpoint_name}/config",
-        headers=headers,
-        data=json.dumps(existing_endpoint_config),
-    )
-
-    if response_updated_endpoint.status_code == 200:
-        print("Endpoint updated successfully with new model version.")
+    endpoint_version = existing_endpoint_config["served_entities"][0]["entity_version"]
+    if str(endpoint_version) == str(model_version):
+        print(
+            "The endpoint version is the same as the champion model version. Skipping the update."
+        )
     else:
-        print(f"Failed to update endpoint: {response_updated_endpoint.status_code}")
-        print("Error:", response_updated_endpoint.json())
-        raise BaseException("Failed to update endpoint configuration")
+        print(
+            "The endpoint version is different than the champion model version. Updating..."
+        )
+        existing_endpoint_config["served_entities"][0]["entity_version"] = model_version
+        existing_endpoint_config["served_entities"][0][
+            "name"
+        ] = f"{model_name}-{model_version}"
+        existing_endpoint_config["traffic_config"]["routes"][0][
+            "served_model_name"
+        ] = f"{model_name}-{model_version}"
+        existing_endpoint_config["traffic_config"]["routes"][0][
+            "served_entity_name"
+        ] = f"{model_name}-{model_version}"
+        # Databricks resommends to use served_entities. served_entities and served_models
+        # cannot be used simultaneously in updating the endpoint.
+        existing_endpoint_config.pop("served_models")
+
+        response_updated_endpoint = requests.put(
+            f"{DATABRICKS_HOST}api/2.0/serving-endpoints/{endpoint_name}/config",
+            headers=headers,
+            data=json.dumps(existing_endpoint_config),
+        )
+
+        if response_updated_endpoint.status_code == 200:
+            print("Endpoint updated successfully with new model version.")
+        else:
+            raise BaseException(
+                f"Failed to update endpoint with code: {response_updated_endpoint.status_code},"
+                f" and error: response_updated_endpoint.json()"
+            )
 # Create the endpoint if it does not exist
 else:
     print(
-        f"The endpoint {endpoint_name} does not exist, creating it with name {model_full_path} and version {model_version}"
+        f"The endpoint {endpoint_name} does not exist, creating it with"
+        f" name {model_full_path} and version {model_version}"
     )
     endpoint_config = {
         "name": endpoint_name,
