@@ -34,5 +34,5 @@ class NycTlcSilverTransformer(Transformer):
             f.col("tipAmount").cast("double"),
             f.col("totalAmount").cast("double"),
         )
-
+        print("Dataframe transformed")
         return df_final
