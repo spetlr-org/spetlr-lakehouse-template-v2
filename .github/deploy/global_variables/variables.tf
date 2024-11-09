@@ -122,6 +122,18 @@ variable "az_data_container" {
   description = "Container in the storage account for databricks data catalog external location"
 }
 
+variable "vnet_public_subnet_name" {
+  type        = string
+  default     = "public-subnet"
+  description = "The name of the public subnet for VNet"
+}
+
+variable "vnet_private_subnet_name" {
+  type        = string
+  default     = "private-subnet"
+  description = "The name of the public subnet for VNet"
+}
+
 # Databricks variables
 variable "db_metastore_name" {
   type        = string
