@@ -15,12 +15,12 @@ jobs:
     with:
       environmentName: dev
     secrets: inherit
-  Deploy-Databricks-MLOps-TEST-Environment:
-    needs: Deploy-Databricks-MLOps-DEV-Environment
-    uses: ./.github/workflows/template-databricks-mlops-deployment.yml
-    with:
-      environmentName: test
-    secrets: inherit
+  # Deploy-Databricks-MLOps-TEST-Environment:
+  #   needs: Deploy-Databricks-MLOps-DEV-Environment
+  #   uses: ./.github/workflows/template-databricks-mlops-deployment.yml
+  #   with:
+  #     environmentName: test
+  #   secrets: inherit
   # Deploy-Databricks-MLOps-PROD:
   #   needs: Deploy-Databricks-MLOps-TEST-Environment
   #   uses: ./.github/workflows/template-databricks-MLOps-deployment.yml

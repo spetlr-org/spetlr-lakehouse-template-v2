@@ -80,6 +80,14 @@ output "az_data_container" {
   value = var.az_data_container
 }
 
+output "vnet_public_subnet_name" {
+  value = var.vnet_public_subnet_name
+}
+
+output "vnet_private_subnet_name" {
+  value = var.vnet_private_subnet_name
+}
+
 # Output for Databricks variables
 output "db_metastore_name" {
   value = var.db_metastore_name

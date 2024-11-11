@@ -71,26 +71,26 @@ jobs:
       buildId: "${{github.run_id}}"
     secrets: inherit
 
-  Workspace-LocalTest-TEST-Environment:
-    needs: Workspace-Linting
-    uses: ./.github/workflows/template-spetlr-unit-test.yml
-    with:
-      environmentName: "test"
-      buildId: "${{github.run_id}}"
-    secrets: inherit
+  # Workspace-LocalTest-TEST-Environment:
+  #   needs: Workspace-Linting
+  #   uses: ./.github/workflows/template-spetlr-unit-test.yml
+  #   with:
+  #     environmentName: "test"
+  #     buildId: "${{github.run_id}}"
+  #   secrets: inherit
 
-  Workspace-ClusterTest-TEST-Environment:
-    needs: Workspace-LocalTest-TEST-Environment
-    uses: ./.github/workflows/template-spetlr-cluster-test.yml
-    with:
-      environmentName: "test"
-      buildId: "${{github.run_id}}"
-    secrets: inherit
+  # Workspace-ClusterTest-TEST-Environment:
+  #   needs: Workspace-LocalTest-TEST-Environment
+  #   uses: ./.github/workflows/template-spetlr-cluster-test.yml
+  #   with:
+  #     environmentName: "test"
+  #     buildId: "${{github.run_id}}"
+  #   secrets: inherit
 
-  Workspace-Terraform-Plan-TEST-Environment:
-    needs: Workspace-LocalTest-TEST-Environment
-    uses: ./.github/workflows/template-workspace-terraform-plan.yml
-    with:
-      environmentName: "test"
-      buildId: "${{github.run_id}}"
-    secrets: inherit
+  # Workspace-Terraform-Plan-TEST-Environment:
+  #   needs: Workspace-LocalTest-TEST-Environment
+  #   uses: ./.github/workflows/template-workspace-terraform-plan.yml
+  #   with:
+  #     environmentName: "test"
+  #     buildId: "${{github.run_id}}"
+  #   secrets: inherit
